@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4221c2aa.chunk.css",
+    "main.js": "/static/js/main.709d0ada.chunk.js",
+    "main.js.map": "/static/js/main.709d0ada.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.e04c3604.js",
+    "runtime-main.js.map": "/static/js/runtime-main.e04c3604.js.map",
+    "static/js/2.d1e96a03.chunk.js": "/static/js/2.d1e96a03.chunk.js",
+    "static/js/2.d1e96a03.chunk.js.map": "/static/js/2.d1e96a03.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.54f547ec90d8b8a893477384d87bd855.js": "/precache-manifest.54f547ec90d8b8a893477384d87bd855.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.4221c2aa.chunk.css.map": "/static/css/main.4221c2aa.chunk.css.map",
+    "static/js/2.d1e96a03.chunk.js.LICENSE.txt": "/static/js/2.d1e96a03.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/static/media/zxylogo.14822f34.JPG"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e04c3604.js",
+    "static/js/2.d1e96a03.chunk.js",
+    "static/css/main.4221c2aa.chunk.css",
+    "static/js/main.709d0ada.chunk.js"
+  ]
+}

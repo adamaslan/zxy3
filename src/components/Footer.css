@@ -1,0 +1,13 @@
+.Footer {
+  box-sizing: border-box;
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: default;
+
+  margin-bottom: 0.5em;
+  background-color: green;
+  bottom: auto;
+  font: "utopia_seriff";
+  align-self: end;
+}
