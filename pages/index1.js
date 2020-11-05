@@ -18,13 +18,7 @@ export default function Home() {
         </h1>
 
         <p className="description">
-          <code>
-            currently focusing on outdoor pop-up art events <br /> contact us on
-            instagram --->
-            <a href="https://www.instagram.com/zxygallery/?hl=en">
-              <u>@zxygallery</u>
-            </a>{" "}
-          </code>
+          <code>pages/index.js</code>
         </p>
 
         <div className="grid">
@@ -35,7 +29,7 @@ export default function Home() {
 
           <a href="/posts/artists" className="card">
             <h3>Artists &rarr;</h3>
-            <p>Participating Artists</p>
+            <p>Learn about the Artists we have shown</p>
           </a>
 
           <a href="/posts/currentshow" className="card">
@@ -45,7 +39,9 @@ export default function Home() {
 
           <a href="/posts/pastshows" className="card">
             <h3>Past Shows &rarr;</h3>
-            <p>Explore Past Shows</p>
+            <p>
+              We've been throwing shows in the current space for over 5 years!
+            </p>
           </a>
         </div>
       </main>
@@ -57,7 +53,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           Check out the current highly toggleable online gallery exhibition "YZX
-          ZXY Gallery" by Adam Aslan. Also props to this free nerdy thing -->
+          ZXY Gallery" by Adam Aslan{" "}
           <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
         </a>
       </footer>
@@ -106,7 +102,7 @@ export default function Home() {
         }
 
         .title a {
-          color: #f30000c0;
+          color: #0070f3;
           text-decoration: none;
         }
 
@@ -166,8 +162,8 @@ export default function Home() {
         .card:hover,
         .card:focus,
         .card:active {
-          color: #f30000c0;
-          border-color: #f30000c0;
+          color: #0070f3;
+          border-color: #0070f3;
         }
 
         .card h3 {
