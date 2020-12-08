@@ -51,15 +51,15 @@ export default function Home() {
       </main>
 
       <footer>
-        <a
+        
+          Click <a here 
           href="https://online.zxygallery.com"
           target="_blank"
           rel="noopener noreferrer"
-        >
-          Check out the current highly toggleable online gallery exhibition "YZX
+        > </a>Check out the current highly toggleable online gallery exhibition "YZX
           ZXY Gallery" by Adam Aslan. Also props to this free nerdy thing -->
           <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
+        
       </footer>
 
       <style jsx>{`
