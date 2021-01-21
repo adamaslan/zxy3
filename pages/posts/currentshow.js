@@ -10,7 +10,7 @@ export default function PastShows() {
           <title>ZXY</title>
         </Head>
         <h1>Current Show</h1>
-        <h2>"Process / Progress"</h2>
+        <h2>"Process / Progress" - find more on our instagram @zxygallery</h2>
 
         <h2>
           <Link href="/">
