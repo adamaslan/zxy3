@@ -10,7 +10,8 @@ export default function PastShows() {
           <title>ZXY</title>
         </Head>
         <h1>Past Shows</h1>
-        <h2>We've been at it for a while</h2>
+    
+        <h2>"Process / Progress</h2>
 
         <h2>
           <Link href="/">
