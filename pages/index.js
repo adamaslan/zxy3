@@ -56,7 +56,7 @@ export default function Home() {
           href="https://online.zxygallery.com"
           target="_blank"
           rel="noopener noreferrer"
-        >here</a> to check out the current highly toggleable online gallery. Thanks to Ellis Marte and Nick Foden for their assitance on this project. 
+        ><u>here</u></a> to check out the current highly toggleable online gallery. Thanks to Ellis Marte and Nick Foden for their assitance on this project. 
         </p>
       </footer>
 
@@ -90,12 +90,6 @@ export default function Home() {
 
         footer img {
           margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
         }
 
         a {
