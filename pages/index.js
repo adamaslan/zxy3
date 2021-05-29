@@ -51,12 +51,13 @@ export default function Home() {
       </main>
 
       <footer>
-        
-          Click{' '} <a 
+        <p>
+          Click <a 
           href="https://online.zxygallery.com"
           target="_blank"
           rel="noopener noreferrer"
-        > <u> <span><&nbsp> here<&nbsp> </span> </u>  </a>{' '} to check out the current highly toggleable online gallery. Thanks to Ellis Marte and Nick Foden for their assitance on this project.       
+        >here</a> to check out the current highly toggleable online gallery. Thanks to Ellis Marte and Nick Foden for their assitance on this project. 
+        </p>
       </footer>
 
       <style jsx>{`
