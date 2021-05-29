@@ -11,7 +11,11 @@ export default function PastShows() {
         </Head>
         <h1>Artists</h1>
         <h2>We are very excited about these artists:</h2>
-
+<p>  Bianca Boragi </p>
+   <p> Jamie Martinez </p>
+    <p> Michael Eckblad </p>
+    <p>Will Ava Wang</p>
+    <p>Julia Duarte </p>
         <h2>
           <Link href="/">
             <a>Back to home</a>
