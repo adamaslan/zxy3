@@ -6,13 +6,13 @@ export default function Home() {
     <div className="container">
       <Head>
         <title>ZXY Gallery</title>
-        <link rel="icon" href="/publicn/favicon.ico" />
+        <link rel="icon" href="/public/favicon.ico" />
       </Head>
 
       <main>
         <h1 className="title">
           Welcome to
-          <Link href="/posts/first-post">
+          <Link href="/posts/currentshow">
             <a> ZXY Gallery</a>
           </Link>
         </h1>
@@ -40,7 +40,7 @@ export default function Home() {
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>Process / Progress</p>
+            <p>Imagined Sequences</p>
           </a>
 
           <a href="/posts/pastshows" className="card">
@@ -52,11 +52,16 @@ export default function Home() {
 
       <footer>
         <p>
-          Click <a 
-          href="https://online.zxygallery.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        ><u>here</u></a> to check out the current highly toggleable online gallery. Thanks to Ellis Marte and Nick Foden for their assitance on this project. 
+          Click{" "}
+          <a
+            href="https://online.zxygallery.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <u>here</u>
+          </a>{" "}
+          to check out the current highly toggleable online gallery. Thanks to
+          Ellis Marte and Nick Foden for their assitance on this project.
         </p>
       </footer>
 
