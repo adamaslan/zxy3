@@ -30,7 +30,7 @@ export default function Home() {
         <div className="grid">
           <a href="/posts/about" className="card">
             <h3>About &rarr;</h3>
-            <p>Learn about ZXY Gallery</p>
+            <p>More about ZXY Gallery</p>
           </a>
 
           <a href="/posts/artists" className="card">
