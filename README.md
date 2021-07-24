@@ -1,3 +1,5 @@
-ZXY Gallery Official Blog.
+# ZXY Gallery Official Website:
 
-Make sure to also check out online.zxygallery.com
+## www.zxygallery.com
+
+## Make sure to also check out www.online.zxygallery.com
