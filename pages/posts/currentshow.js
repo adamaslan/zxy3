@@ -11,29 +11,13 @@ export default function PastShows() {
           <title>ZXY</title>
         </Head>
         <h1>Current Show</h1>
-        <h2>"Imagined Sequences: Physiognomy Amongst"</h2>
+        <h2>"Invoking the Amphibian"</h2>
 
         <Image src="/seqflyer.jpg" alt="Flyer" width={500} height={700} />
 
         <p>
-          Imagined sequences: Physiognomy amongst.. Here you are with me now.
-          You smile boldly. Then breathe deeply and exclaim a joyous “ahh”.
-          Others are present too though some of their visages are dimly lit or
-          even distorted. I’m not sure where we are. My place. Your place.
-          Somewhere that doesn’t exactly exist. The imagined image perpetuates
-          itself in unending succession, taking on objects, releasing others,
-          some painfully, some with nostalgia, and others with a beautiful
-          perfection. Why not? These sequences are yours only. Give them the
-          ideal if you so choose. The ephemera can be from your face as it
-          showed your nervous system from a seemingly more naive and open
-          glance. Maybe it’s a friend’s laugh at you being characteristically
-          aloof to conventional pretense. It is yours. Breathe it in and let it
-          run through you wildly.
-        </p>
-        <p>
-          Announcing “Imagined Sequences,” a new series of exhibitions at ZXY
-          Gallery. The first exhibition deals with memory, nostalgia, ephemera,
-          delirium, and inchoate scenes.
+         To build upon the shaky foundations of the current epoch, we must be hybrids. Survival depends on both physical and mental security, which can be at risk at any time. Amphibians provide a model of adaptability. Invoking the amphibian seems like a safe bet for survival. We must both adapt to the present conditions given to us and also evolve for a future uniquely to  provide ourselves the skills to allow us to flourish in a new paradigm. Flash floods ravage NYC and forest fires burn through Turkey. The air may not be safe one day and water the next. Amphibious life could become the norm. While lessons on survival can be learned from amphibians, French sociologist and anthropologist Bruno Latour provides the concept of hybrids that focuses on entities existing both in a natural and social realm. Attempts to divorce one from the other, paradoxically just reinforces their connection. In this sense, to survive, we all must be like frogs. 
+
         </p>
 
         <h2>
