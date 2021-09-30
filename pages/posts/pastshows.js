@@ -9,8 +9,11 @@ export default function PastShows() {
         <Head>
           <title>ZXY</title>
         </Head>
-        <h1>Past Shows</h1>
+        <article>
+        <h1>Past Shows - 2021</h1>
 
+<h2>Earth in the Heavens </h2>
+<p>These works evocative of earthen material will be presented on the heavenly confines of the ZXY Gallery roof. Highlighting displacement this exibition speaks to identity question often faced by individuals seeking a place of refuge. </p>
         <h2>"Process / Progress</h2>
         <p>
           {" "}
@@ -21,11 +24,21 @@ export default function PastShows() {
           Morojele, Robert Balun
         </p>
 
+        <p> Inquire about specific shows prior to 2021 </p>
+
+        <p>
+            Find more on our instagram{" "}
+            <a href="https://www.instagram.com/zxygallery/">
+              <a>@zxygallery </a>
+            </a>{" "}
+          </p>
+
         <h2>
           <Link href="/">
             <a>Back to home</a>
           </Link>
         </h2>
+        </article>
       </Layout>
     </>
   );
