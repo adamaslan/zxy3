@@ -12,13 +12,20 @@ export default function PastShows() {
         </Head>
         <article>
         <h1>Current Show</h1>
-        <h2>"Invoking the Amphibian"</h2>
-    
- <Image src="/frogshow.jpeg" alt="Flyer" width={500} height={700} />
-    
-    <p>
-         To build upon the shaky foundations of the current epoch, we must be hybrids. Survival depends on both physical and mental security, which can be at risk at any time. Amphibians provide a model of adaptability. Invoking the amphibian seems like a safe bet for survival. We must both adapt to the present conditions given to us and also evolve for a future uniquely to  provide ourselves the skills to allow us to flourish in a new paradigm. Flash floods ravage NYC and forest fires burn through Turkey. The air may not be safe one day and water the next. Amphibious life could become the norm. While lessons on survival can be learned from amphibians, French sociologist and anthropologist Bruno Latour provides the concept of hybrids that focuses on entities existing both in a natural and social realm. Attempts to divorce one from the other, paradoxically just reinforces their connection. In this sense, to survive, we all must be like frogs. 
+        <h2>"*Mei- (1) + *Mei- (2)"</h2>
 
+ <Image src="/mei1.jpg" alt="Flyer" width={1110} height={810} />
+
+    <p>
+    ZXY Gallery is proud to announce, *Mei- (1) + *Mei- (2), a group exhibition with Liz Ainslie, Andrew Zarou, Chiara, and Nazlie Efe.
+
+The show is an exploration of these two Proto-Indo-European roots that have evidence of their existence in Sanskirt, Latin, Greek, and old English.
+*mei- (1) is the Proto-Indo-European root meaning "to change, go, move,"
+*mei- (2) is Proto-Indo-European root meaning "small."
+</p><p>
+These divergent meanings allow for a multitude of analogies with the artists shown in this exhibition. On focus is a beauty created through the softness of material and color.
+
+Expressed as painting and sculpture, the works explore an aesthetic that carries a sense of humility in color via a multitude of themes behind the individual works.
         </p>
 
         <h2>

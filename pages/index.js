@@ -40,7 +40,7 @@ export default function Home() {
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>Invoking the Amphibian</p>
+            <p>"*Mei- (1) + *Mei- (2)"</p>
           </a>
 
           <a href="/posts/pastshows" className="card">
