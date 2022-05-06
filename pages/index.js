@@ -33,9 +33,9 @@ export default function Home() {
             <p>More about ZXY Gallery</p>
           </a>
 
-          <a href="/posts/artists" className="card">
-            <h3>Artists &rarr;</h3>
-            <p>Participating Artists</p>
+          <a href="/posts/featuredwork" className="card">
+            <h3>Featured Work &rarr;</h3>
+            <p>Buy this featured work</p>
           </a>
 
           <a href="/posts/currentshow" className="card">

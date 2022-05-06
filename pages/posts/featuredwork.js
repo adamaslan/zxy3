@@ -2,27 +2,31 @@ import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
 
-export default function PastShows() {
+import Image from "next/image";
+
+export default function FeaturedWork() {
   return (
     <>
       <Layout>
         <Head>
-          <title>Work of the Month</title>
+          <title>Featured Work</title>
         </Head>
 
-        <h1>Work of the Month</h1>
+        <h1>Featured Work</h1>
         <h2>
-          We are pleased to offer this work at a discount price as part of our
-          work of the month program aiming to connect collectors to artists.
+          <Image src="/chiara2.jpeg" alt="Flyer" width={810} height={1110} />
+          Work by Chiara No
+          {/* We are pleased to offer this work at a discount price as part of our
+          work of the month program aiming to connect collectors to artists. */}
         </h2>
 
         {/* Image here */}
 
         <h3>
-          Price reflects price of work. Price and details of shipping to be
-          arranged with artist.
+          {/* Price reflects price of work. Price and details of shipping to be
+          arranged with artist. */}
         </h3>
-        <h2>Purchase Me</h2>
+        <h2>Inquire for pricing and shipping details</h2>
 
         {/* <h1>Artists</h1>
         <h2>We are very excited about these artists and curators:</h2>
