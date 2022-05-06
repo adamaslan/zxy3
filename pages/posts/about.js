@@ -14,8 +14,9 @@ export default function About() {
         <h2>
           {" "}
           We are always looking for artists, especially artists that can show
-          work outdoors. Contact us on instagram  <a href="https://www.instagram.com/zxygallery/">
-              <a>@zxygallery </a>.
+          work outdoors. Contact us on instagram{" "}
+          <a href="https://www.instagram.com/zxygallery/">@zxygallery </a>.{" "}
+        </h2>
         <h2>
           {" "}
           ZXY Gallery looks to bring together artists from a variety of
