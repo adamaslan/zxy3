@@ -23,10 +23,13 @@ export default function FeaturedWork() {
         {/* Image here */}
 
         <h3>
-        Mother of pearl drips from the tip of the phallus as a serpent clapper hangs below the soundbow of the bell. 
+          Mother of pearl drips from the tip of the phallus as a serpent clapper
+          hangs below the soundbow of the bell.
           {/* Price reflects price of work. Price and details of shipping to be
-          arranged with artist. */}<br>
-          To here the sound click  <a href="https://vimeo.com/660146105">here</a>.
+          arranged with artist. */}
+          <br />
+          To here the sound click <a href="https://vimeo.com/660146105">here</a>
+          .
         </h3>
         <h2>Inquire for pricing and shipping details</h2>
 
