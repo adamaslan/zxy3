@@ -15,7 +15,7 @@ export default function FeaturedWork() {
         <h1>Featured Work</h1>
         <h2>
           <Image src="/chiara2.jpeg" alt="Flyer" width={810} height={1110} />
-          Work by Chiara No
+          Abraxas by Chiara No
           {/* We are pleased to offer this work at a discount price as part of our
           work of the month program aiming to connect collectors to artists. */}
         </h2>
@@ -23,8 +23,10 @@ export default function FeaturedWork() {
         {/* Image here */}
 
         <h3>
+        Mother of pearl drips from the tip of the phallus as a serpent clapper hangs below the soundbow of the bell. 
           {/* Price reflects price of work. Price and details of shipping to be
-          arranged with artist. */}
+          arranged with artist. */}<br>
+          To here the sound click  <a href="https://vimeo.com/660146105">here</a>.
         </h3>
         <h2>Inquire for pricing and shipping details</h2>
 
