@@ -28,8 +28,8 @@ export default function FeaturedWork() {
           {/* Price reflects price of work. Price and details of shipping to be
           arranged with artist. */}
           <br />
-          To here the sound click <a href="https://vimeo.com/660146105">here</a>
-          .
+          To hear the sound of the bell ringing click{" "}
+          <a href="https://vimeo.com/660146105">here</a>.
         </h3>
         <h2>Inquire for pricing and shipping details</h2>
 
