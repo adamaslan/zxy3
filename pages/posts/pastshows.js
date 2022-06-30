@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
+import Searchy2 from "../../components/Search2";
 
 export default function PastShows() {
   return (
@@ -37,6 +38,7 @@ export default function PastShows() {
               <a>@zxygallery </a>
             </a>{" "}
           </p>
+          <Searchy2 />
 
           <h2>
             <Link href="/">
