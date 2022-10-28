@@ -9,6 +9,7 @@ export default function About() {
         <Head>
           <title>About ZXY</title>
           <link rel="icon" href="/public/favicon.ico" />
+          <description>A technology focused Art Gallery</description>
           <meta
             property="og:image"
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"

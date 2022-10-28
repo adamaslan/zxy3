@@ -6,6 +6,7 @@ export default function Home() {
     <div className="container">
       <Head>
         <title>ZXY Gallery</title>
+        <description>A technology focused Art Gallery</description>
         <link rel="icon" href="/public/favicon.ico" />
         <meta
           property="og:image"
