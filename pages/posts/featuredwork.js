@@ -10,6 +10,11 @@ export default function FeaturedWork() {
       <Layout>
         <Head>
           <title>Featured Work</title>
+          <link rel="icon" href="/public/favicon.ico" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+          />
         </Head>
 
         <h1>Featured Work</h1>

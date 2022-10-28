@@ -8,7 +8,12 @@ export default function PastShows() {
     <>
       <Layout>
         <Head>
-          <title>ZXY</title>
+          <title>Past Shows</title>
+          <link rel="icon" href="/public/favicon.ico" />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+          />
         </Head>
         <article>
           <h1>Past Shows - 2021</h1>

@@ -7,6 +7,10 @@ export default function Home() {
       <Head>
         <title>ZXY Gallery</title>
         <link rel="icon" href="/public/favicon.ico" />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+        />
       </Head>
 
       <main>
@@ -19,8 +23,8 @@ export default function Home() {
 
         <p className="description">
           <code>
-            currently focusing on outdoor pop-up art events <br /> contact us on
-            instagram --->
+            A technology focused Art Gallery <br /> contact us on instagram for
+            info on our latest events--->
             <a href="https://www.instagram.com/zxygallery/?hl=en">
               <u>@zxygallery</u>
             </a>{" "}
