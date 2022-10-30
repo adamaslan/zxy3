@@ -5,8 +5,12 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>ZXY Gallery</title>
-        <description>A technology focused Art Gallery</description>
+        <title>ZXY Gallery, located in Bushwick, Brooklyn</title>
+
+        <meta
+          name="description"
+          content="A technology focused Art Gallery located in Bushwick, Brooklyn"
+        />
         <link rel="icon" href="/public/favicon.ico" />
         <meta
           property="og:image"
