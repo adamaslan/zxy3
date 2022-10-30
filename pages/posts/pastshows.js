@@ -8,8 +8,9 @@ export default function PastShows() {
     <>
       <Layout>
         <Head>
-          <title>Past Shows</title>
+          <title>An Archive of Past Events at ZXY Gallery</title>
           <link rel="icon" href="/public/favicon.ico" />
+          <meta name="description" content="Hear about all our past events." />
           <meta
             property="og:image"
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"

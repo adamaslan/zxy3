@@ -5,7 +5,12 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>ZXY Gallery</title>
+        <title>ZXY Gallery, located in Bushwick, Brooklyn</title>
+
+        <meta
+          name="description"
+          content="A technology focused Art Gallery located in Bushwick, Brooklyn"
+        />
         <link rel="icon" href="/public/favicon.ico" />
         <meta
           property="og:image"
@@ -24,7 +29,7 @@ export default function Home() {
         <p className="description">
           <code>
             A technology focused Art Gallery <br /> contact us on instagram for
-            info on our latest events--->
+            info on our latest events &nbsp;
             <a href="https://www.instagram.com/zxygallery/?hl=en">
               <u>@zxygallery</u>
             </a>{" "}
@@ -44,7 +49,7 @@ export default function Home() {
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>"*Mei- (1) + *Mei- (2)"</p>
+            <p>"Sea Friends"</p>
           </a>
 
           <a href="/posts/pastshows" className="card">

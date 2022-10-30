@@ -8,8 +8,12 @@ export default function CurrentShows() {
     <>
       <Layout>
         <Head>
-          <title>ZXY Gallery</title>
+          <title>Current Show "Sea Friends" at ZXY Gallery in Bushwick</title>
           <link rel="icon" href="/public/favicon.ico" />
+          <meta
+            name="description"
+            content="Hear about all our current exhibit Sea Friends at ZXY Gallery in Bushwick, Brooklyn"
+          />
           <meta
             property="og:image"
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
@@ -17,19 +21,15 @@ export default function CurrentShows() {
         </Head>
         <article>
           <h1>Current Show</h1>
-          <h2>"*Mei- (1) + *Mei- (2)"</h2>
+          <h2>"Sea Friends"</h2>
 
-          <Image src="/mei1.jpg" alt="Flyer" width={1110} height={810} />
-
-          <p>
-            ZXY Gallery is proud to announce, *Mei- (1) + *Mei- (2), a group
-            exhibition with Liz Ainslie, Andrew Zarou, Chiara, and Nazlie Efe.
-            The show is an exploration of these two Proto-Indo-European roots
-            that have evidence of their existence in Sanskirt, Latin, Greek, and
-            old English. *mei- (1) is the Proto-Indo-European root meaning "to
-            change, go, move," *mei- (2) is Proto-Indo-European root meaning
-            "small."
-          </p>
+          <Image
+            alt="art show"
+            width={1072}
+            height={872}
+            src="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/Choral-show3_a4mibl.jpg"
+          />
+          <p>ZXY Gallery presents sea friends</p>
           <p>
             These divergent meanings allow for a multitude of analogies with the
             artists shown in this exhibition. On focus is a beauty created
