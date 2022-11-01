@@ -22,21 +22,24 @@ export default function CurrentShows() {
         <article>
           <h1>Current Show</h1>
           <h2>"Sea Friends"</h2>
-
-          <Image
-            alt="art show"
-            width={1072}
-            height={872}
-            src="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/Choral-show3_a4mibl.jpg"
-          />
-          <p>ZXY Gallery presents sea friends</p>
+          <div class="flex-container">
+            <div>
+              <Image
+                alt="art show"
+                width={1072}
+                height={872}
+                src="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/Choral-show3_a4mibl.jpg"
+              />
+            </div>
+          </div>
+          <p>ZXY Gallery presents Sea Friends</p>
           <p>
-            These divergent meanings allow for a multitude of analogies with the
-            artists shown in this exhibition. On focus is a beauty created
-            through the softness of material and color. Expressed as painting
-            and sculpture, the works explore an aesthetic that carries a sense
-            of humility in color via a multitude of themes behind the individual
-            works.
+            "Sea Friends" is a group show focused on the ocean. It brings
+            together a range of art that share both similar aesethetic qualities
+            and delve into a range of qualities associated with the sea. The
+            topics in this show range from protecting the strange and beautiful
+            coral to enjoying life on a planet that offers the beauty of the
+            sea.
           </p>
 
           <h2>
