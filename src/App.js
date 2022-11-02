@@ -45,6 +45,10 @@ function App() {
               -a physicist
               <br />
               -a game engineer
+              <br />
+              -a 3d engineer
+              <br />
+              -a XR engineer
             </h2>
             <h2>
               Check out her Podcast with Dan Hooper
