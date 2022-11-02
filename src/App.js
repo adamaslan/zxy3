@@ -18,54 +18,61 @@ function App() {
         <SplitPane
           split="vertical"
           minSize={20}
-          maxSize={-200}
+          maxSize={-500}
           defaultSize={parseInt(localStorage.getItem("splitPos"), 10)}
           onChange={(size) => localStorage.setItem("splitPos", size)}
         >
           <div
             style={{
+              backgroundColor: "cornflowerblue",
+              height: "1000 px",
+              border: "3% solid black",
+            }}
+          >
+            <h2>Shalma Wegsman Our Featured Artist</h2>
+          </div>
+          <div
+            style={{
+              backgroundColor: "pink",
+
+              font: "utopia_seriff",
+
+              border: "3% solid black",
+            }}
+          >
+            <h2>She is: </h2>
+            <h2>
+              -a physicist
+              <br />
+              -a game engineer
+            </h2>
+            <h2>
+              Check out her Podcast with Dan Hooper
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://podcasts.apple.com/us/podcast/why-this-universe/id1523312400"
+              >
+                <p> Why This Universe </p>
+              </a>
+              It makes the deepest concepts in physics digestible.
+            </h2>
+          </div>
+          <div
+            style={{
               backgroundColor: "red",
-              height: "2fr",
-              border: "3% solid black",
-            }}
-          >
-            <h2>This Area is Highly Toggleable</h2>
-          </div>
-          <div
-            style={{
-              backgroundColor: "yellow",
 
               font: "utopia_seriff",
 
               border: "3% solid black",
             }}
           >
-            <h2>
-              We love these
-              <a target="_blank" href="http://chillcastle.com/art">
-                <p>Artists</p>
-              </a>
-              They have shown with us in the past.
-            </h2>
-          </div>
-          <div
-            style={{
-              backgroundColor: "Blue",
-
-              font: "utopia_seriff",
-
-              border: "3% solid black",
-            }}
-          >
-            <h2>
-              OLD SHOWS
-              <a target="_blank" href="http://chillcastle.com/art">
-                <p>PAST</p>
-              </a>
-              They have shown with us in the past.
-            </h2>
+            Check it Out!
           </div>
         </SplitPane>
+      </div>
+      <div className="other-guy">
+        <p> Stay tuned for the next exhibit in this Online </p>
       </div>
       <div className="footer">
         <Footer />
