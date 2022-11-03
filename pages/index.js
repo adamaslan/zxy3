@@ -21,7 +21,7 @@ export default function Home() {
       <main>
         <h1 className="title">
           Welcome to
-          <Link href="/posts/currentshow">
+          <Link href="/posts/currentshow" legacyBehavior>
             <a> ZXY Gallery</a>
           </Link>
         </h1>
