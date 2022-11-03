@@ -17,29 +17,20 @@ function App() {
       <div className="content">
         <SplitPane
           split="vertical"
-          minSize={20}
-          maxSize={-500}
+          minSize={10}
+          maxSize={-100}
           defaultSize={parseInt(localStorage.getItem("splitPos"), 10)}
           onChange={(size) => localStorage.setItem("splitPos", size)}
         >
           <div
             style={{
               backgroundColor: "cornflowerblue",
-              height: "1000 px",
+              // height: "1000px",
               border: "3% solid black",
+              // 1st pane styling here
             }}
           >
             <h2>Shalma Wegsman Our Featured Artist</h2>
-          </div>
-          <div
-            style={{
-              backgroundColor: "pink",
-
-              font: "utopia_seriff",
-
-              border: "3% solid black",
-            }}
-          >
             <h2>She is: </h2>
             <h2>
               -a physicist
@@ -50,6 +41,16 @@ function App() {
               <br />
               -a XR engineer
             </h2>
+          </div>
+          <div
+            style={{
+              backgroundColor: "pink",
+
+              font: "utopia_seriff",
+
+              border: "3% solid black",
+            }}
+          >
             <h2>
               Check out her Podcast with Dan Hooper
               <a

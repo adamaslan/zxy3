@@ -20,7 +20,7 @@ function unFocus(document, window) {
 function getDefaultSize(defaultSize, minSize, maxSize, draggedSize) {
   if (typeof draggedSize === "number") {
     const min = typeof minSize === "number" ? minSize : 0;
-    const max = 
+    const max =
       typeof maxSize === "number" && maxSize >= 0 ? maxSize : Infinity;
     return Math.max(min, Math.min(max, draggedSize));
   }
@@ -265,7 +265,7 @@ class SplitPane extends React.Component {
     const style = {
       display: "flex",
       flex: 1,
-      height: "25%",
+      height: "100%",
       position: "absolute",
       outline: "none",
       overflow: "none",
@@ -286,7 +286,7 @@ class SplitPane extends React.Component {
       Object.assign(style, {
         bottom: 0,
         flexDirection: "column",
-        minHeight: "5%",
+        minHeight: "15%",
         top: 0,
         width: "5%",
       });
