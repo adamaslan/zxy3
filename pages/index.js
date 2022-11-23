@@ -12,6 +12,10 @@ export default function Home() {
           content="A technology focused Art Gallery located in Bushwick, Brooklyn"
         />
         <link rel="icon" href="/public/favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          href="https://res.cloudinary.com/adamaslan/image/upload/c_thumb,w_200,g_face/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+        ></link>
         <meta
           property="og:image"
           content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
