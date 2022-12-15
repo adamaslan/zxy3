@@ -32,14 +32,12 @@ export default function CurrentShows() {
               />
             </div>
           </div>
-          <p>ZXY Gallery presents Sea Friends</p>
+          <p>ZXY Gallery presents "Holiday Market"</p>
           <p>
-            "Sea Friends" is a group show focused on the ocean. It brings
-            together a range of art that share both similar aesethetic qualities
-            and delve into a range of qualities associated with the sea. The
-            topics in this show range from protecting the strange and beautiful
-            coral to enjoying life on a planet that offers the beauty of the
-            sea.
+            "Holiday Market" is a group show focused on bringing together
+            artists that want to sell their work in a market-esque environment.
+            We hope to have future markets. Contact us if you would like to
+            participate on instagram.
           </p>
 
           <h2>
