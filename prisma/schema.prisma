@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model mytable {
+  artist      String @db.String(15)
+  medium1     String @db.String(12)
+  medium2     String @db.String(12)
+  price_range String @db.String(6)
+  id          BigInt @id
+}
