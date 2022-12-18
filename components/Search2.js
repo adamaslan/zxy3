@@ -2,7 +2,17 @@
 //So I NEED to take out the app like things and put them into indexjs
 //and export the component like all the rest of components
 
+import { GetStaticProps } from "next";
 import * as React from "react";
+import prisma from "../lib/prisma";
+
+export const getStaticProps: GetStaticProps = async () => {
+  const allfoods = await prisma.artists.findMany();
+
+  return {
+    props: allFoods,
+  };
+};
 const Searchy2 = () => {
   const stories = [
     {
@@ -42,6 +52,21 @@ const Searchy2 = () => {
       objectID: 4,
     },
   ];
+
+  export const getStaticProps: GetStaticProps = async () => {
+    const feed = await prisma.post.findMany({
+      where: { published: true },
+      include: {
+        author: {
+          select: { name: true },
+        },
+      },
+    });
+    return {
+      props: { feed },
+      revalidate: 10,
+    };
+  };
 
   const [searchTerm, setSearchTerm] = React.useState("");
 
