@@ -3,7 +3,7 @@
 //and export the component like all the rest of components
 
 import * as React from "react";
-import prisma from "../lib/prisma";
+
 const Searchy2 = () => {
   const stories = [
     {
