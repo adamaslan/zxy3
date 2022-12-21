@@ -4,7 +4,16 @@
 
 import * as React from "react";
 
-const Searchy2 = () => {
+export async function getStaticProps() {
+  const prisma = new PrismaClient();
+  const posts = await prisma.post.findMany();
+
+  return {
+    props: { posts },
+  };
+}
+
+const Searchy2 = (props) => {
   const stories = [
     {
       artist: "Chiara No",
@@ -79,6 +88,25 @@ const List = ({ list }) => (
     ))}
   </ul>
 );
+// const { data, error } = useSWR("/api/posts", fetcher);
+// if (error) return <div>An error occured.</div>;
+// if (!data) return <div>Loading ...</div>;
+
+// return (
+//   <ul>
+//     {data.posts.map((post) => (
+//       <li key={post.id}>{post.title}</li>
+//     ))}
+//   </ul>
+// );
+
+// export default ({posts}) =>
+//   <ul>
+//    {posts.map(post => (
+//      <li key={post.id}>{post.title}</li>
+//     ))}
+//   </ul>
+// );
 
 const Item = ({ item }) => (
   <li>
