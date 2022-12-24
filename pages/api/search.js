@@ -2,18 +2,18 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function handle(req, res) {
-  const posts = await prisma.post.findMany();
-  res.json(artist);
-  console.log.json(artist);
-}
+// export default async function handle(req, res) {
+//   const posts = await prisma.post.findMany();
+//   res.json(artist);
+//   console.log.json(artist);
+// }
 
 export async function getStaticProps() {
-  // Get all foods in the "food" db
-  const allfoods = await prisma.artist.findMany();
+  // Get all artists in the "artist" db
+  const allArists = await prisma.mytable.findMany();
 
   return {
-    props: allfoods,
+    props: allArtists,
   };
 }
 
