@@ -6,52 +6,52 @@ import * as React from "react";
 
 export async function getStaticProps() {
   const prisma = new PrismaClient();
-  const posts = await prisma.post.findMany();
+  const stories = await prisma.mytable.findMany();
 
   return {
-    props: { posts },
+    props: { stories },
   };
 }
 
-const Searchy2 = (props) => {
-  const stories = [
-    {
-      artist: "Chiara No",
-      url: "http://www.chiara-no.com/",
-      medium: " Sculpture",
-      medium2: " Installation",
-      objectID: 0,
-    },
-    {
-      artist: "Andrew Zarou",
+const Searchy2 = ({ stories }) => {
+  // const stories = [
+  //   {
+  //     artist: "Chiara No",
+  //     url: "http://www.chiara-no.com/",
+  //     medium: " Sculpture",
+  //     medium2: " Installation",
+  //     objectID: 0,
+  //   },
+  //   {
+  //     artist: "Andrew Zarou",
 
-      medium: " Painting",
-      medium2: " Drawing",
-      objectID: 1,
-    },
-    {
-      artist: "Nazli Efe",
+  //     medium: " Painting",
+  //     medium2: " Drawing",
+  //     objectID: 1,
+  //   },
+  //   {
+  //     artist: "Nazli Efe",
 
-      medium: " Sculpture ",
-      medium2: " Installation",
-      instagram: "@nazliefee",
-      objectID: 2,
-    },
-    {
-      artist: "Liz Ainslie",
-      url: "http://www.lizainslie.com/",
-      medium: " Painting",
-      medium2: " Drawing",
-      objectID: 3,
-    },
-    {
-      artist: "Michael Eckblad",
-      url: "http://michaeleckblad.com/",
-      medium: " Sculpture",
-      medium2: " Installation",
-      objectID: 4,
-    },
-  ];
+  //     medium: " Sculpture ",
+  //     medium2: " Installation",
+  //     instagram: "@nazliefee",
+  //     objectID: 2,
+  //   },
+  //   {
+  //     artist: "Liz Ainslie",
+  //     url: "http://www.lizainslie.com/",
+  //     medium: " Painting",
+  //     medium2: " Drawing",
+  //     objectID: 3,
+  //   },
+  //   {
+  //     artist: "Michael Eckblad",
+  //     url: "http://michaeleckblad.com/",
+  //     medium: " Sculpture",
+  //     medium2: " Installation",
+  //     objectID: 4,
+  //   },
+  // ];
 
   const [searchTerm, setSearchTerm] = React.useState("");
 
