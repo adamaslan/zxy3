@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>ZXY Gallery, located in Bushwick, Brooklyn</title>
+        <title>Meditation Insights</title>
 
         <meta
           name="description"
@@ -26,14 +26,14 @@ export default function Home() {
         <h1 className="title">
           Welcome to
           <Link href="/posts/currentshow" legacyBehavior>
-            <a> ZXY Gallery</a>
+            <a> Meditation Land</a>
           </Link>
         </h1>
 
         <p className="description">
           <code>
-            A technology focused Art Gallery <br /> contact us on instagram for
-            info on our latest events &nbsp;
+            A new fun meditation app and event space at ZXY <br /> contact us on
+            instagram for info on our latest events &nbsp;
             <a href="https://www.instagram.com/zxygallery/?hl=en">
               <u>@zxygallery</u>
             </a>{" "}
@@ -43,12 +43,12 @@ export default function Home() {
         <div className="grid">
           <a href="/posts/about" className="card">
             <h3>About &rarr;</h3>
-            <p>More about ZXY Gallery</p>
+            <p>More about the app and ZXY Gallery</p>
           </a>
 
-          <a href="/posts/featuredwork" className="card">
-            <h3>Featured Work &rarr;</h3>
-            <p>Buy this featured work</p>
+          <a href="/posts/featuredfeature" className="card">
+            <h3>Featured App Feature &rarr;</h3>
+            <p>Our most fun new feature</p>
           </a>
 
           <a href="/posts/currentshow" className="card">
@@ -56,9 +56,9 @@ export default function Home() {
             <p>"Sea Friends"</p>
           </a>
 
-          <a href="/posts/pastshows" className="card">
-            <h3>Past Shows &rarr;</h3>
-            <p>Explore Past Shows</p>
+          <a href="/posts/pastfeatures" className="card">
+            <h3>Past Features &rarr;</h3>
+            <p>Explore Past Features</p>
           </a>
         </div>
       </main>

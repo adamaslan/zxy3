@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 export const prisma = new PrismaClient();
 export const getAllUsers = async () => {
-  const allUsers = await prisma.mytable.findMany();
+  const allUsers = await prisma.meditation3.findMany();
   return allUsers;
 };
 // function Searchy2({ results }) {
