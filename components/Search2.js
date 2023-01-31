@@ -19,7 +19,7 @@ const Searchy2 = ({ stories }) => {
   //     artist: "Chiara No",
   //     url: "http://www.chiara-no.com/",
   //     medium: " Sculpture",
-  //     medium2: " Installation",
+  //     medium2: "Installation",
   //     objectID: 0,
   //   },
   //   {
