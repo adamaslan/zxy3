@@ -3,35 +3,42 @@ import Head from "next/head";
 import Layout from "../../components/layout";
 import Image from "next/image";
 
-export default function PastShows() {
+export default function CurrentShows() {
   return (
     <>
       <Layout>
         <Head>
-          <title>ZXY</title>
+          <title>Current Show "Sea Friends" at ZXY Gallery in Bushwick</title>
+          <link rel="icon" href="/public/favicon.ico" />
+          <meta
+            name="description"
+            content="Hear about all our current exhibit Sea Friends at ZXY Gallery in Bushwick, Brooklyn"
+          />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+          />
         </Head>
         <article>
           <h1>Current Show</h1>
-          <h2>"Invoking the Amphibian"</h2>
 
-          <Image src="/frogshow.jpeg" alt="Flyer" width={500} height={700} />
-
+          <div className="flex-container">
+            <div className="flex-item">
+              <Image
+                alt="art show"
+                width={1072}
+                height={872}
+                src="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/Choral-show3_a4mibl.jpg"
+              />
+            </div>
+          </div>
+          <p>ZXY Gallery presents "Holiday Market"</p>
           <p>
-            To build upon the shaky foundations of the current epoch, we must be
-            hybrids. Survival depends on both physical and mental security,
-            which can be at risk at any time. Amphibians provide a model of
-            adaptability. Invoking the amphibian seems like a safe bet for
-            survival. We must both adapt to the present conditions given to us
-            and also evolve for a future uniquely to provide ourselves the
-            skills to allow us to flourish in a new paradigm. Flash floods
-            ravage NYC and forest fires burn through Turkey. The air may not be
-            safe one day and water the next. Amphibious life could become the
-            norm. While lessons on survival can be learned from amphibians,
-            French sociologist and anthropologist Bruno Latour provides the
-            concept of hybrids that focuses on entities existing both in a
-            natural and social realm. Attempts to divorce one from the other,
-            paradoxically just reinforces their connection. In this sense, to
-            survive, we all must be like frogs.
+            "Holiday Market" is a group show focused on bringing together
+            artists that want to sell their work in a market-esque environment.
+            We hope to have future markets. Contact us if you would like to
+            participate on instagram.
+
           </p>
 
           <h2>
@@ -41,9 +48,9 @@ export default function PastShows() {
                 <a>@zxygallery </a>
               </a>{" "}
             </p>
-            <Link href="/">
-              <a>Back to home</a>
-            </Link>
+
+            <Link href="/">Back to home</Link>
+
           </h2>
         </article>
       </Layout>

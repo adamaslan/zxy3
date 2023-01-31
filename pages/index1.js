@@ -12,7 +12,7 @@ export default function Home() {
       <main>
         <h1 className="title">
           Welcome to
-          <Link href="/posts/first-post">
+          <Link href="/posts/first-post" legacyBehavior>
             <a> ZXY Gallery</a>
           </Link>
         </h1>

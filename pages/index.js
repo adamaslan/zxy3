@@ -5,22 +5,35 @@ export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>ZXY Gallery</title>
+        <title>ZXY Gallery, located in Bushwick, Brooklyn</title>
+
+        <meta
+          name="description"
+          content="A technology focused Art Gallery located in Bushwick, Brooklyn"
+        />
         <link rel="icon" href="/public/favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          href="https://res.cloudinary.com/adamaslan/image/upload/c_thumb,w_200,g_face/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+        ></link>
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+        />
       </Head>
 
       <main>
         <h1 className="title">
           Welcome to
-          <Link href="/posts/currentshow">
+          <Link href="/posts/currentshow" legacyBehavior>
             <a> ZXY Gallery</a>
           </Link>
         </h1>
 
         <p className="description">
           <code>
-            currently focusing on outdoor pop-up art events <br /> contact us on
-            instagram --->
+            A technology focused Art Gallery <br /> contact us on instagram for
+            info on our latest events &nbsp;
             <a href="https://www.instagram.com/zxygallery/?hl=en">
               <u>@zxygallery</u>
             </a>{" "}
@@ -33,14 +46,14 @@ export default function Home() {
             <p>More about ZXY Gallery</p>
           </a>
 
-          <a href="/posts/artists" className="card">
-            <h3>Artists &rarr;</h3>
-            <p>Participating Artists</p>
+          <a href="/posts/featuredwork" className="card">
+            <h3>Featured Work &rarr;</h3>
+            <p>Buy this featured work</p>
           </a>
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>Invoking the Amphibian</p>
+            <p>"Sea Friends"</p>
           </a>
 
           <a href="/posts/pastshows" className="card">
