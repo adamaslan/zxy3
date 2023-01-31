@@ -6,9 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT",
-    "p-format": "prisma format",
-    "p-generate": "prisma generate"
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.5.0",

@@ -8,9 +8,9 @@ datasource db {
 }
 
 model mytable {
-  artist      String  @db.String(15)
-  medium1     String  @db.String(12)
+  artist      String @db.String(15)
+  medium1     String @db.String(12)
   medium2     String? @db.String(12)
-  price_range String  @db.String(6)
-  id          BigInt  @id
+  price_range String @db.String(6)
+  id          BigInt @id
 }
