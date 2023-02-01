@@ -3,13 +3,13 @@ import Head from "next/head";
 import Layout from "../../components/layout";
 import { getAllUsers } from "../../components/Search2";
 import { useState } from "react";
+
 export default function PastShows({ results }) {
   // console.log(results);
   // console.log({ results });
   const [state, setState] = useState({ search: "", searchResults: [] });
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setState((s) => ({ ...s, [name]: value }));
   };
   const handleSearch = async (e) => {
