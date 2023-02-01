@@ -36,22 +36,45 @@ export default function PastShows({ results }) {
           />
         </Head>
         <article>
-          <h1>Past Shows - 2021</h1>
-          <h2>Earth in the Heavens </h2>
+          <h1>Past Shows - 2022</h1>
+          <h2>Meaning in Fragility</h2>
+          <p>
+            ZXY Gallery is pleased to announce its latest group exhibition,
+            “Meaning in Fragility”, featuring work by Stefanie Guerrero,
+            Lesdavag, and Manuela Riestra. These works speak to the fragility of
+            existence for those embracing contemporary values in a society
+            fueled by problematic interests. While this fragility is ubiquitous
+            for all with similar senses of meaning, it is particularly
+            challenging for artists devoted to upholding a sense of self that
+            challenges archaic modes and also must put in the time requisite to
+            survive as an artist. A tenuous grasp on things becomes meaningful
+            as an artist balances concerns for their own physical and mental
+            health with the needs of a committed art practice. Stefanie Guerrero
+            explores fragility through the uncertainty and chance for error she
+            embraces in her work. Manuela Riestra uses art to deconstruct many
+            important aspects of the human experience. Lesdavag deals with the
+            rejection of personal history by dancing a baile folklorico laden
+            with meaning and the vulnerable solitude of diverging from a
+            prevailing culture.{" "}
+          </p>
+
+          <h2>Natural Ephemera</h2>
           <p>
             These works evocative of earthen material will be presented on the
             heavenly confines of the ZXY Gallery roof. Highlighting displacement
             this exibition speaks to identity question often faced by
             individuals seeking a place of refuge.{" "}
           </p>
-          <h2>"Process / Progress</h2>
+          <h2>Sea Friends</h2>
           <p>
             {" "}
-            A Group exhibition showcasing artists that display unique processes
-            behind their work. On display is not just the completed works, but
-            also artifacts of the process. Artists showing include Renana
-            Nueman, Emily MacCloud, Bianca Boragi, Derek Des Islets, Bill
-            Pierce, Mofaana Morojele, Robert Balun
+            With so much connected to the sea, one wonders why we imagine that
+            we can seemingly do the type of things to it that we would never
+            want to see done to land that is close to where we live. The amount
+            of toxic chemicals that are poured into the ocean is astonishing.
+            Evoking the beauty and importance of this mysterious and clandestine
+            gem, the artists of “Sea Friends bring together a strong vision of
+            what goes into all the aspects of the sea.
           </p>
           <p> Inquire about specific shows prior to 2021 </p>
           <p>
