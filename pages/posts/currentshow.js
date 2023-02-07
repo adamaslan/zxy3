@@ -21,7 +21,7 @@ export default function CurrentShows() {
         </Head>
         <article>
           <h1>Current Show</h1>
-          <h2>"Sea Friends"</h2>
+
           <div className="flex-container">
             <div className="flex-item">
               <Image
@@ -38,6 +38,7 @@ export default function CurrentShows() {
             artists that want to sell their work in a market-esque environment.
             We hope to have future markets. Contact us if you would like to
             participate on instagram.
+
           </p>
 
           <h2>
@@ -47,7 +48,9 @@ export default function CurrentShows() {
                 <a>@zxygallery </a>
               </a>{" "}
             </p>
+
             <Link href="/">Back to home</Link>
+
           </h2>
         </article>
       </Layout>
