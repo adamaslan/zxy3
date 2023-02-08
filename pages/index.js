@@ -53,7 +53,7 @@ export default function Home() {
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>"Sea Friends"</p>
+            <p>"Holiday Market"</p>
           </a>
 
           <a href="/posts/pastshows" className="card">
