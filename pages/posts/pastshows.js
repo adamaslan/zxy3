@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
-import "../styles/global.css";
 import { getAllUsers } from "../../components/Search2";
 import { useState } from "react";
 
@@ -78,6 +77,13 @@ export default function PastShows({ results }) {
             what goes into all the aspects of the sea.
           </p>
           <p> Inquire about specific shows prior to 2021 </p>
+          <h2>
+            Search for works of Sculpture, Painting, Photography and more:
+          </h2>
+          <input onChange={handleChange} name="search" />
+          <button className="funbutton" type={"button"} onClick={handleSearch}>
+            Search
+          </button>
           <p>
             Find more on our instagram{" "}
             <a href="https://www.instagram.com/zxygallery/">
@@ -88,10 +94,6 @@ export default function PastShows({ results }) {
             <Link href="/">Back to home</Link>
           </h2>
 
-          <input onChange={handleChange} name="search" />
-          <button type={"button"} onClick={handleSearch}>
-            Search
-          </button>
           {state.searchResults.map((result) => (
             <li>
               <span>{result.artist} </span>
