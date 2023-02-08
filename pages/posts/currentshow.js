@@ -20,38 +20,36 @@ export default function CurrentShows() {
           />
         </Head>
         <article>
-          <h1>Current Show</h1>
-
           <div className="flex-container">
-            <div className="flex-item">
+            <div>
               <Image
                 alt="art show"
-                width={1072}
-                height={872}
-                src="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/Choral-show3_a4mibl.jpg"
+                width={1080}
+                height={809}
+                objectFit="cover"
+                src="https://res.cloudinary.com/adamaslan/image/upload/v1675883567/ZXY%20/holiday-market1_wo9voo.jpg"
               />
             </div>
-          </div>
-          <p>ZXY Gallery presents "Holiday Market"</p>
-          <p>
-            "Holiday Market" is a group show focused on bringing together
-            artists that want to sell their work in a market-esque environment.
-            We hope to have future markets. Contact us if you would like to
-            participate on instagram.
 
-          </p>
-
-          <h2>
+            <p>ZXY Gallery presents "Holiday Market"</p>
             <p>
-              Find more on our instagram{" "}
-              <a href="https://www.instagram.com/zxygallery/">
-                <a>@zxygallery </a>
-              </a>{" "}
+              "Holiday Market" is a group show focused on bringing together
+              artists that want to sell their work in a market-esque
+              environment. We hope to have future markets. Contact us if you
+              would like to participate on instagram.
             </p>
 
-            <Link href="/">Back to home</Link>
+            <h2>
+              <p>
+                Find more on our instagram{" "}
+                <a href="https://www.instagram.com/zxygallery/">
+                  <a>@zxygallery </a>
+                </a>{" "}
+              </p>
 
-          </h2>
+              <Link href="/">Back to home</Link>
+            </h2>
+          </div>
         </article>
       </Layout>
     </>

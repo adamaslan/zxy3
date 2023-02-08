@@ -28,13 +28,30 @@ img {
 
 .flex-container {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 1080px) {
+    .container {
+      width: 100%;
+      height: auto;
+    }
+  }
 }
 
-.flex-container > div {
-  margin: 10px;
-  padding: 20px;
+.square-div {
+  width: 80%;
 }
 
-.flex-item {
-  padding: 5px;
+.square {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  object-fit: cover;
+}
+
+.rectangle {
+  height: 75%;
+  width: 50%;
 }

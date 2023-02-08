@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
+import "../styles/global.css";
 import { getAllUsers } from "../../components/Search2";
 import { useState } from "react";
 
