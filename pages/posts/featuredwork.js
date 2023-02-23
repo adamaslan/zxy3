@@ -23,7 +23,7 @@ export default function FeaturedWork() {
 
         <div className="flex-container">
           <h2>
-            <Image src="/chiara2.jpeg" alt="Flyer" width={1000} height={1333} />
+            <img src="/chiara2.jpeg" alt="Flyer" className="container1" />
             Abraxas by Chiara No
             {/* We are pleased to offer this work at a discount price as part of our
         work of the month program aiming to connect collectors to artists. */}
