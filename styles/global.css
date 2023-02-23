@@ -25,6 +25,41 @@ img {
   max-width: 100%;
   display: block;
 }
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 1080px) {
+  .container1 {
+    flex: 1;
+    max-height: 100%;
+    max-width: 100%;
+  }
+}
+
+/* 
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 1080px)
+   {
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: cover;
+    }
+  }
+}
 
 .flex-container {
   display: flex;
@@ -32,13 +67,20 @@ img {
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 1080px) {
+  @media (max-width: 1080px)
+   {
     .container {
-      width: 100%;
-      height: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: cover;
     }
   }
-}
+} */
+
 .funbutton {
   border-radius: 4px;
   background-color: #f4511e;

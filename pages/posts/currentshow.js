@@ -8,7 +8,9 @@ export default function CurrentShows() {
     <>
       <Layout>
         <Head>
-          <title>Current Show "Sea Friends" at ZXY Gallery in Bushwick</title>
+          <title>
+            Current Show "Holiday Market" at ZXY Gallery in Bushwick
+          </title>
           <link rel="icon" href="/public/favicon.ico" />
           <meta
             name="description"
@@ -21,12 +23,10 @@ export default function CurrentShows() {
         </Head>
         <article>
           <div className="flex-container">
-            <div>
-              <Image
+            <div className="container1">
+              <img
                 alt="art show"
-                width={1080}
-                height={809}
-                objectFit="cover"
+                className="container1"
                 src="https://res.cloudinary.com/adamaslan/image/upload/v1675883567/ZXY%20/holiday-market1_wo9voo.jpg"
               />
             </div>
