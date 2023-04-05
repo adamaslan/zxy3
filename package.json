@@ -13,6 +13,8 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.5.0",
     "@prisma/client": "^3.15.2",
+    "@react-three/drei": "^9.32.4",
+    "@react-three/fiber": "^8.8.8",
     "next": "^12.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
