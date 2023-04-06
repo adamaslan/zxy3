@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import SplashScreen from "../components/SplashScreen";
 
 export default function Home() {
   return (
@@ -29,7 +30,7 @@ export default function Home() {
             <a> ZXY Gallery</a>
           </Link>
         </h1>
-
+        <SplashScreen />
         <p className="description">
           <code>
             A technology focused Art Gallery <br /> contact us on instagram for
