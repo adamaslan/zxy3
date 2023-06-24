@@ -24,19 +24,21 @@ export default function CurrentShows() {
         <article>
           <div className="flex-container">
             <div className="container1">
-              <img
-                alt="art show"
-                className="container1"
-                src="https://res.cloudinary.com/adamaslan/image/upload/v1675883567/ZXY%20/holiday-market1_wo9voo.jpg"
-              />
+              {/*<img*/}
+              {/*  alt="art show"*/}
+              {/*  className="container1"*/}
+              {/*  src="https://res.cloudinary.com/adamaslan/image/upload/v1675883567/ZXY%20/holiday-market1_wo9voo.jpg"*/}
+              {/*/>*/}
             </div>
 
-            <p>ZXY Gallery presents "Holiday Market"</p>
+            <p>ZXY Gallery presents "Adjacencies of the Organic"</p>
             <p>
-              "Holiday Market" is a group show focused on bringing together
-              artists that want to sell their work in a market-esque
-              environment. We hope to have future markets. Contact us if you
-              would like to participate on instagram.
+
+              The word ORGANIC carries a certain note its tone’s effect moves poly-directionally ever onward with little seeming resistance. Yet…the biologic’s TONE could either be synonymous or seemingly static. The profundity of its diction infinite but it’s effect muted unless put in another context. A backup singer at best or award winning supporting acting roles for life. The biologic feels left BEHIND.
+<br /> <br />
+              "Adjacencies of the Organic" seeks to re-emphasize the biologic in a practice of saying yes. Yes to aliveness. Yes to MATERIALS that come directly from something being alive or any OBJECT that provides a resource that aides an organism.
+
+              The works in this show will range from installation to bio art to ceramic sculpture to edible art.
             </p>
 
             <h2>
