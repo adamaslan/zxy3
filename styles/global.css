@@ -21,10 +21,10 @@ a:hover {
   text-decoration: underline;
 }
 
-img {
-  max-width: 100%;
-  display: block;
-}
+/*img {*/
+/*  max-width: 100%;*/
+/*  display: block;*/
+/*}*/
 .flex-container {
   display: flex;
   flex-direction: column;
