@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
-import Image from "next/image";
+import styles from "../../styles/layout.module.css";
+
 
 export default function CurrentShows() {
   return (
@@ -9,12 +10,12 @@ export default function CurrentShows() {
       <Layout>
         <Head>
           <title>
-            Current Show "Holiday Market" at ZXY Gallery in Bushwick
+            Current Show "Adjacencies of the Organic" at ZXY Gallery in Bushwick
           </title>
           <link rel="icon" href="/public/favicon.ico" />
           <meta
             name="description"
-            content="Hear about all our current exhibit Sea Friends at ZXY Gallery in Bushwick, Brooklyn"
+            content="Hear about all our current exhibit at ZXY Gallery in Bushwick, Brooklyn for the last 8 years"
           />
           <meta
             property="og:image"
@@ -22,14 +23,18 @@ export default function CurrentShows() {
           />
         </Head>
         <article>
-          <div className="flex-container">
-            <div className="container1">
-              {/*<img*/}
-              {/*  alt="art show"*/}
-              {/*  className="container1"*/}
-              {/*  src="https://res.cloudinary.com/adamaslan/image/upload/v1675883567/ZXY%20/holiday-market1_wo9voo.jpg"*/}
-              {/*/>*/}
-            </div>
+          {/*<div className="flex-container">*/}
+              <div className={styles.gridcontainer4}>
+                  {/*<div className={headerStyles.description}>*/}
+                  {/*    On the Love of Raki and Turkish Food <br />*/}
+                  {/*</div>*/}
+                  <div className={styles.gridcontainer5}>
+                      <img
+                alt="art show"
+                className={styles.photo}
+                src="/organic-flyer.jpeg"
+              />
+
 
             <p>ZXY Gallery presents "Adjacencies of the Organic"</p>
             <p>
@@ -48,10 +53,12 @@ export default function CurrentShows() {
                   <a>@zxygallery </a>
                 </a>{" "}
               </p>
-
+<br />
               <Link href="/">Back to home</Link>
             </h2>
+                  </div>
           </div>
+
         </article>
       </Layout>
     </>
