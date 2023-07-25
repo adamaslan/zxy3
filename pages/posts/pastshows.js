@@ -36,7 +36,18 @@ export default function PastShows({ results }) {
           />
         </Head>
         <article>
+          <h1>Past Shows - 2023</h1>
+          <h2>Invoking Pizza</h2>
+          <p> Artists present disparate works deconstructing pizza creating a dialogue a posteriori of inherited tropes
+            exposing latent meaning with in pizza and with
+            out as pizza is shown to connect with a larger individual and societal sense of identity</p>
+
           <h1>Past Shows - 2022</h1>
+
+          <h2>Holiday Market</h2>
+          <p> ZXY Presents a variety of works perfect as Holiday Gifts</p>
+
+
           <h2>Meaning in Fragility</h2>
           <p>
             ZXY Gallery is pleased to announce its latest group exhibition,
