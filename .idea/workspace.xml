@@ -5,17 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2a28a58-ae62-410e-8d18-bb75d3f92d73" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/organic-flyer.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/styles/layout.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/2/32b53a9b08e2bdb5834f0971cad6ab31b012f57b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/5/4/5434f249b66d8ae790b502792022aa50c664a314" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/6/c/6c43796f295c8386ed45c3d8cdaf8604ef6e6a63" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/7/0/7030d0b2f71b999ff89a343de08c414af32fc93a" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/6/86dfbffc7cb38091a9c45d429fc9d203cb275b3b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/6/96b4ddcf376e8fab46c65036e8d1d4e5f0c1cb3b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/e/6/e6b255246071e8b96186a33b8c2ef06687d7345a" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/2/32b53a9b08e2bdb5834f0971cad6ab31b012f57b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/5/4/5434f249b66d8ae790b502792022aa50c664a314" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/6/c/6c43796f295c8386ed45c3d8cdaf8604ef6e6a63" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/7/0/7030d0b2f71b999ff89a343de08c414af32fc93a" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/6/86dfbffc7cb38091a9c45d429fc9d203cb275b3b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/6/96b4ddcf376e8fab46c65036e8d1d4e5f0c1cb3b" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/e/6/e6b255246071e8b96186a33b8c2ef06687d7345a" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/layout.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/layout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/layout.module.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/posts/currentshow.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/posts/currentshow.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/global.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/global.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/posts/pastshows.js" beforeDir="false" afterPath="$PROJECT_DIR$/pages/posts/pastshows.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +38,9 @@
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
   <component name="ProjectId" id="2JQuQ0YVsf9saOpvoTMdHfABTsj" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -39,24 +49,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;curr1&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/adamaslan/Codebase/zxy3&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "curr2",
+    "last_opened_file_path": "/Users/adamaslan/Codebase/zxy3",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/styles" />
@@ -95,6 +105,7 @@
       <workItem from="1681684695275" duration="1248000" />
       <workItem from="1687645427306" duration="3748000" />
       <workItem from="1688314225197" duration="4358000" />
+      <workItem from="1690242484349" duration="2743000" />
     </task>
     <servers />
   </component>
