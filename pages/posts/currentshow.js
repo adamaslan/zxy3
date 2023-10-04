@@ -10,7 +10,7 @@ export default function CurrentShows() {
       <Layout>
         <Head>
           <title>
-            Current Show "Adjacencies of the Organic" at ZXY Gallery in Bushwick
+            Current Show "Atonement ||" at ZXY Gallery in Bushwick
           </title>
           <link rel="icon" href="/public/favicon.ico" />
           <meta
@@ -32,19 +32,14 @@ export default function CurrentShows() {
                       <img
                 alt="art show"
                 className={styles.photo}
-                src="/organic-flyer.jpeg"
+                src="/atone.jpeg"
               />
 
 
-            <p>ZXY Gallery presents "Adjacencies of the Organic"</p>
+            <p>ZXY Gallery presents "Atonement ||"</p>
             <p>
 
-              The word ORGANIC carries a certain note its tone’s effect moves poly-directionally ever onward with little seeming resistance. Yet…the biologic’s TONE could either be synonymous or seemingly static. The profundity of its diction infinite but it’s effect muted unless put in another context. A backup singer at best or award winning supporting acting roles for life. The biologic feels left BEHIND.
-<br /> <br />
-              "Adjacencies of the Organic" seeks to re-emphasize the biologic in a practice of saying yes. Yes to aliveness. Yes to MATERIALS that come directly from something being alive or any OBJECT that provides a resource that aides an organism.
-
-              The works in this show will range from installation to bio art to ceramic sculpture to edible art.
-            </p>
+            The exhibition seeks to atone via bringing in works that are challenging for the gallery to show for various reasons. </p>
 
             <h2>
               <p>

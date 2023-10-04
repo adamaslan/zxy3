@@ -37,14 +37,13 @@ export default function About() {
           the art world.
           <br />
           <br /> We also believe that much of the "progress" that has been made
-          is a band-aid on a gaping wound. One thing that sets us apart from
-          other galleries is our ability to create a safe space for dialogue. As
-          such, we have had many artists discuss their work at the gallery.
+          is a band-aid on a gaping wound in the art world. We take pride in our ability to create a safe space for dialogue. As
+          such, we have had many artists discuss their work at the gallery in a salon-type environment.
         </h2>{" "}
         <br />
         <h2>
-          We are particularly interested in artists that embrace technology,
-          digital art, 3D animation, AI, Blockchain, and Web3. While physical
+          We value an inclusivity of the term “art” that embraces experiments with technology,
+          digital art, 3D animation, and AI. While physical
           art will always have a place, we are excited about the accessibility
           to the art world that these emerging technologies bring.
         </h2>
