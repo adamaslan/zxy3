@@ -2,13 +2,12 @@ import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
 import SplashRandom from "../../components/SplashRandom";
-import SplashScreen from "../../components/SplashScreen";
+// import SplashScreen from "../../components/SplashScreen";
 export default function About() {
   return (
     <>
       <Layout>
-        <Head>
-          <title>About ZXY</title>
+        <Heads          <title>About ZXY</title>
           <link rel="icon" href="/public/favicon.ico" />
           <meta
             name="description"
