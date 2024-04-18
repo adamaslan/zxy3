@@ -36,7 +36,11 @@ export default function PastShows({ results }) {
           />
         </Head>
         <article>
+          
           <h1>Past Shows - 2023</h1>
+          <h2> "Atonement ||"</h2>
+            <p>
+            The exhibition seeks to atone via bringing in works that are challenging for the gallery to show for various reasons. </p>
           <h2>Invoking Pizza</h2>
           <p> Artists present disparate works deconstructing pizza creating a dialogue a posteriori of inherited tropes
             exposing latent meaning with in pizza and with
