@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
+import styles from "../../styles/layout.module.css";
 
 export default function FeaturedWork() {
   return (
@@ -18,18 +19,23 @@ export default function FeaturedWork() {
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
           />
         </Head>
-
-        <div className="flex-container">
-          <h2>
-            <img src="/chiara2.jpeg" alt="Flyer" className="container1" />
+        <div className={styles.gridcontainer4}>
+    
+                  {/*<div className={headerStyles.description}>*/}
+                  {/*    On the Love of Raki and Turkish Food <br />*/}
+                  {/*</div>*/}
+                  <div className={styles.gridcontainer5}>
+                      <img
+                alt="art show"
+                className={styles.photo}src="/chiara2.jpeg"  />
             Abraxas by Chiara No
             {/* We are pleased to offer this work at a discount price as part of our
         work of the month program aiming to connect collectors to artists. */}
-          </h2>
+ 
 
           {/* Image here */}
 
-          <h3>
+          <p>
             Mother of pearl drips from the tip of the phallus as a serpent
             clapper hangs below the soundbow of the bell.
             {/* Price reflects price of work. Price and details of shipping to be
@@ -37,10 +43,11 @@ export default function FeaturedWork() {
             <br /> <br />
             To hear the sound of the bell ringing click{" "}
             <a href="https://vimeo.com/660146105">here</a>.
-          </h3>
-          <h2>Inquire for pricing and shipping details</h2>
+          </p>
+          <p>Inquire for pricing and shipping details</p>
 
           <Link href="/">Back to home</Link>
+        </div>
         </div>
       </Layout>
     </>
