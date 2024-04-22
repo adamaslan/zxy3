@@ -10,7 +10,7 @@ export default function CurrentShows() {
       <Layout>
         <Head>
           <title>
-            Current Show "Atonement ||" at ZXY Gallery in Bushwick
+            Current Show "Trad Medium" at ZXY Gallery in Bushwick
           </title>
           <link rel="icon" href="/public/favicon.ico" />
           <meta
@@ -32,14 +32,27 @@ export default function CurrentShows() {
                       <img
                 alt="art show"
                 className={styles.photo}
-                src="/atone.jpeg"
+                src="/tradmedium.jpeg"
               />
 
 
             <p>ZXY Gallery presents "Atonement ||"</p>
             <p>
 
-            The exhibition seeks to atone via bringing in works that are challenging for the gallery to show for various reasons. </p>
+            announcing “Trad Medium” - ah yes…the trad medium…the trad use of material…the trad dichotomy of subject and object…the trad decision to figure or abstract…shall we try to escape it? no…not today…we will embrace it…study it…move forth…appreciating…the works…like a successful trad gallery ought to, should do…ZXY Gal at your trad service sir… </p>
+            <p>
+work by:<br />
+Lucius Anhello @lucius_anhello <br />
+Mariel Rowling Montes @maaaaarmz  <br />
+Georgia Hourdas @georgia_hourdas <br />
+Liz Ainslie @liz.ainslie <br />
+Sanie Bokhari @saniebokhari <br />
+Gunner Dongieux @gunlagoon <br />
+Farrell Mason-Brown @ffawo <br />
+Noel de Lesseps @noeldelesseps <br />
+Mary Sellers @srellesyram <br />
+Eliot Lambert @eliot_lambert <br />
+curated by @cosmicveggie </p> 
 
             <h2>
               <p>
