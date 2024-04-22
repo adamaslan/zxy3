@@ -1,5 +1,5 @@
 {
-  "name": "learn-starter",
+  "name": "zxy3",
   "homepage": "http://zxygallery.com",
   "version": "0.1.0",
   "private": true,
@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start -p $PORT",
     "p-format": "prisma format",
-    "p-generate": "prisma generate"
+    "p-generate": "prisma generate",
+    "cy:open": "cypress open"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.5.0",
@@ -21,6 +22,7 @@
     "three": "^0.151.3"
   },
   "devDependencies": {
+    "cypress": "^13.8.0",
     "eslint": "7.31.0",
     "eslint-config-next": "^13.1.6",
     "next-transpile-modules": "^10.0.0",
