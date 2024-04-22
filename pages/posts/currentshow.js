@@ -36,7 +36,7 @@ export default function CurrentShows() {
               />
 
 
-            <p>ZXY Gallery presents "Atonement ||"</p>
+            <p>ZXY Gallery presents "Trad Medium"</p>
             <p>
 
             announcing “Trad Medium” - ah yes…the trad medium…the trad use of material…the trad dichotomy of subject and object…the trad decision to figure or abstract…shall we try to escape it? no…not today…we will embrace it…study it…move forth…appreciating…the works…like a successful trad gallery ought to, should do…ZXY Gal at your trad service sir… </p>
