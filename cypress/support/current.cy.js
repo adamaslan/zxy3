@@ -1,6 +1,6 @@
 describe('CurrentShows Page', () => {
     it('should load the page successfully', () => {
-      cy.visit('http://localhost:3000/posts/currentshows')
+      cy.visit('/posts/currentshows')
       cy.title().should('eq', 'Current Show "Trad Medium" at ZXY Gallery in Bushwick')
     })
   
@@ -14,7 +14,7 @@ describe('CurrentShows Page', () => {
   
     it('should navigate to the home page when the link is clicked', () => {
       cy.get('a[href="/"]').click()
-      cy.url().should('eq', 'http://localhost:3000/')
+      cy.url().should('eq', '/')
     })
   
     it('should navigate to the Instagram page when the link is clicked', () => {
