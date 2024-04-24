@@ -54,7 +54,7 @@ export default function Home() {
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>"Adjacencies of the Organic"</p>
+            <p>"Trad Medium"</p>
           </a>
 
           <a href="/posts/pastshows" className="card">
