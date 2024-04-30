@@ -20,11 +20,11 @@ export default function About() {
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
           />
         </Head>
-        <h1>About Zxy Gallery</h1>
+        <h1>About ZXY Gallery</h1>
         <br />{" "}
         <h2>
           {" "}
-          We are always looking for artists, especially artists that can show
+          We are always looking for new artists, especially artists that can show
           work outdoors. Contact us on instagram{" "}
           <a href="https://www.instagram.com/zxygallery/">@zxygallery </a>.{" "}
         </h2>
