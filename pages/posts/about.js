@@ -7,8 +7,7 @@ export default function About() {
   return (
     <>
       <Layout>
-        <Head>
-          <title>About ZXY</title>
+        <Heads          <title>About ZXY</title>
           <link rel="icon" href="/public/favicon.ico" />
           <meta
             name="description"
