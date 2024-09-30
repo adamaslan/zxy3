@@ -36,13 +36,12 @@ export default function About() {
           communities that have not traditionally had the same opportunities in
           the art world.
           <br />
-          <br /> We also believe that much of the "progress" that has been made
-          is a band-aid on a gaping wound in the art world. We take pride in our ability to create a safe space for dialogue. As
-          such, we have had many artists discuss their work at the gallery in a salon-type environment.
+          <br /> We ar be looking to uplift these communities by a curatorial program that brings emerging artists with mid-career artists. We take pride in our ability to create a safe space for dialogue. As
+          such, we like to create a salon-type environment with artist discussions mixed with performance of various sorts.
         </h2>{" "}
         <br />
         <h2>
-          We value an inclusivity of the term “art” that embraces experiments with technology,
+          We value an inclusivity that embraces experiments with technology,
           digital art, 3D animation, and AI. While physical
           art will always have a place, we are excited about the accessibility
           to the art world that these emerging technologies bring.
