@@ -38,7 +38,7 @@ export default function About() {
           communities that have not traditionally had the same opportunities in
           the art world.
           <br />
-          <br /> We ar be looking to uplift these communities by a curatorial program that brings emerging artists with mid-career artists. We take pride in our ability to create a safe space for dialogue. As
+          <br /> We aim to uplift these communities with a curatorial program that brings emerging artists with mid-career artists. We take pride in our ability to create a safe space for dialogue. As
           such, we like to create a salon-type environment with artist discussions mixed with performance of various sorts.
         </h2>{" "}
         <br />
