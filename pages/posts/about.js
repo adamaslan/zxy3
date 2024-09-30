@@ -26,7 +26,9 @@ export default function About() {
           {" "}
           We are always looking for new artists, especially artists that can show
           work outdoors. Contact us on instagram{" "}
-          <a href="https://www.instagram.com/zxygallery/">@zxygallery </a>.{" "}
+          <Link href="https://www.instagram.com/zxygallery/" passHref>
+        <a target="_blank" rel="noopener noreferrer">@zxygallery</a>
+      </Link>
         </h2>
         <h2>
           {" "}
