@@ -14,11 +14,23 @@ export default function PastShows({ results }) {
   };
   const handleSearch = async (e) => {
     e.preventDefault();
-    const result = await fetch(`/api/search?searchDB=${state.search}`)
-      .then((j) => j.json())
-      .then((r) => r);
-    setState((s) => ({ ...s, searchResults: result }));
+  
+    try {
+      // Fetch data from the API
+      const result = await fetch(`/api/search?searchDB=${state.search}`)
+        .then((j) => j.json());
+  
+      // Log the entire result from the API
+      console.log("API Response:", result);
+  
+      // Ensure result is an array and set it in the state
+      const validResult = Array.isArray(result) ? result : [];
+      setState((s) => ({ ...s, searchResults: validResult }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
+  
   return (
     <>
       <Layout>
