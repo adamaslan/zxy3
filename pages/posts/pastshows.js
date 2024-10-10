@@ -52,6 +52,14 @@ export default function PastShows({ results }) {
       
         <h1>Past Shows - 2024</h1>
 
+        <h2>Re-imagined Narrative</h2> <p>“Re-imagined Narrative” explores the work of Roman Kalinovski. <br />
+
+The paintings are inspired from digital and analog video stills bringing yet another new transformation of the original figure
+once optimized for view in a movie theater and now within the confines of oil on canvas.
+  </p>
+
+
+
 <h2>Trad Medium</h2> <p> ah yes…the trad medium…the trad use of material…the trad dichotomy of subject and object…the trad decision to figure or abstract…shall we try to escape it? 
   no…not today…we will embrace it…study it…move forth…appreciating…the works…like a successful trad gallery ought to, should do…ZXY Gal at your trad service sir… </p>
 
