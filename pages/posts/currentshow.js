@@ -53,7 +53,8 @@ export default function CurrentShows() {
             </ul>
 
             <p>Featuring: Kewpie Mayo</p>
-
+<br />
+<br />
             <h2>
               Find more on our Instagram{" "}
               <a href="https://www.instagram.com/zxygallery/" target="_blank" rel="noopener noreferrer">
