@@ -34,25 +34,17 @@ export default function CurrentShows() {
               ref={videoRef}
               alt="art show"
               className={styles.photo}
-              src="/mayo1.MOV"
+              src="/zxy-april.MOV"
               autoPlay
               loop
               muted
               playsInline
             />
 
-            <h1>ZXY Gallery presents "Mayoween"</h1>
-            <p>A group exhibition and culinary journey</p>
+            <h1>ZXY Gallery presents the work of Paula De Martino and Rosalie</h1>
+            <p>These multi-displinary artists are currently showing at ZXY Gallery till May 3rd</p>
             
-            <p>Work by:</p>
-            <ul>
-              <li>Carolyn Colsant @jkbutseriously</li>
-              <li>Gunner Dongieux @gunlagoon</li>
-              <li>Karla Zurita @karlakarlakarlazurita</li>
-              <li>Julio Williams @julio.cesar.williams</li>
-            </ul>
-
-            <p>Featuring: Kewpie Mayo</p>
+            <p>Stay tuned for more information on the closing event in Bushwick</p>
 <br />
 <br />
             <h2>
