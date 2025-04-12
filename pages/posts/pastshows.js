@@ -52,6 +52,8 @@ export default function PastShows({ results }) {
       
         <h1>Past Shows - 2024</h1>
 
+
+
         <h2>Re-imagined Narrative</h2> <p>“Re-imagined Narrative” explores the work of Roman Kalinovski. <br />
 
 The paintings are inspired from digital and analog video stills bringing yet another new transformation of the original figure
@@ -65,6 +67,18 @@ once optimized for view in a movie theater and now within the confines of oil on
 
 
           <h1>Past Shows - 2023</h1>
+          <h2>ZXY Gallery presents "Mayoween"</h2>
+            <p>A group exhibition and culinary journey</p>
+            
+            <p>Work by:</p>
+            <ul>
+              <li>Carolyn Colsant @jkbutseriously</li>
+              <li>Gunner Dongieux @gunlagoon</li>
+              <li>Karla Zurita @karlakarlakarlazurita</li>
+              <li>Julio Williams @julio.cesar.williams</li>
+            </ul>
+
+            <p>Featuring: Kewpie Mayo</p>
           <h2> "Atonement ||"</h2>
             <p>
             The exhibition seeks to atone via bringing in works that are challenging for the gallery to show for various reasons. </p>
