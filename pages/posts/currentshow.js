@@ -41,7 +41,9 @@ export default function CurrentShows() {
               playsInline
             />
 
-            <h1>ZXY Gallery presents the work of Paula De Martino and Rosalie</h1>
+            <h2>ZXY Gallery presents:</h2>
+            <h2>Paula De Martino</h2>
+            <h2>Rosalie Smith</h2>
             <p>These multi-displinary artists are currently showing at ZXY Gallery till May 3rd</p>
             
             <p>Stay tuned for more information on the closing event in Bushwick</p>

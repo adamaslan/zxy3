@@ -54,7 +54,8 @@ export default function Home() {
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>"Rosalie Smith and Paula De Martino"</p>
+            <p>Rosalie Smith</p>
+            <p>Paula De Martino</p>
           </a>
 
           <a href="/posts/pastshows" className="card">
