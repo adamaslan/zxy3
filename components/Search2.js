@@ -18,3 +18,15 @@ export const getAllUsers = async () => {
     await prisma.$disconnect();
   }
 };
+
+export default async function handler(req, res) {
+  const artworks = await prisma.mytable.findMany({
+    select: {
+      id: true,
+      artist: true,
+      medium1: true,
+      medium2: true
+    }
+  })
+  res.status(200).json(artworks)
+}
