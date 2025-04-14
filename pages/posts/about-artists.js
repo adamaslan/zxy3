@@ -17,7 +17,7 @@ export default function CurrentShows() {
   return (
     <Layout>
       <Head>
-        <title>Current Show "Mayoween" at ZXY Gallery in Bushwick</title>
+        <title>Artist DB</title>
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
@@ -31,12 +31,13 @@ export default function CurrentShows() {
       <article>
         <div className={styles.gridcontainer4}>
           <div className={styles.gridcontainer5}>
-            <ArtworkTable />
-            <h2>ZXY Gallery presents:</h2>
+       
+            <h2>ZXY Gallery Artist DB</h2>
            
-            <p>Stay tuned for more information on the closing event in Bushwick</p>
+         
 <br />
 <br />
+<ArtworkTable />
             <h2>
               Find more on our Instagram{" "}
               <a href="https://www.instagram.com/zxygallery/" target="_blank" rel="noopener noreferrer">

@@ -51,6 +51,14 @@ export default function About() {
         <br />
         <br />
         <h2>
+We provide services to other artists and curators to help them navigate the art world. These services focus on using data and technology to further artist careers and gallery operations. Here is an example of a live database we created  <a href="/posts/about-artists" className="card">
+            <h3>Artist DB</h3>
+            <p>click here</p>
+          </a>.
+        </h2>
+        <br />
+        <br />
+        <h2>
           How it was built: <br /> This website is built with Nextjs, React,
           CSS, HTML. It is super fast via its integration with Vercel, which
           also allows for testing before deployment. It runs via github.
