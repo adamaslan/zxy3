@@ -46,8 +46,7 @@ export default function ArtworkTable() {
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
-      <h2 className="text-xl font-bold mb-4">Artwork Catalog</h2>
-      
+     
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">

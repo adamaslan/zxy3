@@ -33,9 +33,10 @@ export default function CurrentShows() {
           <div className={styles.gridcontainer5}>
        
             <h2>ZXY Gallery Artist DB</h2>
-           
-         
-<br />
+            <br />
+            <h2 className="text-xl font-bold mb-4 ">Artwork Catalog</h2>
+      
+
 <br />
 <ArtworkTable />
             <h2>
@@ -43,9 +44,9 @@ export default function CurrentShows() {
               <a href="https://www.instagram.com/zxygallery/" target="_blank" rel="noopener noreferrer">
                 @zxygallery
               </a><br />
-              <Link href="/">Home</Link>
+           
             </h2>
-            
+            <h2>   <Link href="/">Home</Link></h2>
           </div>
         </div>
       </article>
