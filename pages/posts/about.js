@@ -26,9 +26,13 @@ export default function About() {
           {" "}
           We are always looking for new artists, especially artists that can show
           work outdoors. Contact us on instagram{" "}
-          <Link href="https://www.instagram.com/zxygallery/" passHref>
-        <a target="_blank" rel="noopener noreferrer">@zxygallery</a>
-      </Link>
+          <Link
+            href="https://www.instagram.com/zxygallery/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @zxygallery
+          </Link>
         </h2>
         <h2>
           {" "}
@@ -51,7 +55,7 @@ export default function About() {
         <br />
         <br />
         <h2>
-We provide services to other artists and curators to help them navigate the art world. These services focus on using data and technology to further artist careers and gallery operations. Here is an example of a live database we created  <a href="/posts/about-artists" className="card">
+          We provide services to other artists and curators to help them navigate the art world. These services focus on using data and technology to further artist careers and gallery operations. Here is an example of a live database we created  <a href="/posts/about-artists" className="card">
             <h3>Artist DB</h3>
             <p>click here</p>
           </a>.
