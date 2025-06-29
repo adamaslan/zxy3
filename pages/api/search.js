@@ -1,40 +1,63 @@
-import { prisma } from "../../components/Search2";
-export default async (req, res) => {
-  const { searchDB } = req.query;
-  console.log(searchDB);
-  try {
-    const results = await prisma.mytable.findMany({
-      where: {
-        OR: [
-          { artist: { contains: searchDB } },
-          { medium1: { contains: searchDB } },
-        ],
-      },
-    });
-    const cleanResult = results.map((artist) => ({ ...artist, id: "abc" }));
-    res.status(200).json(cleanResult);
-  } catch (err) {
-    console.log(err);
-    res.status(403).json({ err: "Error occured while adding a new artist." });
-  }
-};
-// export default async function handle(req, res) {
-//   const posts = await prisma.post.findMany();
-//   res.json(artist);
-//   console.log.json(artist);
-// }
+// Fix the import - should be the prisma instance, not from Search2
+import { prisma } from "../../prisma/globalprisma";
 
-// export default async (req, res) => {
-//   const data = req.body;
-//   try {
-//     const result = await prisma.artist.create({
-//       data: {
-//         ...data,
-//       },
-//     });
-//     res.status(200).json(result);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(403).json({ err: "Error occured while adding a new artist." });
-//   }
-// };
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { searchDB } = req.query;
+
+  try {
+    let artworks;
+    
+    if (!searchDB || searchDB.trim() === '') {
+      // If no search term, return all artworks
+      artworks = await prisma.mytable.findMany({
+        select: {
+          id: true,
+          artist: true,
+          medium1: true,
+          medium2: true
+        }
+      });
+    } else {
+      // Search for artworks matching the search term
+      artworks = await prisma.mytable.findMany({
+        where: {
+          OR: [
+            {
+              artist: {
+                contains: searchDB,
+                mode: 'insensitive' // Case-insensitive search
+              }
+            },
+            {
+              medium1: {
+                contains: searchDB,
+                mode: 'insensitive'
+              }
+            },
+            {
+              medium2: {
+                contains: searchDB,
+                mode: 'insensitive'
+              }
+            }
+          ]
+        },
+        select: {
+          id: true,
+          artist: true,
+          medium1: true,
+          medium2: true
+        }
+      });
+    }
+
+    res.status(200).json(artworks);
+  } catch (error) {
+    console.error("Error searching artworks:", error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
