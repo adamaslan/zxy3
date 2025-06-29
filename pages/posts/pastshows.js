@@ -5,29 +5,27 @@ import { getAllUsers } from "../../components/Search2";
 import { useState } from "react";
 
 export default function PastShows({ results }) {
-  // console.log(results);
-  // console.log({ results });
   const [state, setState] = useState({ search: "", searchResults: [] });
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setState((s) => ({ ...s, [name]: value }));
   };
+  
   const handleSearch = async (e) => {
     e.preventDefault();
   
     try {
-      // Fetch data from the API
-      const result = await fetch(`/api/search?searchDB=${state.search}`)
+      const result = await fetch(`/api/search?searchDB=${encodeURIComponent(state.search)}`)
         .then((j) => j.json());
   
-      // Log the entire result from the API
       console.log("API Response:", result);
   
-      // Ensure result is an array and set it in the state
       const validResult = Array.isArray(result) ? result : [];
       setState((s) => ({ ...s, searchResults: validResult }));
     } catch (error) {
       console.error("Error fetching data:", error);
+      setState((s) => ({ ...s, searchResults: [] }));
     }
   };
   
@@ -40,7 +38,7 @@ export default function PastShows({ results }) {
           <link
             rel="apple-touch-icon"
             href="https://res.cloudinary.com/adamaslan/image/upload/c_thumb,w_200,g_face/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
-          ></link>
+          />
           <meta name="description" content="Hear about all our past events." />
           <meta
             property="og:image"
@@ -49,54 +47,51 @@ export default function PastShows({ results }) {
         </Head>
         <article>
           
-      
-        <h1>Past Shows - 2024</h1>
+          <h1>Past Shows - 2024</h1>
 
+          <h2>Re-imagined Narrative</h2> 
+          <p>"Re-imagined Narrative" explores the work of Roman Kalinovski. <br />
+            The paintings are inspired from digital and analog video stills bringing yet another new transformation of the original figure
+            once optimized for view in a movie theater and now within the confines of oil on canvas.
+          </p>
 
-
-        <h2>Re-imagined Narrative</h2> <p>“Re-imagined Narrative” explores the work of Roman Kalinovski. <br />
-
-The paintings are inspired from digital and analog video stills bringing yet another new transformation of the original figure
-once optimized for view in a movie theater and now within the confines of oil on canvas.
-  </p>
-
-
-
-<h2>Trad Medium</h2> <p> ah yes…the trad medium…the trad use of material…the trad dichotomy of subject and object…the trad decision to figure or abstract…shall we try to escape it? 
-  no…not today…we will embrace it…study it…move forth…appreciating…the works…like a successful trad gallery ought to, should do…ZXY Gal at your trad service sir… </p>
-
+          <h2>Trad Medium</h2> 
+          <p>ah yes…the trad medium…the trad use of material…the trad dichotomy of subject and object…the trad decision to figure or abstract…shall we try to escape it? 
+            no…not today…we will embrace it…study it…move forth…appreciating…the works…like a successful trad gallery ought to, should do…ZXY Gal at your trad service sir…
+          </p>
 
           <h1>Past Shows - 2023</h1>
           <h2>ZXY Gallery presents "Mayoween"</h2>
-            <p>A group exhibition and culinary journey</p>
-            
-            <p>Work by:</p>
-            <ul>
-              <li>Carolyn Colsant @jkbutseriously</li>
-              <li>Gunner Dongieux @gunlagoon</li>
-              <li>Karla Zurita @karlakarlakarlazurita</li>
-              <li>Julio Williams @julio.cesar.williams</li>
-            </ul>
+          <p>A group exhibition and culinary journey</p>
+          
+          <p>Work by:</p>
+          <ul>
+            <li>Carolyn Colsant @jkbutseriously</li>
+            <li>Gunner Dongieux @gunlagoon</li>
+            <li>Karla Zurita @karlakarlakarlazurita</li>
+            <li>Julio Williams @julio.cesar.williams</li>
+          </ul>
 
-            <p>Featuring: Kewpie Mayo</p>
-          <h2> "Atonement ||"</h2>
-            <p>
-            The exhibition seeks to atone via bringing in works that are challenging for the gallery to show for various reasons. </p>
+          <p>Featuring: Kewpie Mayo</p>
+          
+          <h2>"Atonement ||"</h2>
+          <p>The exhibition seeks to atone via bringing in works that are challenging for the gallery to show for various reasons.</p>
+          
           <h2>Invoking Pizza</h2>
-          <p> Artists present disparate works deconstructing pizza creating a dialogue a posteriori of inherited tropes
+          <p>Artists present disparate works deconstructing pizza creating a dialogue a posteriori of inherited tropes
             exposing latent meaning with in pizza and with
-            out as pizza is shown to connect with a larger individual and societal sense of identity</p>
+            out as pizza is shown to connect with a larger individual and societal sense of identity
+          </p>
 
           <h1>Past Shows - 2022</h1>
 
           <h2>Holiday Market</h2>
-          <p> ZXY Presents a variety of works perfect as Holiday Gifts</p>
-
+          <p>ZXY Presents a variety of works perfect as Holiday Gifts</p>
 
           <h2>Meaning in Fragility</h2>
           <p>
             ZXY Gallery is pleased to announce its latest group exhibition,
-            “Meaning in Fragility”, featuring work by Stefanie Guerrero,
+            "Meaning in Fragility", featuring work by Stefanie Guerrero,
             Lesdavag, and Manuela Riestra. These works speak to the fragility of
             existence for those embracing contemporary values in a society
             fueled by problematic interests. While this fragility is ubiquitous
@@ -111,7 +106,7 @@ once optimized for view in a movie theater and now within the confines of oil on
             important aspects of the human experience. Lesdavag deals with the
             rejection of personal history by dancing a baile folklorico laden
             with meaning and the vulnerable solitude of diverging from a
-            prevailing culture.{" "}
+            prevailing culture.
           </p>
 
           <h2>Natural Ephemera</h2>
@@ -119,45 +114,57 @@ once optimized for view in a movie theater and now within the confines of oil on
             These works evocative of earthen material will be presented on the
             heavenly confines of the ZXY Gallery roof. Highlighting displacement
             this exibition speaks to identity question often faced by
-            individuals seeking a place of refuge.{" "}
+            individuals seeking a place of refuge.
           </p>
+          
           <h2>Sea Friends</h2>
           <p>
-            {" "}
             With so much connected to the sea, one wonders why we imagine that
             we can seemingly do the type of things to it that we would never
             want to see done to land that is close to where we live. The amount
             of toxic chemicals that are poured into the ocean is astonishing.
             Evoking the beauty and importance of this mysterious and clandestine
-            gem, the artists of “Sea Friends bring together a strong vision of
+            gem, the artists of "Sea Friends bring together a strong vision of
             what goes into all the aspects of the sea.
           </p>
-          <p> Inquire about specific shows prior to 2021 </p>
-          <h2>
-            Search for works of Sculpture, Painting, Photography and more:
-          </h2>
-          <input onChange={handleChange} name="search" />
-          <button className="funbutton" type={"button"} onClick={handleSearch}>
-            Search
-          </button>
+          
+          <p>Inquire about specific shows prior to 2021</p>
+          
+          <h2>Search for works of Sculpture, Painting, Photography and more:</h2>
+          <form onSubmit={handleSearch}>
+            <input 
+              onChange={handleChange} 
+              name="search" 
+              value={state.search}
+              placeholder="Search by artist or medium..."
+            />
+            <button className="funbutton" type="submit">
+              Search
+            </button>
+          </form>
+
+          {state.searchResults.length > 0 && (
+            <div>
+              <h3>Search Results:</h3>
+              <ul>
+                {state.searchResults.map((result) => (
+                  <li key={result.id}>
+                    <strong>{result.artist}</strong> - {result.medium1}
+                    {result.medium2 && `, ${result.medium2}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <p>
             Find more on our instagram{" "}
-            <a href="https://www.instagram.com/zxygallery/">
-              <a>@zxygallery </a>
-            </a>{" "}
+            <a href="https://www.instagram.com/zxygallery/">@zxygallery</a>
           </p>
+          
           <h2>
             <Link href="/">Back to home</Link>
           </h2>
-
-          {state.searchResults.map((result) => (
-            <li>
-              <span>{result.artist} </span>
-              {result.medium1}
-            </li>
-          ))}
-          {/* <h2>Search our database for artists:</h2> */}
-          {/* const searchResults = []; */}
         </article>
       </Layout>
     </>
@@ -166,6 +173,6 @@ once optimized for view in a movie theater and now within the confines of oil on
 
 export const getServerSideProps = async () => {
   const results = await getAllUsers();
-  const cleanResult = results.map((artist) => ({ ...artist, id: "abc" }));
+  const cleanResult = results.map((artist) => ({ ...artist, id: artist.id || "abc" }));
   return { props: { results: JSON.parse(JSON.stringify(cleanResult)) } };
 };
