@@ -44,7 +44,7 @@ export default function CurrentShows() {
             <h2>ZXY Gallery presents:</h2>
             <h2>Paula De Martino</h2>
             <h2>Rosalie Smith</h2>
-            <p>These multi-displinary artists are currently showing at ZXY Gallery till May 3rd</p>
+            <p>These multi-displinary artists are currently showing at ZXY Gallery</p>
             
             <p>Stay tuned for more information on the closing event in Bushwick</p>
 <br />
