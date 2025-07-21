@@ -106,10 +106,11 @@ export default function Search() {
   );
 }
 
-## nu diagram
+## 4. Optimized Data Flow Diagram
+
+The new data flow is much simpler and more efficient.
 
 ```mermaid
-
 graph TD
     subgraph Browser
         A[Client Component: <Search />]
