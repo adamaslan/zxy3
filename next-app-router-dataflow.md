@@ -108,17 +108,15 @@ export default function Search() {
 
 ## 4. Optimized Data Flow Diagram
 
-The new data flow is much simpler and more efficient.
 
 ```mermaid
 graph TD
     subgraph Browser
-        A[Client Component: <Search />]
+        A["Client Component: <Search />"]
     end
-
     subgraph "Next.js Server (App Router)"
-        B[Server Component: `past-shows/page.js`]
-        C[Server Action: `searchArtworks()`]
+        B["Server Component: `past-shows/page.js`"]
+        C["Server Action: `searchArtworks()`"]
         D[Prisma Client]
     end
 
