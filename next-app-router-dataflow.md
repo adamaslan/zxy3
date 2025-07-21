@@ -108,6 +108,8 @@ export default function Search() {
 
 ## nu diagram
 
+```mermaid
+
 graph TD
     subgraph Browser
         A[Client Component: <Search />]
