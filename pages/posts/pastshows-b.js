@@ -1,47 +1,37 @@
 import Link from "next/link";
 import Head from "next/head";
-import React, { useState, useEffect } from 'react';
-import Layout from '../../components/layout';
+import Layout from "../../components/layout";
+import { getAllUsers } from "../../components/Search2";
+import { useState } from "react";
 
-export default function PastShows1() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchArtworks = async () => {
-      if (searchTerm.trim() === '') {
-        setSearchResults([]); // Clear results if search term is empty
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`/api/search?searchDB=${encodeURIComponent(searchTerm)}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setSearchResults(data);
-      } catch (e) {
-        console.error("Error fetching search results:", e);
-        setError("Failed to fetch search results. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArtworks();
-  }, [searchTerm]); // Re-run effect when searchTerm changes
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+export default function PastShows({ results }) {
+  const [state, setState] = useState({ search: "", searchResults: [] });
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((s) => ({ ...s, [name]: value }));
   };
-
+  
+  const handleSearch = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const result = await fetch(`/api/search?searchDB=${encodeURIComponent(state.search)}`)
+        .then((j) => j.json());
+  
+      console.log("API Response:", result);
+  
+      const validResult = Array.isArray(result) ? result : [];
+      setState((s) => ({ ...s, searchResults: validResult }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setState((s) => ({ ...s, searchResults: [] }));
+    }
+  };
+  
   return (
-<Layout>
+    <>
+      <Layout>
         <Head>
           <title>An Archive of Past Events at ZXY Gallery</title>
           <link rel="icon" href="/public/favicon.ico" />
@@ -141,45 +131,33 @@ export default function PastShows1() {
           <p>Inquire about specific shows prior to 2021</p>
           
           <h2>Search for works of Sculpture, Painting, Photography and more:</h2>
-        
-      <input
-        type="text"
-        placeholder="Search artists or mediums..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        style={{
-          padding: '10px',
-          fontSize: '16px',
-          width: '100%',
-          maxWidth: '500px',
-          marginBottom: '20px',
-          borderRadius: '5px',
-          border: '1px solid #ccc'
-        }}
-      />
+          <form onSubmit={handleSearch}>
+            <input 
+              onChange={handleChange} 
+              name="search" 
+              value={state.search}
+              placeholder="Search by artist or medium..."
+            />
+            <button className="funbutton" type="submit">
+              Search
+            </button>
+          </form>
 
-      {loading && <p>Loading results...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+          {state.searchResults.length > 0 && (
+            <div>
+              <h3>Search Results:</h3>
+              <ul>
+                {state.searchResults.map((result) => (
+                  <li key={result.id}>
+                    <strong>{result.artist}</strong> - {result.medium1}
+                    {result.medium2 && `, ${result.medium2}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-      {!loading && !error && searchTerm.trim() !== '' && searchResults.length === 0 && (
-        <p>No results found for "{searchTerm}".</p>
-      )}
-
-      {!loading && !error && searchTerm.trim() !== '' && searchResults.length > 0 && (
-        <div>
-          <h2>Search Results:</h2>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            {searchResults.map((artwork) => (
-              <li key={artwork.id} style={{ marginBottom: '10px', border: '1px solid #eee', padding: '10px', borderRadius: '5px' }}>
-                <strong>Artist:</strong> {artwork.artist || 'N/A'}<br/>
-                <strong>Medium 1:</strong> {artwork.medium1 || 'N/A'}<br/>
-                <strong>Medium 2:</strong> {artwork.medium2 || 'N/A'}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-            <p>
+          <p>
             Find more on our instagram{" "}
             <a href="https://www.instagram.com/zxygallery/">@zxygallery</a>
           </p>
@@ -188,6 +166,13 @@ export default function PastShows1() {
             <Link href="/">Back to home</Link>
           </h2>
         </article>
-    </Layout>
+      </Layout>
+    </>
   );
 }
+
+export const getServerSideProps = async () => {
+  const results = await getAllUsers();
+  const cleanResult = results.map((artist) => ({ ...artist, id: artist.id || "abc" }));
+  return { props: { results: JSON.parse(JSON.stringify(cleanResult)) } };
+};
