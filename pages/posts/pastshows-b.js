@@ -1,11 +1,34 @@
 import Link from "next/link";
 import Head from "next/head";
-import React, { useState, useEffect } from 'react';
-import Layout from '../../components/layout';
-import ArtworkSearchTable from "../../components/ds-magic2";
-import styles from "../../styles/layout.module.css";
+import Layout from "../../components/layout";
+import { getAllUsers } from "../../components/Search2";
+import { useState } from "react";
 
-export default function PastShows1() {
+export default function PastShows({ results }) {
+  const [state, setState] = useState({ search: "", searchResults: [] });
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState((s) => ({ ...s, [name]: value }));
+  };
+  
+  const handleSearch = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const result = await fetch(`/api/search?searchDB=${encodeURIComponent(state.search)}`)
+        .then((j) => j.json());
+  
+      console.log("API Response:", result);
+  
+      const validResult = Array.isArray(result) ? result : [];
+      setState((s) => ({ ...s, searchResults: validResult }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setState((s) => ({ ...s, searchResults: [] }));
+    }
+  };
+  
   return (
     <>
       <Layout>
@@ -22,7 +45,7 @@ export default function PastShows1() {
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
           />
         </Head>
-        <div className={styles.gridcontainer4}>
+        <article>
           
           <h1>Past Shows - 2024</h1>
 
@@ -108,11 +131,33 @@ export default function PastShows1() {
           <p>Inquire about specific shows prior to 2021</p>
           
           <h2>Search for works of Sculpture, Painting, Photography and more:</h2>
-          <ArtworkSearchTable />
+          <form onSubmit={handleSearch}>
+            <input 
+              onChange={handleChange} 
+              name="search" 
+              value={state.search}
+              placeholder="Search by artist or medium..."
+            />
+            <button className="funbutton" type="submit">
+              Search
+            </button>
+          </form>
 
+          {state.searchResults.length > 0 && (
+            <div>
+              <h3>Search Results:</h3>
+              <ul>
+                {state.searchResults.map((result) => (
+                  <li key={result.id}>
+                    <strong>{result.artist}</strong> - {result.medium1}
+                    {result.medium2 && `, ${result.medium2}`}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-
-            <p>
+          <p>
             Find more on our instagram{" "}
             <a href="https://www.instagram.com/zxygallery/">@zxygallery</a>
           </p>
@@ -120,8 +165,14 @@ export default function PastShows1() {
           <h2>
             <Link href="/">Back to home</Link>
           </h2>
-        </div>
+        </article>
       </Layout>
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  const results = await getAllUsers();
+  const cleanResult = results.map((artist) => ({ ...artist, id: artist.id || "abc" }));
+  return { props: { results: JSON.parse(JSON.stringify(cleanResult)) } };
+};
