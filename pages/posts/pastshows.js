@@ -2,46 +2,13 @@ import Link from "next/link";
 import Head from "next/head";
 import React, { useState, useEffect } from 'react';
 import Layout from '../../components/layout';
+import ArtworkSearchTable from "../../components/ds-magic2";
+import styles from "../../styles/layout.module.css";
 
 export default function PastShows1() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchArtworks = async () => {
-      if (searchTerm.trim() === '') {
-        setSearchResults([]); // Clear results if search term is empty
-        return;
-      }
-
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`/api/search?searchDB=${encodeURIComponent(searchTerm)}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setSearchResults(data);
-      } catch (e) {
-        console.error("Error fetching search results:", e);
-        setError("Failed to fetch search results. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArtworks();
-  }, [searchTerm]); // Re-run effect when searchTerm changes
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
   return (
-<Layout>
+    <>
+      <Layout>
         <Head>
           <title>An Archive of Past Events at ZXY Gallery</title>
           <link rel="icon" href="/public/favicon.ico" />
@@ -55,7 +22,7 @@ export default function PastShows1() {
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
           />
         </Head>
-        <article>
+        <div className={styles.gridcontainer4}>
           
           <h1>Past Shows - 2024</h1>
 
@@ -141,44 +108,10 @@ export default function PastShows1() {
           <p>Inquire about specific shows prior to 2021</p>
           
           <h2>Search for works of Sculpture, Painting, Photography and more:</h2>
-        
-      <input
-        type="text"
-        placeholder="Search artists or mediums..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        style={{
-          padding: '10px',
-          fontSize: '16px',
-          width: '100%',
-          maxWidth: '500px',
-          marginBottom: '20px',
-          borderRadius: '5px',
-          border: '1px solid #ccc'
-        }}
-      />
+          <ArtworkSearchTable />
 
-      {loading && <p>Loading results...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {!loading && !error && searchTerm.trim() !== '' && searchResults.length === 0 && (
-        <p>No results found for "{searchTerm}".</p>
-      )}
 
-      {!loading && !error && searchTerm.trim() !== '' && searchResults.length > 0 && (
-        <div>
-          <h2>Search Results:</h2>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            {searchResults.map((artwork) => (
-              <li key={artwork.id} style={{ marginBottom: '10px', border: '1px solid #eee', padding: '10px', borderRadius: '5px' }}>
-                <strong>Artist:</strong> {artwork.artist || 'N/A'}<br/>
-                <strong>Medium 1:</strong> {artwork.medium1 || 'N/A'}<br/>
-                <strong>Medium 2:</strong> {artwork.medium2 || 'N/A'}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
             <p>
             Find more on our instagram{" "}
             <a href="https://www.instagram.com/zxygallery/">@zxygallery</a>
@@ -187,7 +120,8 @@ export default function PastShows1() {
           <h2>
             <Link href="/">Back to home</Link>
           </h2>
-        </article>
-    </Layout>
+        </div>
+      </Layout>
+    </>
   );
 }
