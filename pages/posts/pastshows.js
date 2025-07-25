@@ -22,7 +22,7 @@ export default function PastShows1() {
             content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
           />
         </Head>
-        <div className={styles.gridcontainer4}>
+ 
           
           <h1>Past Shows - 2024</h1>
 
@@ -107,7 +107,7 @@ export default function PastShows1() {
           
           <p>Inquire about specific shows prior to 2021</p>
           
-          <h2>Search for works of Sculpture, Painting, Photography and more:</h2>
+          <h3>Search for works of Sculpture, Painting, Photography and more:</h3>
           <ArtworkSearchTable />
 
 
@@ -120,7 +120,7 @@ export default function PastShows1() {
           <h2>
             <Link href="/">Back to home</Link>
           </h2>
-        </div>
+       
       </Layout>
     </>
   );
