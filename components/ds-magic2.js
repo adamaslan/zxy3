@@ -45,21 +45,25 @@ export default function ArtworkSearchTable() {
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Artwork Search</h1>
+        <h2 >Artwork Search</h2>
         
         <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Enter search terms..."
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
+   <input 
+  type="text" 
+  value={searchQuery} 
+  onChange={(e) => setSearchQuery(e.target.value)} 
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  }}
+  placeholder="Enter search terms..." 
+  className="search-input"
+/>
+            <button className="funbutton" 
             onClick={handleSearch}
             disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+                    >
             {loading ? 'Searching...' : 'Search'}
           </button>
         </div>
@@ -91,9 +95,9 @@ export default function ArtworkSearchTable() {
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Artist</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Primary Medium</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Secondary Medium</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price Range</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ">Secondary Medium</th>
+                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price Range</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th> */}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -102,8 +106,8 @@ export default function ArtworkSearchTable() {
                   <td className="px-6 py-4 whitespace-nowrap">{piece.artist}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{piece.medium1}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{piece.medium2 || '-'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{piece.price_range}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{piece.id}</td>
+                  {/* <td className="px-6 py-4 whitespace-nowrap">{piece.price_range}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{piece.id}</td> */}
                 </tr>
               ))}
             </tbody>
