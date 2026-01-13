@@ -12,11 +12,11 @@ datasource db {
 // ============================================================
 
 model mytable {
-  artist      String @db.String(15)
-  medium1     String @db.String(12)
+  artist      String  @db.String(15)
+  medium1     String  @db.String(12)
   medium2     String? @db.String(12)
-  price_range String @db.String(6)
-  id          BigInt @id
+  price_range String  @db.String(6)
+  id          BigInt  @id
 
   @@map("mytable")
 }
@@ -27,21 +27,21 @@ model mytable {
 
 /// Artist entity with metadata and social links
 model Artist {
-  id               BigInt   @id @default(autoincrement())
-  name             String   @db.String(255)
-  bio              String?
-  portfolioUrl     String?  @db.String(500)
-  instagramHandle  String?  @db.String(100)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  createdBy        String?  @db.String(100)
+  id              BigInt   @id @default(autoincrement())
+  name            String   @db.String(255)
+  bio             String?
+  portfolioUrl    String?  @db.String(500)
+  instagramHandle String?  @db.String(100)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdBy       String?  @db.String(100)
 
   // Relations
-  artworks         Artwork[]
-  metrics          ArtistMetrics[]
-  predictions      PricePrediction[]
-  events           ArtistEvent[]
-  interactions     Event[]
+  artworks     Artwork[]
+  metrics      ArtistMetrics[]
+  predictions  PricePrediction[]
+  events       ArtistEvent[]
+  interactions Event[]
 
   @@unique([name])
   @@index([name])
@@ -50,41 +50,41 @@ model Artist {
 
 /// Artwork entity linked to artist with provenance tracking
 model Artwork {
-  id               BigInt   @id @default(autoincrement())
-  artistId         BigInt
-  medium1          String   @db.String(50)
-  medium2          String?  @db.String(50)
-  priceRange       String?  @db.String(20)
-  sourceId         BigInt?
-  externalId       String?  @db.String(255)
-  metadata         Json?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id         BigInt   @id @default(autoincrement())
+  artistId   BigInt
+  medium1    String   @db.String(50)
+  medium2    String?  @db.String(50)
+  priceRange String?  @db.String(20)
+  sourceId   BigInt?
+  externalId String?  @db.String(255)
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   // Relations
-  artist           Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
-  source           GallerySource? @relation(fields: [sourceId], references: [id])
+  artist Artist         @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  source GallerySource? @relation(fields: [sourceId], references: [id])
 
+  @@unique([externalId, sourceId])
   @@index([artistId])
   @@index([sourceId])
-  @@unique([externalId, sourceId])
   @@map("artworks")
 }
 
 /// Gallery source tracking (API, CSV, ICS feed, web scrape)
 model GallerySource {
-  id                  BigInt   @id @default(autoincrement())
-  name                String   @db.String(100)
-  apiEndpoint         String?  @db.String(500)
-  apiKeyEncrypted     String?  @db.String(500)
-  sourceType          SourceType
-  lastSyncAt          DateTime?
-  syncFrequencyHours  Int      @default(24)
-  isActive            Boolean  @default(true)
-  createdAt           DateTime @default(now())
+  id                 BigInt     @id @default(autoincrement())
+  name               String     @db.String(100)
+  apiEndpoint        String?    @db.String(500)
+  apiKeyEncrypted    String?    @db.String(500)
+  sourceType         SourceType
+  lastSyncAt         DateTime?
+  syncFrequencyHours Int        @default(24)
+  isActive           Boolean    @default(true)
+  createdAt          DateTime   @default(now())
 
   // Relations
-  artworks            Artwork[]
+  artworks Artwork[]
 
   @@unique([name])
   @@index([isActive])
@@ -93,35 +93,36 @@ model GallerySource {
 
 /// Trending metrics computed on schedule (7d, 30d, 90d windows)
 model ArtistMetrics {
-  id                  BigInt   @id @default(autoincrement())
-  artistId            BigInt
-  metricWindow        MetricWindow
-  viewCount           Int      @default(0)
-  searchFrequency     Int      @default(0)
-  marketMentions      Int      @default(0)
-  trendingRank        Int?
-  computedAt          DateTime @default(now())
+  id              BigInt       @id @default(autoincrement())
+  artistId        BigInt
+  metricWindow    MetricWindow
+  viewCount       Int          @default(0)
+  searchFrequency Int          @default(0)
+  marketMentions  Int          @default(0)
+  trendingRank    Int?
+  computedAt      DateTime     @default(now())
 
   // Relations
-  artist              Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
   @@unique([artistId, metricWindow])
+  @@index([artistId])
   @@map("artist_metrics")
 }
 
 /// ML-generated value predictions across periods
 model PricePrediction {
-  id                  BigInt   @id @default(autoincrement())
-  artistId            BigInt
-  predictionPeriod    PredictionPeriod
-  predictedValue      Decimal? @db.Decimal(12, 2)
-  confidenceLower     Decimal? @db.Decimal(12, 2)
-  confidenceUpper     Decimal? @db.Decimal(12, 2)
-  modelVersion        String?  @db.String(50)
-  createdAt           DateTime @default(now())
+  id               BigInt           @id @default(autoincrement())
+  artistId         BigInt
+  predictionPeriod PredictionPeriod
+  predictedValue   Decimal?         @db.Decimal(12, 2)
+  confidenceLower  Decimal?         @db.Decimal(12, 2)
+  confidenceUpper  Decimal?         @db.Decimal(12, 2)
+  modelVersion     String?          @db.String(50)
+  createdAt        DateTime         @default(now())
 
   // Relations
-  artist              Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
   @@unique([artistId, predictionPeriod])
   @@map("price_predictions")
@@ -129,20 +130,20 @@ model PricePrediction {
 
 /// Artist events: exhibitions, shows, residencies
 model ArtistEvent {
-  id                  BigInt   @id @default(autoincrement())
-  artistId            BigInt
-  eventTitle          String   @db.String(255)
-  eventType           EventType
-  eventDate           DateTime @db.Date
-  eventEndDate        DateTime? @db.Date
-  venueName           String?  @db.String(255)
-  venueLocation       String?  @db.String(500)
-  description         String?
-  sourceUrl           String?  @db.String(500)
-  createdAt           DateTime @default(now())
+  id            BigInt    @id @default(autoincrement())
+  artistId      BigInt
+  eventTitle    String    @db.String(255)
+  eventType     EventType
+  eventDate     DateTime  @db.Date
+  eventEndDate  DateTime? @db.Date
+  venueName     String?   @db.String(255)
+  venueLocation String?   @db.String(500)
+  description   String?
+  sourceUrl     String?   @db.String(500)
+  createdAt     DateTime  @default(now())
 
   // Relations
-  artist              Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artistId], references: [id], onDelete: Cascade)
 
   @@index([artistId, eventDate])
   @@map("artist_events")
@@ -150,14 +151,14 @@ model ArtistEvent {
 
 /// Audit log for all data mutations (compliance & debugging)
 model AuditLog {
-  id                  BigInt   @id @default(autoincrement())
-  tableName           String   @db.String(50)
-  recordId            BigInt
-  action              AuditAction
-  oldValues           Json?
-  newValues           Json?
-  changedBy           String?  @db.String(100)
-  changedAt           DateTime @default(now())
+  id        BigInt      @id @default(autoincrement())
+  tableName String      @db.String(50)
+  recordId  BigInt
+  action    AuditAction
+  oldValues Json?
+  newValues Json?
+  changedBy String?     @db.String(100)
+  changedAt DateTime    @default(now())
 
   @@index([tableName, recordId])
   @@index([changedAt])
@@ -166,15 +167,15 @@ model AuditLog {
 
 /// User interaction tracking for trending analytics
 model Event {
-  id                  BigInt   @id @default(autoincrement())
-  artistId            BigInt?
-  eventType           InteractionType
-  sessionId           String?  @db.Uuid
-  timestamp           DateTime @default(now())
-  metadata            Json?
+  id        BigInt          @id @default(autoincrement())
+  artistId  BigInt?
+  eventType InteractionType
+  sessionId String?         @db.Uuid
+  timestamp DateTime        @default(now())
+  metadata  Json?
 
   // Relations
-  artist              Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artist Artist? @relation(fields: [artistId], references: [id], onDelete: SetNull)
 
   @@index([artistId, timestamp])
   @@map("events")
@@ -194,18 +195,18 @@ enum SourceType {
 }
 
 enum MetricWindow {
-  SEVEN_DAYS    @map("7d")
-  THIRTY_DAYS   @map("30d")
-  NINETY_DAYS   @map("90d")
+  SEVEN_DAYS  @map("7d")
+  THIRTY_DAYS @map("30d")
+  NINETY_DAYS @map("90d")
 
   @@map("metric_window_enum")
 }
 
 enum PredictionPeriod {
-  ONE_YEAR      @map("1Y")
-  THREE_YEARS   @map("3Y")
-  FIVE_YEARS    @map("5Y")
-  TEN_YEARS     @map("10Y")
+  ONE_YEAR    @map("1Y")
+  THREE_YEARS @map("3Y")
+  FIVE_YEARS  @map("5Y")
+  TEN_YEARS   @map("10Y")
 
   @@map("prediction_period_enum")
 }
