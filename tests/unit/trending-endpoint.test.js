@@ -111,14 +111,19 @@ describe('Trending API Endpoint', () => {
       };
 
       // Response structure is validated by getTrendingArtists
-      // which returns: { rank, artistId, name, trendScore, percentile, metrics, ... }
+      // which returns: { artists: [...], total, offset, limit }
 
       const { getTrendingArtists } = require('../../lib/trending/calculator');
-      const trendingArtists = await getTrendingArtists(mockPrisma, '7d', 100);
+      const result = await getTrendingArtists(mockPrisma, '7d', 100);
 
-      expect(Array.isArray(trendingArtists)).toBe(true);
-      if (trendingArtists.length > 0) {
-        const artist = trendingArtists[0];
+      expect(result).toHaveProperty('artists');
+      expect(result).toHaveProperty('total');
+      expect(result).toHaveProperty('offset');
+      expect(result).toHaveProperty('limit');
+      expect(Array.isArray(result.artists)).toBe(true);
+
+      if (result.artists.length > 0) {
+        const artist = result.artists[0];
         expect(artist).toHaveProperty('rank');
         expect(artist).toHaveProperty('artistId');
         expect(artist).toHaveProperty('name');
