@@ -65,11 +65,11 @@ async function handler(req, res) {
       });
     }
 
-    // Fetch trending artists (no offset for trending, but support for API consistency)
-    const allTrending = await getTrendingArtists(prisma, window, limit + offset);
+    // Fetch trending artists with database-level pagination
+    // This prevents memory bloat and CPU waste on large offsets
+    const result = await getTrendingArtists(prisma, window, limit, offset);
 
-    // Apply offset
-    const trendingArtists = allTrending.slice(offset, offset + limit);
+    const { artists: trendingArtists, total } = result;
 
     res.status(200).json(
       successResponse(trendingArtists, {
@@ -78,8 +78,8 @@ async function handler(req, res) {
         pagination: {
           offset,
           limit,
-          total: allTrending.length,
-          hasMore: offset + trendingArtists.length < allTrending.length
+          total,
+          hasMore: offset + trendingArtists.length < total
         }
       })
     );
