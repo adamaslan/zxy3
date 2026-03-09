@@ -10,6 +10,7 @@
     "p-format": "prisma format",
     "p-generate": "prisma generate",
     "cy:open": "cypress open",
+    "db:seed": "node prisma/seed.js",
     "test": "jest",
     "test:unit": "jest --testPathPattern=unit",
     "test:integration": "jest --testPathPattern=integration",
