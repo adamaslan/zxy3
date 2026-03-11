@@ -10,7 +10,7 @@ const prisma = new PrismaClient()
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`
 const VISION_URL = `https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`
 
 // ─── GEMINI: Extract tags from artist bio ─────────────────────────────────────
@@ -18,13 +18,20 @@ async function extractTagsWithGemini(artistName, bio) {
   const prompt = `
 You are an art world expert. Given this artist's name and bio, extract structured tags.
 Return ONLY a JSON array of strings. No explanation, no markdown, no backticks.
-Include: art movements, mediums, themes, geographic associations, career stage.
-Limit to 10 tags maximum.
+Include: art movements, mediums, themes, geographic associations, and EXACTLY ONE career stage.
 
-Artist: ${artistName}
-Bio: ${bio || 'No bio available. Generate tags based on name context only.'}
+Career stage MUST be one of these four exact strings (pick the best fit):
+- "emerging artist"
+- "mid-career artist"
+- "established artist"
+- "late-career artist"
 
-Example output: ["oil painting", "abstract expressionism", "New York", "mid-career", "portraiture"]
+Limit to 10 tags maximum (including the career stage).
+
+<artist_name>${artistName}</artist_name>
+<artist_bio>${bio || 'No bio available. Generate tags based on name context only.'}</artist_bio>
+
+Example output: ["oil painting", "abstract expressionism", "New York", "mid-career artist", "portraiture"]
 `
 
   const response = await fetch(GEMINI_URL, {
@@ -51,7 +58,8 @@ Example output: ["oil painting", "abstract expressionism", "New York", "mid-care
 // ─── GEMINI: Generate artist bio ──────────────────────────────────────────────
 async function generateBioWithGemini(artistName) {
   const prompt = `
-Write a concise 2-sentence professional bio for the artist "${artistName}".
+Write a concise 2-sentence professional bio for the artist whose name is in <artist_name> tags.
+<artist_name>${artistName}</artist_name>
 If this is a real artist you know, use factual information.
 If unknown, write a plausible art-world bio in a neutral tone.
 Do not fabricate specific exhibition dates or gallery names.
@@ -72,7 +80,36 @@ Return only the bio text, no quotes, no formatting.
 }
 
 // ─── GOOGLE VISION: Analyze artwork image ─────────────────────────────────────
+
+// Allowlist of trusted image hosting domains
+const ALLOWED_IMAGE_HOSTS = [
+  's3.amazonaws.com',
+  's3.us-east-1.amazonaws.com',
+  's3.us-west-2.amazonaws.com',
+  'storage.googleapis.com',
+  'res.cloudinary.com',
+  'images.unsplash.com',
+  'uploads.zxygallery.com',
+]
+
+function isAllowedImageUrl(imageUrl) {
+  let parsed
+  try {
+    parsed = new URL(imageUrl)
+  } catch {
+    return false
+  }
+  if (parsed.protocol !== 'https:') return false
+  return ALLOWED_IMAGE_HOSTS.some(
+    host => parsed.hostname === host || parsed.hostname.endsWith('.' + host)
+  )
+}
+
 async function analyzeImageWithVision(imageUrl) {
+  if (!isAllowedImageUrl(imageUrl)) {
+    throw new Error(`Image URL not allowed: ${imageUrl}`)
+  }
+
   const response = await fetch(VISION_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -178,8 +215,6 @@ exports.handler = async (event) => {
 
   } catch (err) {
     console.error('Lambda enrichment failed:', err)
-    return { statusCode: 500, body: err.message }
-  } finally {
-    await prisma.$disconnect()
+    return { statusCode: 500, body: 'Internal server error' }
   }
 }
