@@ -62,6 +62,16 @@ export default function Home() {
             <h3>Past Shows &rarr;</h3>
             <p>Explore Past Shows</p>
           </a>
+
+          <a href="/artists" className="card">
+            <h3>Artists &rarr;</h3>
+            <p>Browse all 67 artists</p>
+          </a>
+
+          <a href="/trending" className="card">
+            <h3>Trending &rarr;</h3>
+            <p>See who's rising</p>
+          </a>
         </div>
       </main>
 

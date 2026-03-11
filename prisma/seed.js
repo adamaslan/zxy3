@@ -19,7 +19,25 @@ const ARTISTS = [
   "Marco Santini"
 ]
 
+const TEMPEST_ARTISTS = [
+  "Yasmeen Abdallah", "Earth Ængel", "Taesha Aurora", "Amir Badawi",
+  "Chris Baker", "James Baker", "Sammy Bennett", "Haifa Bint-Kadi",
+  "Lauren Bradshaw", "Aruni Dharmakirthi", "Katherine Earle",
+  "Francisco echo Eraso", "Elham Goodarzi", "Amy Greco", "Gigi Gruenburg",
+  "Jenna Hamed", "Clare Hu", "Ray Hwang"
+]
+
 const GALLERIES = [
+  {
+    name: "Tempest",
+    slug: "tempest",
+    type: "commercial",
+    website: "https://www.tempestonweirfield.com",
+    instagram: "@tempest.gallery",
+    city: "Ridgewood",
+    state: "NY",
+    country: "USA",
+  },
   { name: "King's Leap", type: "commercial" },
   { name: "15 Orient", type: "commercial" },
   { name: "Magenta Plains", type: "commercial" },
@@ -115,7 +133,30 @@ async function main() {
   }
   console.log(`✅ ${ARTISTS.length} artists seeded\n`)
 
-  // ── 2. Seed Galleries ────────────────────────────────────────────────────────
+  // ── 2. Seed Tempest Artists ───────────────────────────────────────────────────
+  console.log(`Seeding ${TEMPEST_ARTISTS.length} Tempest artists...`)
+  for (const name of TEMPEST_ARTISTS) {
+    await prisma.artist.upsert({
+      where: { slug: toSlug(name) },
+      update: {},
+      create: {
+        name,
+        slug: toSlug(name),
+        active: true,
+        bio_generated: false,
+        comprehend_tags: ['emerging artist'],
+        metrics: {
+          create: {
+            search_hits: 0,
+            profile_views: 0,
+          }
+        }
+      },
+    })
+  }
+  console.log(`✅ ${TEMPEST_ARTISTS.length} Tempest artists seeded\n`)
+
+  // ── 3. Seed Galleries ────────────────────────────────────────────────────────
   console.log(`Seeding ${GALLERIES.length} galleries...`)
   for (const g of GALLERIES) {
     await prisma.gallery.upsert({
@@ -123,14 +164,39 @@ async function main() {
       update: {},
       create: {
         name: g.name,
-        slug: toSlug(g.name),
+        slug: g.slug || toSlug(g.name),
         type: g.type,
+        website: g.website || null,
+        instagram: g.instagram || null,
+        city: g.city || null,
+        country: g.country || null,
       },
     })
   }
   console.log(`✅ ${GALLERIES.length} galleries seeded\n`)
 
-  // ── 3. Seed Museums & Institutions ──────────────────────────────────────────
+  // ── 4. Link Tempest artists to Tempest gallery ────────────────────────────────
+  console.log('Linking Tempest artists to Tempest gallery...')
+  const tempestGallery = await prisma.gallery.findUnique({ where: { name: 'Tempest' } })
+  if (tempestGallery) {
+    for (const name of TEMPEST_ARTISTS) {
+      const artist = await prisma.artist.findUnique({ where: { slug: toSlug(name) } })
+      if (artist) {
+        await prisma.artistGallery.upsert({
+          where: { artist_id_gallery_id: { artist_id: artist.id, gallery_id: tempestGallery.id } },
+          update: {},
+          create: {
+            artist_id: artist.id,
+            gallery_id: tempestGallery.id,
+            relationship: 'represented',
+          },
+        })
+      }
+    }
+    console.log(`✅ ${TEMPEST_ARTISTS.length} artists linked to Tempest\n`)
+  }
+
+  // ── 5. Seed Museums & Institutions ──────────────────────────────────────────
   console.log(`Seeding ${MUSEUMS.length} museums & institutions...`)
   for (const m of MUSEUMS) {
     await prisma.gallery.upsert({
