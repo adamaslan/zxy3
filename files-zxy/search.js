@@ -9,9 +9,8 @@
 //   GET /api/search?q=moma&type=museum
 
 import { prisma } from '../../prisma/globalprisma'
-import { withRateLimit } from '../../lib/middleware/rateLimit'
 
-async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -156,8 +155,6 @@ async function handler(req, res) {
 
   } catch (error) {
     console.error('GET /api/search error:', error)
-    return res.status(500).json({ error: 'Search failed' })
+    return res.status(500).json({ error: 'Search failed', detail: error.message })
   }
 }
-
-export default withRateLimit(handler, { windowMs: 60_000, max: 30 });

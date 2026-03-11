@@ -28,3 +28,11 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+.claude
+# secrets
+.env
+
+# lambda build artifacts
+lambda/bundle/
+lambda/*.zip

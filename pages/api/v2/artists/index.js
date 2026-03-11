@@ -68,8 +68,16 @@ async function handler(req, res) {
         select: {
           id: true,
           name: true,
+          bio: true,
+          comprehend_tags: true,
           createdAt: true,
           updatedAt: true,
+          gallery_links: {
+            take: 1,
+            select: {
+              gallery: { select: { name: true, city: true } }
+            }
+          },
           _count: {
             select: { artworks: true }
           }
@@ -84,6 +92,9 @@ async function handler(req, res) {
     const formattedArtists = artists.map(artist => ({
       id: artist.id.toString(),
       name: artist.name,
+      bio: artist.bio || null,
+      comprehend_tags: artist.comprehend_tags || [],
+      gallery: artist.gallery_links?.[0]?.gallery || null,
       artworkCount: artist._count.artworks,
       createdAt: artist.createdAt,
       updatedAt: artist.updatedAt
@@ -110,8 +121,19 @@ async function handler(req, res) {
   }
 }
 
+function sanitizeCacheSegment(value) {
+  if (!value) return '';
+  return String(value).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
+}
+
 export default withRedisCache(handler, {
   ttl: 86400, // 24 hours (artists rarely change)
   key: 'artists:list',
-  keyGenerator: (req) => `artists:list:${req.query.limit}:${req.query.offset}:${req.query.search || 'all'}:${req.query.orderBy || 'name'}`
+  keyGenerator: (req) => {
+    const limit = parseInt(req.query.limit, 10) || 20;
+    const offset = parseInt(req.query.offset, 10) || 0;
+    const search = sanitizeCacheSegment(req.query.search) || 'all';
+    const orderBy = req.query.orderBy === 'createdAt' ? 'createdAt' : 'name';
+    return `artists:list:${limit}:${offset}:${search}:${orderBy}`;
+  }
 });

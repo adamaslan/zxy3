@@ -8,8 +8,9 @@
  */
 
 import { runTrendingComputationNow } from '../../../../../../lib/cron/trendingCron.js';
+import { withAdminAuth } from '../../../../../../lib/middleware/adminAuth.js';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -37,3 +38,5 @@ export default async function handler(req, res) {
     });
   }
 }
+
+export default withAdminAuth(handler);

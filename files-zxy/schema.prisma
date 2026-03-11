@@ -10,10 +10,10 @@ datasource db {
 // ─── LEGACY TABLE (keep until fully migrated) ────────────────────────────────
 model mytable {
   id          BigInt  @id @default(sequence())
-  artist      String  @db.String(15)
-  medium1     String  @db.String(12)
-  medium2     String? @db.String(12)
-  price_range String  @db.String(6)
+  artist      String
+  medium1     String
+  medium2     String?
+  price_range String
 }
 
 // ─── V2 SCHEMA ───────────────────────────────────────────────────────────────
@@ -40,8 +40,6 @@ model Artist {
   artworks         Artwork[]
   metrics          ArtistMetrics?
   gallery_links    ArtistGallery[]
-
-  @@map("artists")
 }
 
 model Artwork {
@@ -71,8 +69,6 @@ model Artwork {
   updatedAt            DateTime  @updatedAt
 
   artist               Artist    @relation(fields: [artist_id], references: [id])
-
-  @@map("artworks")
 }
 
 model Gallery {
@@ -89,8 +85,6 @@ model Gallery {
   updatedAt    DateTime @updatedAt
 
   artist_links ArtistGallery[]
-
-  @@map("galleries")
 }
 
 model ArtistGallery {
@@ -104,7 +98,6 @@ model ArtistGallery {
   gallery      Gallery @relation(fields: [gallery_id], references: [id])
 
   @@id([artist_id, gallery_id])
-  @@map("artist_galleries")
 }
 
 model ArtistMetrics {
@@ -114,6 +107,4 @@ model ArtistMetrics {
   last_viewed   DateTime?
 
   artist        Artist    @relation(fields: [artist_id], references: [id])
-
-  @@map("artist_metrics")
 }

@@ -38,6 +38,7 @@ import { successResponse } from '../../../../lib/api/handlers';
 import { getTrendingArtistsSchema } from '../../../../lib/api/validators';
 import { getTrendingArtists, getValidWindows } from '../../../../lib/trending/calculator';
 import { withRedisCache } from '../../../../lib/middleware/redisCache';
+import { withRateLimit } from '../../../../lib/middleware/rateLimit';
 
 async function handler(req, res) {
   try {
@@ -92,8 +93,7 @@ async function handler(req, res) {
         status: 'error',
         error: {
           message: 'Invalid query parameters',
-          code: 'VALIDATION_ERROR',
-          details: error.errors
+          code: 'VALIDATION_ERROR'
         }
       });
     }
@@ -108,8 +108,17 @@ async function handler(req, res) {
   }
 }
 
-export default withRedisCache(handler, {
+const VALID_WINDOWS = ['7d', '30d', '90d'];
+
+const cachedHandler = withRedisCache(handler, {
   ttl: 3600, // 1 hour
   key: 'trending:artists',
-  keyGenerator: (req) => `trending:artists:${req.query.window || '7d'}:${req.query.limit || 100}:${req.query.offset || 0}`
+  keyGenerator: (req) => {
+    const window = VALID_WINDOWS.includes(req.query.window) ? req.query.window : '7d';
+    const limit = parseInt(req.query.limit, 10) || 100;
+    const offset = parseInt(req.query.offset, 10) || 0;
+    return `trending:artists:${window}:${limit}:${offset}`;
+  }
 });
+
+export default withRateLimit(cachedHandler, { windowMs: 60_000, max: 20 });
