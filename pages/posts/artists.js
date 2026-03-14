@@ -194,7 +194,7 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
           </Link>
           <nav style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem' }}>
             <Link href="/" style={{ color: '#555', textDecoration: 'none' }}>Home</Link>
-            <Link href="/artists" style={{ color: '#f30000c0', textDecoration: 'none', fontWeight: 600 }}>Artists</Link>
+            <Link href="/posts/artists" style={{ color: '#f30000c0', textDecoration: 'none', fontWeight: 600 }}>Artists</Link>
             <Link href="/trending" style={{ color: '#555', textDecoration: 'none' }}>Trending</Link>
             <Link href="/posts/pastshows" style={{ color: '#555', textDecoration: 'none' }}>Shows</Link>
           </nav>
@@ -368,7 +368,7 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
 }
 
 export async function getServerSideProps() {
-  const { prisma } = require('../prisma/globalprisma');
+  const { prisma } = require('../../prisma/globalprisma');
 
   const [artists, total] = await Promise.all([
     prisma.artist.findMany({

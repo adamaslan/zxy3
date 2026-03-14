@@ -36,3 +36,4 @@ yarn-error.log*
 # lambda build artifacts
 lambda/bundle/
 lambda/*.zip
+.vercel

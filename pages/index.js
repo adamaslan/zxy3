@@ -63,7 +63,7 @@ export default function Home() {
             <p>Explore Past Shows</p>
           </a>
 
-          <a href="/artists" className="card">
+          <a href="/posts/artists" className="card">
             <h3>Artists &rarr;</h3>
             <p>Browse all 67 artists</p>
           </a>
