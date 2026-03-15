@@ -88,14 +88,14 @@ export default function ArtworkSearchTable() {
               {artists.map((artist) =>
                 artist.artworks.length > 0
                   ? artist.artworks.map((aw) => (
-                      <tr key={aw.id} className="hover:bg-gray-50">
+                      <tr key={`aw-${aw.id}`} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">{artist.name}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{aw.medium || '-'}</td>
                         <td className="px-6 py-4 whitespace-nowrap">{aw.medium_secondary || '-'}</td>
                       </tr>
                     ))
                   : (
-                    <tr key={artist.id} className="hover:bg-gray-50">
+                    <tr key={`artist-${artist.id}`} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">{artist.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap">-</td>
                       <td className="px-6 py-4 whitespace-nowrap">-</td>
