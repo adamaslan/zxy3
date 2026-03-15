@@ -24,6 +24,7 @@
 import { prisma } from '../../../../prisma/globalprisma';
 import { successResponse } from '../../../../lib/api/handlers';
 import { withRedisCache } from '../../../../lib/middleware/redisCache';
+import { withRateLimit } from '../../../../lib/middleware/rateLimit';
 
 async function handler(req, res) {
   try {
@@ -97,8 +98,10 @@ async function handler(req, res) {
   }
 }
 
-export default withRedisCache(handler, {
-  ttl: 86400, // 24 hours (artists rarely change)
+const cachedHandler = withRedisCache(handler, {
+  ttl: 86400,
   key: 'artists:detail',
-  keyGenerator: (req) => `artists:detail:${req.query.id}`
+  keyGenerator: (req) => `artists:detail:${parseInt(req.query.id, 10) || 'invalid'}`
 });
+
+export default withRateLimit(cachedHandler, { windowMs: 60_000, max: 60, routeKey: 'artists-v2-detail' });

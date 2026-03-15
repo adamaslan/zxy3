@@ -3,8 +3,9 @@
 // Falls back to legacy mytable if v2 has no data yet
 
 import { prisma } from '../../prisma/globalprisma'
+import { withRateLimit } from '../../lib/middleware/rateLimit'
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -85,3 +86,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Failed to fetch artworks' })
   }
 }
+
+export default withRateLimit(handler, { windowMs: 60_000, max: 60, routeKey: 'artworks-v1' })

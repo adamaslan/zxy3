@@ -11,7 +11,16 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`
+
+function sanitizeForPrompt(value, maxLength = 500) {
+  if (!value) return ''
+  return String(value)
+    .replace(/[<>]/g, '')
+    .replace(/[\x00-\x1F]/g, '')
+    .slice(0, maxLength)
+    .trim()
+}
 
 const VALID_CAREER_STAGES = [
   'emerging artist',
@@ -21,6 +30,9 @@ const VALID_CAREER_STAGES = [
 ]
 
 async function extractTagsWithGemini(artistName, bio) {
+  const safeName = sanitizeForPrompt(artistName, 100)
+  const safeBio = sanitizeForPrompt(bio, 500) || 'No bio available. Generate tags based on name context only.'
+
   const prompt = `
 You are an art world expert. Given this artist's name and bio, extract structured tags.
 Return ONLY a JSON array of strings. No explanation, no markdown, no backticks.
@@ -34,8 +46,8 @@ Career stage MUST be one of these four exact strings (pick the best fit):
 
 Limit to 10 tags maximum (including the career stage).
 
-Artist: ${artistName}
-Bio: ${bio || 'No bio available. Generate tags based on name context only.'}
+Artist: ${safeName}
+Bio: ${safeBio}
 
 Example output: ["oil painting", "abstract expressionism", "New York", "mid-career artist", "portraiture"]
 `

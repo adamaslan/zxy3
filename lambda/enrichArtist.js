@@ -13,8 +13,21 @@ const VISION_API_KEY = process.env.GOOGLE_VISION_API_KEY
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`
 const VISION_URL = `https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`
 
+// Strip characters that could break out of XML-like prompt tags or inject new instructions
+function sanitizeForPrompt(value, maxLength = 500) {
+  if (!value) return ''
+  return String(value)
+    .replace(/[<>]/g, '')        // remove tag delimiters
+    .replace(/[\x00-\x1F]/g, '') // remove control characters
+    .slice(0, maxLength)
+    .trim()
+}
+
 // ─── GEMINI: Extract tags from artist bio ─────────────────────────────────────
 async function extractTagsWithGemini(artistName, bio) {
+  const safeName = sanitizeForPrompt(artistName, 100)
+  const safeBio = sanitizeForPrompt(bio, 500) || 'No bio available. Generate tags based on name context only.'
+
   const prompt = `
 You are an art world expert. Given this artist's name and bio, extract structured tags.
 Return ONLY a JSON array of strings. No explanation, no markdown, no backticks.
@@ -28,8 +41,8 @@ Career stage MUST be one of these four exact strings (pick the best fit):
 
 Limit to 10 tags maximum (including the career stage).
 
-<artist_name>${artistName}</artist_name>
-<artist_bio>${bio || 'No bio available. Generate tags based on name context only.'}</artist_bio>
+<artist_name>${safeName}</artist_name>
+<artist_bio>${safeBio}</artist_bio>
 
 Example output: ["oil painting", "abstract expressionism", "New York", "mid-career artist", "portraiture"]
 `
@@ -57,9 +70,10 @@ Example output: ["oil painting", "abstract expressionism", "New York", "mid-care
 
 // ─── GEMINI: Generate artist bio ──────────────────────────────────────────────
 async function generateBioWithGemini(artistName) {
+  const safeName = sanitizeForPrompt(artistName, 100)
   const prompt = `
 Write a concise 2-sentence professional bio for the artist whose name is in <artist_name> tags.
-<artist_name>${artistName}</artist_name>
+<artist_name>${safeName}</artist_name>
 If this is a real artist you know, use factual information.
 If unknown, write a plausible art-world bio in a neutral tone.
 Do not fabricate specific exhibition dates or gallery names.

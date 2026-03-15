@@ -25,6 +25,7 @@ import { prisma } from '../../../../prisma/globalprisma';
 import { successResponse } from '../../../../lib/api/handlers';
 import { getArtworksSchema } from '../../../../lib/api/validators';
 import { withRedisCache } from '../../../../lib/middleware/redisCache';
+import { withRateLimit } from '../../../../lib/middleware/rateLimit';
 
 async function handler(req, res) {
   try {
@@ -105,8 +106,21 @@ async function handler(req, res) {
   }
 }
 
-export default withRedisCache(handler, {
-  ttl: 3600, // 1 hour
+function sanitizeCacheSegment(value) {
+  if (!value) return '';
+  return String(value).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
+}
+
+const cachedHandler = withRedisCache(handler, {
+  ttl: 3600,
   key: 'artworks:list',
-  keyGenerator: (req) => `artworks:list:${req.query.limit}:${req.query.offset}:${req.query.artistId || 'all'}:${req.query.search || 'all'}`
+  keyGenerator: (req) => {
+    const limit = parseInt(req.query.limit, 10) || 20;
+    const offset = parseInt(req.query.offset, 10) || 0;
+    const artistId = parseInt(req.query.artistId, 10) || 'all';
+    const search = sanitizeCacheSegment(req.query.search) || 'all';
+    return `artworks:list:${limit}:${offset}:${artistId}:${search}`;
+  }
 });
+
+export default withRateLimit(cachedHandler, { windowMs: 60_000, max: 60, routeKey: 'artworks-v2-list' });
