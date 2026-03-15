@@ -38,17 +38,16 @@ async function handler(req, res) {
 
     // Validate query parameters
     const query = getArtistsSchema.parse(req.query);
-    const { limit = 20, offset = 0, search, orderBy = 'name' } = query;
+    const { limit = 20, offset = 0, search, orderBy = 'name', careerStage } = query;
 
     // Build the where clause
-    const where = search
-      ? {
-          name: {
-            contains: search,
-            mode: 'insensitive'
-          }
-        }
-      : {};
+    const where = {};
+    if (search) {
+      where.name = { contains: search, mode: 'insensitive' };
+    }
+    if (careerStage) {
+      where.comprehend_tags = { has: careerStage };
+    }
 
     // Determine order by field
     const order = {};
@@ -58,10 +57,13 @@ async function handler(req, res) {
       order.createdAt = 'desc';
     }
 
-    // Execute queries in parallel
-    const [artists, total] = await Promise.all([
+    const CAREER_STAGES = ['emerging artist', 'mid-career artist', 'established artist', 'late-career artist'];
+    const whereClause = Object.keys(where).length > 0 ? where : undefined;
+
+    // Execute queries in parallel, including per-stage counts for the sidebar
+    const [artists, total, ...stageCountResults] = await Promise.all([
       prisma.artist.findMany({
-        where: Object.keys(where).length > 0 ? where : undefined,
+        where: whereClause,
         skip: offset,
         take: limit,
         orderBy: order,
@@ -83,10 +85,17 @@ async function handler(req, res) {
           }
         }
       }),
-      prisma.artist.count({
-        where: Object.keys(where).length > 0 ? where : undefined
-      })
+      prisma.artist.count({ where: whereClause }),
+      ...CAREER_STAGES.map(stage =>
+        prisma.artist.count({
+          where: { ...where, comprehend_tags: { has: stage } }
+        })
+      )
     ]);
+
+    const stageCounts = Object.fromEntries(
+      CAREER_STAGES.map((stage, i) => [stage, stageCountResults[i]])
+    );
 
     // Format response
     const formattedArtists = artists.map(artist => ({
@@ -107,7 +116,8 @@ async function handler(req, res) {
           limit,
           total,
           hasMore: offset + artists.length < total
-        }
+        },
+        stageCounts
       })
     );
   } catch (error) {

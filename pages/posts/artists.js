@@ -3,7 +3,7 @@
  * Showcases all artists with search, career stage filter, and trending rankings
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -116,6 +116,12 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
   const [trendWindow, setTrendWindow] = useState('7d');
   const [trending, setTrending] = useState([]);
   const [trendLoading, setTrendLoading] = useState(true);
+  const [stageCounts, setStageCounts] = useState(() =>
+    CAREER_STAGES.slice(1).reduce((acc, s) => {
+      acc[s] = initialArtists?.filter(a => (a.comprehend_tags || []).includes(s)).length || 0;
+      return acc;
+    }, {})
+  );
 
   const LIMIT = 24;
 
@@ -133,6 +139,7 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
       limit: LIMIT,
       offset: page * LIMIT,
       ...(debouncedSearch && { search: debouncedSearch }),
+      ...(careerFilter !== 'all' && { careerStage: careerFilter }),
     });
 
     fetch(`/api/v2/artists?${params}`)
@@ -140,14 +147,9 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
       .then(data => {
         if (!active) return;
         if (data.status === 'success') {
-          let results = data.data || [];
-          if (careerFilter !== 'all') {
-            results = results.filter(a =>
-              (a.comprehend_tags || []).includes(careerFilter)
-            );
-          }
-          setArtists(results);
+          setArtists(data.data || []);
           setTotal(data.meta?.pagination?.total || 0);
+          if (data.meta?.stageCounts) setStageCounts(data.meta.stageCounts);
         }
       })
       .finally(() => { if (active) setLoading(false); });
@@ -168,11 +170,6 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
 
   // Reset page on filter change
   useEffect(() => { setPage(0); }, [debouncedSearch, careerFilter]);
-
-  const stageCounts = CAREER_STAGES.slice(1).reduce((acc, s) => {
-    acc[s] = initialArtists?.filter(a => (a.comprehend_tags || []).includes(s)).length || 0;
-    return acc;
-  }, {});
 
   return (
     <>
