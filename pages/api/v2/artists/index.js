@@ -144,6 +144,7 @@ export default withRedisCache(handler, {
     const offset = parseInt(req.query.offset, 10) || 0;
     const search = sanitizeCacheSegment(req.query.search) || 'all';
     const orderBy = req.query.orderBy === 'createdAt' ? 'createdAt' : 'name';
-    return `artists:list:${limit}:${offset}:${search}:${orderBy}`;
+    const careerStage = sanitizeCacheSegment(req.query.careerStage) || 'all';
+    return `artists:list:${limit}:${offset}:${search}:${orderBy}:${careerStage}`;
   }
 });

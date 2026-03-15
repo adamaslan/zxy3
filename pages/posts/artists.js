@@ -365,35 +365,40 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
 }
 
 export async function getServerSideProps() {
-  const { prisma } = require('../../prisma/globalprisma');
+  try {
+    const { prisma } = require('../../prisma/globalprisma');
 
-  const [artists, total] = await Promise.all([
-    prisma.artist.findMany({
-      take: 24,
-      orderBy: { name: 'asc' },
-      select: {
-        id: true,
-        name: true,
-        bio: true,
-        comprehend_tags: true,
-        gallery_links: {
-          take: 1,
-          select: {
-            gallery: { select: { name: true, city: true } }
+    const [artists, total] = await Promise.all([
+      prisma.artist.findMany({
+        take: 24,
+        orderBy: { name: 'asc' },
+        select: {
+          id: true,
+          name: true,
+          bio: true,
+          comprehend_tags: true,
+          gallery_links: {
+            take: 1,
+            select: {
+              gallery: { select: { name: true, city: true } }
+            }
           }
         }
-      }
-    }),
-    prisma.artist.count()
-  ]);
+      }),
+      prisma.artist.count()
+    ]);
 
-  const formatted = artists.map(a => ({
-    id: a.id.toString(),
-    name: a.name,
-    bio: a.bio || null,
-    comprehend_tags: a.comprehend_tags || [],
-    gallery: a.gallery_links?.[0]?.gallery || null,
-  }));
+    const formatted = artists.map(a => ({
+      id: a.id.toString(),
+      name: a.name,
+      bio: a.bio || null,
+      comprehend_tags: a.comprehend_tags || [],
+      gallery: a.gallery_links?.[0]?.gallery || null,
+    }));
 
-  return { props: { initialArtists: formatted, totalCount: total } };
+    return { props: { initialArtists: formatted, totalCount: total } };
+  } catch (err) {
+    console.error('getServerSideProps /posts/artists failed:', err.message);
+    return { props: { initialArtists: [], totalCount: 0 } };
+  }
 }

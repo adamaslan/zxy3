@@ -65,7 +65,7 @@ export default function Home() {
 
           <a href="/posts/artists" className="card">
             <h3>Artists &rarr;</h3>
-            <p>Browse all 67 artists</p>
+            <p>Search every artist ZXY has shown. Filter by career stage, read AI-generated bios, and see who's trending now.</p>
           </a>
 
           <a href="/trending" className="card">
