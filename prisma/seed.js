@@ -94,6 +94,8 @@ const MUSEUMS = [
   { name: "Felix Art Show", slug: "felix-art-show", city: "Los Angeles", country: "USA", type: "art_fair" },
 ]
 
+const METRIC_WINDOWS = ['7d', '30d', '90d']
+
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
 function toSlug(name) {
@@ -105,6 +107,27 @@ function toSlug(name) {
     .trim()
 }
 
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+async function seedMetrics(artistId) {
+  for (const window of METRIC_WINDOWS) {
+    await prisma.artistMetrics.upsert({
+      where: { artistId_metricWindow: { artistId, metricWindow: window } },
+      update: {},
+      create: {
+        artistId,
+        metricWindow: window,
+        viewCount: randomInt(10, 300),
+        searchFrequency: randomInt(5, 100),
+        marketMentions: randomInt(0, 50),
+        computedAt: new Date(),
+      },
+    })
+  }
+}
+
 // ─── SEED ─────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -113,7 +136,7 @@ async function main() {
   // ── 1. Seed Artists ──────────────────────────────────────────────────────────
   console.log(`Seeding ${ARTISTS.length} artists...`)
   for (const name of ARTISTS) {
-    await prisma.artist.upsert({
+    const artist = await prisma.artist.upsert({
       where: { slug: toSlug(name) },
       update: {},
       create: {
@@ -122,21 +145,16 @@ async function main() {
         active: true,
         bio_generated: false,
         comprehend_tags: [],
-        metrics: {
-          create: {
-            search_hits: 0,
-            profile_views: 0,
-          }
-        }
       },
     })
+    await seedMetrics(artist.id)
   }
   console.log(`✅ ${ARTISTS.length} artists seeded\n`)
 
   // ── 2. Seed Tempest Artists ───────────────────────────────────────────────────
   console.log(`Seeding ${TEMPEST_ARTISTS.length} Tempest artists...`)
   for (const name of TEMPEST_ARTISTS) {
-    await prisma.artist.upsert({
+    const artist = await prisma.artist.upsert({
       where: { slug: toSlug(name) },
       update: {},
       create: {
@@ -145,14 +163,9 @@ async function main() {
         active: true,
         bio_generated: false,
         comprehend_tags: ['emerging artist'],
-        metrics: {
-          create: {
-            search_hits: 0,
-            profile_views: 0,
-          }
-        }
       },
     })
+    await seedMetrics(artist.id)
   }
   console.log(`✅ ${TEMPEST_ARTISTS.length} Tempest artists seeded\n`)
 
