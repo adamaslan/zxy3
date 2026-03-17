@@ -1,0 +1,7 @@
+# Copy this to terraform.tfvars and fill in real values.
+# terraform.tfvars is gitignored — never commit it.
+
+aws_region            = "us-east-1"
+gemini_api_key        = "your-gemini-key"
+google_vision_api_key = "your-vision-key"
+database_url          = "postgresql://..."

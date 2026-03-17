@@ -37,3 +37,6 @@ yarn-error.log*
 lambda/bundle/
 lambda/*.zip
 .vercel
+terraform.tfvars
+.terraform/
+*.tfstate*
