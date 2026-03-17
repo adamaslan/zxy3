@@ -121,4 +121,4 @@ const cachedHandler = withRedisCache(handler, {
   }
 });
 
-export default withRateLimit(cachedHandler, { windowMs: 60_000, max: 20 });
+export default withRateLimit(cachedHandler, { windowMs: 60_000, max: 20, routeKey: 'trending:artists' });
