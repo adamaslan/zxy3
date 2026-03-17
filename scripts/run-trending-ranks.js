@@ -26,8 +26,7 @@ async function main() {
         console.log(`  ${window}: ${data.updated} artists ranked`);
       }
     } else {
-      console.error('\nComputation failed:', result.error);
-      process.exit(1);
+      throw new Error(result.error);
     }
   } finally {
     await prisma.$disconnect();
@@ -36,6 +35,5 @@ async function main() {
 
 main().catch(err => {
   console.error('Fatal error:', err.message);
-  prisma.$disconnect();
   process.exit(1);
 });
