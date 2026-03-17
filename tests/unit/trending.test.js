@@ -200,15 +200,15 @@ describe('Trending Scorer', () => {
 });
 
 describe('Trending Calculator', () => {
-  describe('mapWindowToEnum', () => {
-    it('should map window strings to enums', () => {
-      expect(calculator.mapWindowToEnum('7d')).toBe('SEVEN_DAYS');
-      expect(calculator.mapWindowToEnum('30d')).toBe('THIRTY_DAYS');
-      expect(calculator.mapWindowToEnum('90d')).toBe('NINETY_DAYS');
+  describe('validateMetricWindow', () => {
+    it('should return valid window strings as-is', () => {
+      expect(calculator.validateMetricWindow('7d')).toBe('7d');
+      expect(calculator.validateMetricWindow('30d')).toBe('30d');
+      expect(calculator.validateMetricWindow('90d')).toBe('90d');
     });
 
-    it('should default to SEVEN_DAYS for unknown window', () => {
-      expect(calculator.mapWindowToEnum('unknown')).toBe('SEVEN_DAYS');
+    it('should default to 7d for unknown window', () => {
+      expect(calculator.validateMetricWindow('unknown')).toBe('7d');
     });
   });
 
