@@ -38,7 +38,7 @@ model Artist {
   updatedAt        DateTime  @updatedAt
 
   artworks         Artwork[]
-  metrics          ArtistMetrics?
+  metrics          ArtistMetrics[]
   gallery_links    ArtistGallery[]
 
   @@map("artists")
@@ -108,12 +108,16 @@ model ArtistGallery {
 }
 
 model ArtistMetrics {
-  artist_id     BigInt    @id
-  search_hits   Int       @default(0)
-  profile_views Int       @default(0)
-  last_viewed   DateTime?
+  artistId        BigInt   @map("artist_id")
+  metricWindow    String   @map("metric_window")
+  viewCount       Int      @default(0) @map("view_count")
+  searchFrequency Int      @default(0) @map("search_frequency")
+  marketMentions  Int      @default(0) @map("market_mentions")
+  trendingRank    Int?     @map("trending_rank")
+  computedAt      DateTime @default(now()) @map("computed_at")
 
-  artist        Artist    @relation(fields: [artist_id], references: [id])
+  artist          Artist   @relation(fields: [artistId], references: [id])
 
+  @@id([artistId, metricWindow])
   @@map("artist_metrics")
 }

@@ -104,7 +104,7 @@ function TrendingRow({ artist, rank }) {
   );
 }
 
-export default function ArtistsPage({ initialArtists, totalCount }) {
+export default function ArtistsPage({ initialArtists, totalCount, initialStageCounts }) {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [careerFilter, setCareerFilter] = useState('all');
@@ -116,11 +116,8 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
   const [trendWindow, setTrendWindow] = useState('7d');
   const [trending, setTrending] = useState([]);
   const [trendLoading, setTrendLoading] = useState(true);
-  const [stageCounts, setStageCounts] = useState(() =>
-    CAREER_STAGES.slice(1).reduce((acc, s) => {
-      acc[s] = initialArtists?.filter(a => (a.comprehend_tags || []).includes(s)).length || 0;
-      return acc;
-    }, {})
+  const [stageCounts, setStageCounts] = useState(
+    initialStageCounts || CAREER_STAGES.slice(1).reduce((acc, s) => ({ ...acc, [s]: 0 }), {})
   );
 
   const LIMIT = 24;
@@ -364,11 +361,13 @@ export default function ArtistsPage({ initialArtists, totalCount }) {
   );
 }
 
+const EMPTY_STAGE_COUNTS = CAREER_STAGES.slice(1).reduce((acc, s) => ({ ...acc, [s]: 0 }), {});
+
 export async function getServerSideProps() {
   try {
     const { prisma } = require('../../prisma/globalprisma');
 
-    const [artists, total] = await Promise.all([
+    const [artists, total, ...stageCountResults] = await Promise.all([
       prisma.artist.findMany({
         take: 24,
         orderBy: { name: 'asc' },
@@ -377,15 +376,12 @@ export async function getServerSideProps() {
           name: true,
           bio: true,
           comprehend_tags: true,
-          gallery_links: {
-            take: 1,
-            select: {
-              gallery: { select: { name: true, city: true } }
-            }
-          }
         }
       }),
-      prisma.artist.count()
+      prisma.artist.count(),
+      ...CAREER_STAGES.slice(1).map(stage =>
+        prisma.artist.count({ where: { comprehend_tags: { has: stage } } })
+      )
     ]);
 
     const formatted = artists.map(a => ({
@@ -393,12 +389,16 @@ export async function getServerSideProps() {
       name: a.name,
       bio: a.bio || null,
       comprehend_tags: a.comprehend_tags || [],
-      gallery: a.gallery_links?.[0]?.gallery || null,
+      gallery: null,
     }));
 
-    return { props: { initialArtists: formatted, totalCount: total } };
+    const initialStageCounts = Object.fromEntries(
+      CAREER_STAGES.slice(1).map((s, i) => [s, stageCountResults[i]])
+    );
+
+    return { props: { initialArtists: formatted, totalCount: total, initialStageCounts } };
   } catch (err) {
     console.error('getServerSideProps /posts/artists failed:', err.message);
-    return { props: { initialArtists: [], totalCount: 0 } };
+    return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS } };
   }
 }

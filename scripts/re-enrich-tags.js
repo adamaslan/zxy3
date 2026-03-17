@@ -13,14 +13,7 @@ const prisma = new PrismaClient()
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`
 
-function sanitizeForPrompt(value, maxLength = 500) {
-  if (!value) return ''
-  return String(value)
-    .replace(/[<>]/g, '')
-    .replace(/[\x00-\x1F]/g, '')
-    .slice(0, maxLength)
-    .trim()
-}
+const { sanitizeForPrompt } = require('../lib/utils/sanitizeForPrompt')
 
 const VALID_CAREER_STAGES = [
   'emerging artist',
