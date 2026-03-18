@@ -1,5 +1,13 @@
 # Artists API — Full Stack Overview
 
+## Pipeline Summary
+
+When an artist is created or updated, an EventBridge event triggers the `enrichArtist` Lambda, which calls Google Gemini to generate a bio and career stage tag, and Google Vision to extract image labels and dominant colors. The enriched data is written back to CockroachDB via Prisma, giving every artist a rich, AI-generated profile automatically.
+
+On the read path, a hourly cron job recomputes trending scores across 7, 30, and 90-day windows using a weighted formula of view counts, search frequency, and market mentions, storing ranked results in `ArtistMetrics`. User requests hit Next.js API routes that enforce per-IP rate limits and serve responses from a Redis cache (falling back to in-memory), so the database is only queried on cache misses.
+
+The entire AWS infrastructure — EventBridge rules, the Lambda function, and supporting IAM roles — is provisioned and versioned through Terraform (`terraform/main.tf`), enabling reproducible deployments. On the Next.js side, three versioned API routes under `/api/v2/` expose artist listing with filtering and pagination, single-artist lookup, and trending leaderboards; all three share a common middleware stack (`withRateLimit` → `withRedisCache` → handler) defined in `lib/middleware/`, keeping rate limiting and caching concerns separate from business logic.
+
 ## Architecture Graph
 
 ```
