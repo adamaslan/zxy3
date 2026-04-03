@@ -19,7 +19,9 @@
     "test:integration": "jest --testPathPattern=integration",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "eslint . --ext .js,.jsx"
+    "lint": "eslint . --ext .js,.jsx",
+    "enrich-artists": "node scripts/enrich-artists-artsy.js",
+    "enrich-artists-dry": "node scripts/enrich-artists-artsy.js --dry-run"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.5.0",
