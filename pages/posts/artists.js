@@ -324,7 +324,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
               ) : trending.length === 0 ? (
                 <div style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>
                   No trending data yet.<br />
-                  <span style={{ fontSize: '0.75rem' }}>Run the cron job to compute rankings.</span>
+                  <span style={{ fontSize: '0.75rem' }}>Run: <code>npm run trending</code></span>
                 </div>
               ) : (
                 trending.map((a, i) => <TrendingRow key={a.artistId} artist={a} rank={i + 1} />)

@@ -110,10 +110,16 @@ model ArtistGallery {
 model ArtistMetrics {
   artistId        BigInt   @map("artist_id")
   metricWindow    String   @map("metric_window")
-  viewCount       Int      @default(0) @map("view_count")
-  searchFrequency Int      @default(0) @map("search_frequency")
-  marketMentions  Int      @default(0) @map("market_mentions")
-  trendingRank    Int?     @map("trending_rank")
+
+  // New column additions to match DB schema
+  searchHits      Int      @default(0) @map("search_hits")
+  profileViews    Int      @default(0) @map("profile_views")
+  lastViewed      DateTime? @map("last_viewed")
+
+  viewCount       BigInt   @default(0) @map("view_count")
+  searchFrequency BigInt   @default(0) @map("search_frequency")
+  marketMentions  BigInt   @default(0) @map("market_mentions")
+  trendingRank    BigInt?  @map("trending_rank")
   computedAt      DateTime @default(now()) @map("computed_at")
 
   artist          Artist   @relation(fields: [artistId], references: [id])
