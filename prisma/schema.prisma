@@ -24,15 +24,36 @@ model Artist {
   slug             String?   @unique
   bio              String?
   website          String?
-  instagram        String?
+  cv_url           String?   // link to artist CV/resume page
+  instagram        String?   // handle only, e.g. "@artist"
   nationality      String?
   birth_year       Int?
   active           Boolean   @default(true)
+
+  // Career classification
+  career_stage     String?   // "emerging" | "mid-career" | "established" | "late-career"
+
+  // Show counts (from CV/Artsy)
+  show_count_solo  Int       @default(0)
+  show_count_group Int       @default(0)
+
+  // Market data (from Artsy / auction records)
+  artsy_url        String?   // canonical Artsy profile URL
+  artsy_id         String?   // Artsy artist slug/id for API queries
+  highest_sale_price    Float?   // in USD
+  highest_sale_currency String? @default("USD")
+  highest_sale_source   String? // "artsy" | "christies" | "sothebys" | etc.
+
+  // Image
+  profile_image_url String?  // best available image URL
 
   // AI enrichment fields (written by Lambda)
   bio_generated    Boolean   @default(false)
   comprehend_tags  String[]
   comprehend_ran   DateTime?
+
+  // Enrichment tracking
+  artsy_enriched_at DateTime?
 
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
@@ -85,6 +106,10 @@ model Gallery {
   instagram    String?
   type         String?  // "commercial" | "non-profit" | "museum" | "institution" | "art_fair"
 
+  // Gallery tier based on career stage of artists shown
+  // "mega" | "major" | "mid" | "emerging"
+  gallery_tier String?
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -110,10 +135,24 @@ model ArtistGallery {
 model ArtistMetrics {
   artistId        BigInt   @map("artist_id")
   metricWindow    String   @map("metric_window")
-  viewCount       Int      @default(0) @map("view_count")
-  searchFrequency Int      @default(0) @map("search_frequency")
-  marketMentions  Int      @default(0) @map("market_mentions")
-  trendingRank    Int?     @map("trending_rank")
+
+  // Internal engagement (kept, used until external data populates)
+  searchHits      Int      @default(0) @map("search_hits")
+  profileViews    Int      @default(0) @map("profile_views")
+  lastViewed      DateTime? @map("last_viewed")
+
+  viewCount       BigInt   @default(0) @map("view_count")
+  searchFrequency BigInt   @default(0) @map("search_frequency")
+  marketMentions  BigInt   @default(0) @map("market_mentions")
+
+  // External metrics (replace internal metrics in scoring once populated)
+  instagramFollowers    Int?    @map("instagram_followers")
+  soloShowCount         Int     @default(0) @map("solo_show_count")
+  groupShowCount        Int     @default(0) @map("group_show_count")
+  highestSalePrice      Float?  @map("highest_sale_price")
+  artsyPageViews        Int?    @map("artsy_page_views")
+
+  trendingRank    BigInt?  @map("trending_rank")
   computedAt      DateTime @default(now()) @map("computed_at")
 
   artist          Artist   @relation(fields: [artistId], references: [id])

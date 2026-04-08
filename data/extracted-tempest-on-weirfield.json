@@ -1,0 +1,506 @@
+{
+  "gallery": "tempest-on-weirfield",
+  "segment": "emerging",
+  "artists": [
+    {
+      "name": "Earth Ængel",
+      "bio": null,
+      "shows": [
+        {
+          "title": "My armor thinned to a silken scrim",
+          "year": 2025,
+          "endYear": 2025
+        },
+        {
+          "title": "AJA'IB",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "Rhonda Khalifeh",
+      "bio": null,
+      "shows": [
+        {
+          "title": "My armor thinned to a silken scrim",
+          "year": 2025,
+          "endYear": 2025
+        },
+        {
+          "title": "AJA'IB",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "joell vee",
+      "bio": null,
+      "shows": [
+        {
+          "title": "My armor thinned to a silken scrim",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "Angelica Yudasto",
+      "bio": null,
+      "shows": [
+        {
+          "title": "My armor thinned to a silken scrim",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "Weihui Lu",
+      "bio": null,
+      "shows": [
+        {
+          "title": "when there is no longer a danger of frost",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "Ray Hwang",
+      "bio": null,
+      "shows": [
+        {
+          "title": "Ghost Coast",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "katherine earle",
+      "bio": null,
+      "shows": [
+        {
+          "title": "cat's cradle",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "claire hu",
+      "bio": null,
+      "shows": [
+        {
+          "title": "cat's cradle",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "leila seyedzadeh",
+      "bio": null,
+      "shows": [
+        {
+          "title": "cat's cradle",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "Sammy Bennett",
+      "bio": null,
+      "shows": [
+        {
+          "title": "AJA'IB",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "Aruni Dharmakirthi",
+      "bio": null,
+      "shows": [
+        {
+          "title": "AJA'IB",
+          "year": 2025,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "yasmeen abdallah",
+      "bio": null,
+      "shows": [
+        {
+          "title": "witchgrass",
+          "year": 2024,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "amy greco",
+      "bio": null,
+      "shows": [
+        {
+          "title": "witchgrass",
+          "year": 2024,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "rose malenfant",
+      "bio": null,
+      "shows": [
+        {
+          "title": "witchgrass",
+          "year": 2024,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "taraneh mosadegh",
+      "bio": null,
+      "shows": [
+        {
+          "title": "witchgrass",
+          "year": 2024,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "defne tutus",
+      "bio": null,
+      "shows": [
+        {
+          "title": "witchgrass",
+          "year": 2024,
+          "endYear": 2025
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "jacob olmedo",
+      "bio": null,
+      "shows": [
+        {
+          "title": "the softness of moonlight / the strength of the sun",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "elham goodarzi",
+      "bio": null,
+      "shows": [
+        {
+          "title": "sunless",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "Taesha Aurora",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "amir badawi",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "haifa bint kadi",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "lauren bradshaw",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "francisco echo Eraso",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "gigi gruenburg",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "jenna hamed",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "vandana jain",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "ayqa kahn",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "amalya megerman",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "kris rumman",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "jordan segal",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "theo trotter",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "natasha vega",
+      "bio": null,
+      "shows": [
+        {
+          "title": "welcome stranger",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "lena ruth schwartz",
+      "bio": null,
+      "shows": [
+        {
+          "title": "the new body",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "james baker",
+      "bio": null,
+      "shows": [
+        {
+          "title": "no one really dreams any longer of the blue flower",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    },
+    {
+      "name": "christopher baker",
+      "bio": null,
+      "shows": [
+        {
+          "title": "no one really dreams any longer of the blue flower",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": ["Tempest on Weirfield"],
+      "instagram": null,
+      "website": null
+    }
+  ]
+}

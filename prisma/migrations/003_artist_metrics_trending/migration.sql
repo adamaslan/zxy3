@@ -3,6 +3,11 @@
 -- We need to add: metric_window, view_count, search_frequency, market_mentions, trending_rank
 -- Then backfill metric_window and drop the constraint so we can have 3 rows per artist (one per window)
 
+-- Step 0: Ensure base columns exist (may have been added outside migrations)
+ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS search_hits INT NOT NULL DEFAULT 0;
+ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS profile_views INT NOT NULL DEFAULT 0;
+ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS last_viewed TIMESTAMP;
+
 -- Step 1: Add new columns
 ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS metric_window VARCHAR(10) NOT NULL DEFAULT '7d';
 ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS view_count INT NOT NULL DEFAULT 0;
