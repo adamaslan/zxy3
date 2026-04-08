@@ -116,9 +116,10 @@ function toCSV(data) {
   const rows = data.map((row) =>
     headers.map((h) => {
       const val = row[h] ?? "";
-      // Escape quotes and wrap in quotes if contains comma
+      // Escape quotes and wrap in quotes if contains comma, newline, or quote
       const escaped = String(val).replace(/"/g, '""');
-      return escaped.includes(",") ? `"${escaped}"` : escaped;
+      const needsQuotes = escaped.includes(",") || escaped.includes("\n") || escaped.includes("\r") || String(val).includes('"');
+      return needsQuotes ? `"${escaped}"` : escaped;
     })
   );
 

@@ -119,7 +119,8 @@ async function fetchJSON(url, token = null) {
     const res = await fetch(url, { headers });
     if (!res.ok) return null;
     return await res.json();
-  } catch {
+  } catch (error) {
+    console.error(`[Artsy] Fetch error for ${url}:`, error.message);
     return null;
   }
 }
@@ -208,7 +209,7 @@ async function getArtsyHighestSale(artsyId, token) {
  */
 function deriveCareerStage(artsyData, soloShows, groupShows) {
   const birthYear = artsyData?.birthday ? parseInt(artsyData.birthday, 10) : null;
-  const currentYear = 2026;
+  const currentYear = new Date().getFullYear();
   const totalShows = soloShows + groupShows;
 
   if (birthYear && !isNaN(birthYear)) {

@@ -10,10 +10,10 @@ ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS last_viewed TIMESTAMP;
 
 -- Step 1: Add new columns
 ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS metric_window VARCHAR(10) NOT NULL DEFAULT '7d';
-ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS view_count INT NOT NULL DEFAULT 0;
-ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS search_frequency INT NOT NULL DEFAULT 0;
-ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS market_mentions INT NOT NULL DEFAULT 0;
-ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS trending_rank INT;
+ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS view_count BIGINT NOT NULL DEFAULT 0;
+ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS search_frequency BIGINT NOT NULL DEFAULT 0;
+ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS market_mentions BIGINT NOT NULL DEFAULT 0;
+ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS trending_rank BIGINT;
 ALTER TABLE artist_metrics ADD COLUMN IF NOT EXISTS computed_at TIMESTAMP NOT NULL DEFAULT now();
 
 -- Step 2: Backfill view_count and search_frequency from existing columns
