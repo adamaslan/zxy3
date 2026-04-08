@@ -33,11 +33,7 @@ export default function Home() {
         <SplashScreen />
         <p className="description">
           <code>
-            A technology focused Art Gallery <br /> contact us on instagram for
-            info on our latest events &nbsp;
-            <a href="https://www.instagram.com/zxygallery/?hl=en">
-              <u>@zxygallery</u>
-            </a>{" "}
+            A technology focused Art Gallery <br /> 
           </code>
         </p>
 
@@ -45,6 +41,7 @@ export default function Home() {
           <a href="/posts/about" className="card">
             <h3>About &rarr;</h3>
             <p>More about ZXY Gallery</p>
+            
           </a>
 
           <a href="/posts/featuredwork" className="card">
@@ -72,6 +69,12 @@ export default function Home() {
             <h3>Trending &rarr;</h3>
             <p>See who's rising</p>
           </a>
+
+       
+          <a href="https://www.instagram.com/zxygallery/?hl=en" className="card">
+            <h3>Contact</h3> <p>   contact us on instagram for
+          info on our latest events &nbsp; <u>@zxygallery</u>
+          </p></a>{" "}
         </div>
       </main>
 

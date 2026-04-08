@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Tiger Strikes Asteroid",
+    "slug": "tiger-strikes-asteroid",
+    "website": "https://www.tigerstrikesasteroid.com",
+    "segment": "emerging",
+    "tier": "emerging"
+  },
+  {
+    "name": "Underdonk",
+    "slug": "underdonk",
+    "website": "https://www.underdonk.com",
+    "segment": "emerging",
+    "tier": "emerging"
+  },
+  {
+    "name": "Tempest on Weirfield",
+    "slug": "tempest-on-weirfield",
+    "website": "https://www.tempestonweirfield.com",
+    "segment": "emerging",
+    "tier": "emerging"
+  },
+  {
+    "name": "15 Orient",
+    "slug": "15orient",
+    "website": "https://15orient.com",
+    "segment": "mid-career",
+    "tier": "mid"
+  },
+  {
+    "name": "King's Leap",
+    "slug": "kingsleap",
+    "website": "https://www.kingsleap.com",
+    "segment": "mid-career",
+    "tier": "mid"
+  },
+  {
+    "name": "Microscope Gallery",
+    "slug": "microscope-gallery",
+    "website": "https://www.microscopegallery.com",
+    "segment": "mid-career",
+    "tier": "mid"
+  },
+  {
+    "name": "Luhring Augustine",
+    "slug": "luhring-augustine",
+    "website": "https://www.luhringaugustine.com",
+    "segment": "established",
+    "tier": "major"
+  },
+  {
+    "name": "Magenta Plains",
+    "slug": "magenta-plains",
+    "website": "https://www.magentas.org",
+    "segment": "established",
+    "tier": "major"
+  },
+  {
+    "name": "MoMA",
+    "slug": "moma",
+    "website": "https://www.moma.org",
+    "segment": "late-career",
+    "tier": "mega"
+  },
+  {
+    "name": "Tanya Bonakdar",
+    "slug": "tanya-bonakdar",
+    "website": "https://www.tanyabonakdargallery.com",
+    "segment": "late-career",
+    "tier": "major"
+  }
+]
