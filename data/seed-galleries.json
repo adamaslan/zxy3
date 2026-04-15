@@ -30,13 +30,13 @@
   {
     "name": "King's Leap",
     "slug": "kingsleap",
-    "website": "https://www.kingsleap.com",
+    "website": "https://www.kingsleapfinearts.com",
     "segment": "mid-career",
     "tier": "mid"
   },
   {
     "name": "Microscope Gallery",
-    "slug": "microscope-gallery",
+    "slug": "microscope",
     "website": "https://www.microscopegallery.com",
     "segment": "mid-career",
     "tier": "mid"
@@ -46,27 +46,20 @@
     "slug": "luhring-augustine",
     "website": "https://www.luhringaugustine.com",
     "segment": "established",
-    "tier": "major"
+    "tier": "established"
   },
   {
     "name": "Magenta Plains",
     "slug": "magenta-plains",
-    "website": "https://www.magentas.org",
+    "website": "https://magentaplains.com",
     "segment": "established",
-    "tier": "major"
-  },
-  {
-    "name": "MoMA",
-    "slug": "moma",
-    "website": "https://www.moma.org",
-    "segment": "late-career",
-    "tier": "mega"
+    "tier": "established"
   },
   {
     "name": "Tanya Bonakdar",
     "slug": "tanya-bonakdar",
     "website": "https://www.tanyabonakdargallery.com",
     "segment": "late-career",
-    "tier": "major"
+    "tier": "top"
   }
 ]
