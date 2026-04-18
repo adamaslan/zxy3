@@ -74,7 +74,7 @@ UNREACHABLE_GALLERIES = {
     "King's Leap",
     "Mery Gates",
     "Satellite Art Show",
-    "Tanya Bondakar Gallery",
+    "Tanya Bonakdar Gallery",
     "The Border",
     "Underdonk",
 }

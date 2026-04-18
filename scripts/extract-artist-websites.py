@@ -158,9 +158,19 @@ def main():
     artists = load_artists_needing_websites()
     print(f"Found {len(artists)} artists missing websites\n")
 
+    # Allow limiting artists via command line (e.g., --limit 10)
+    limit = None
+    if len(sys.argv) > 1 and sys.argv[1].startswith("--limit"):
+        try:
+            limit = int(sys.argv[1].split("=")[1])
+        except (ValueError, IndexError):
+            print("Usage: python extract-artist-websites.py [--limit=N]", file=sys.stderr)
+            sys.exit(1)
+
+    artists_to_process = artists[:limit] if limit else artists
     results = []
-    for i, artist in enumerate(artists[:10], 1):  # Start with first 10
-        print(f"[{i}/{len(artists[:10])}] {artist}")
+    for i, artist in enumerate(artists_to_process, 1):
+        print(f"[{i}/{len(artists_to_process)}] {artist}")
         result = find_artist_website(artist)
         results.append(result)
 

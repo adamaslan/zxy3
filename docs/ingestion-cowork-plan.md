@@ -88,7 +88,7 @@ Yasmeen Abdallah, Yasue Maetake
 | Signal Gallery | — | — | commercial |
 | SoMad | — | — | commercial |
 | Spring/Break Art Show | New York | USA | art_fair |
-| Tanya Bondakar Gallery | — | — | commercial |
+| Tanya Bonakdar Gallery | — | — | commercial |
 | Tempest | Ridgewood | USA | commercial |
 | The Armory Show | New York | USA | art_fair |
 | The Bass | Miami Beach | USA | museum |

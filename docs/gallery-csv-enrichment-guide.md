@@ -33,7 +33,7 @@ These galleries have broken or unreachable websites. **Action**: Investigate eac
 | King's Leap | https://www.kingsleap.com | SSL hostname mismatch | Find correct website |
 | Mery Gates | https://www.merygates.com | Timeout | Check if gallery still operating |
 | Satellite Art Show | https://www.satelliteartshow.com | DNS error | Verify current website or status |
-| Tanya Bondakar Gallery | https://www.tanyabondakargallery.com | DNS error | Check if gallery exists |
+| Tanya Bonakdar Gallery | https://www.tanyabonakdargallery.com | DNS error | Check if gallery exists |
 | The Border | https://www.theborder.nyc | DNS error | Verify current website |
 | Underdonk | https://www.underdonk.info | DNS error | Search for current website |
 

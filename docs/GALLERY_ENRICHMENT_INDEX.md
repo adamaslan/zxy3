@@ -120,7 +120,7 @@ Enrichment columns:     4 (ready to fill)
 7. King's Leap
 8. Mery Gates
 9. Satellite Art Show
-10. Tanya Bondakar Gallery
+10. Tanya Bonakdar Gallery
 11. The Border
 12. Underdonk
 
