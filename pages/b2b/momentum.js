@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../../styles/B2BMomentum.module.css';
@@ -10,6 +10,9 @@ const WINDOWS = [
 ];
 
 const STAGES = ['all', 'Emerging', 'Mid-career', 'Established', 'Researching'];
+const INITIAL_VISIBLE_ARTISTS = 120;
+const VISIBLE_ARTIST_INCREMENT = 120;
+const RANK_LIMIT_PER_WINDOW = 250;
 
 const SIGNAL_FILTERS = [
   { id: 'hasCv', label: 'CV' },
@@ -127,13 +130,37 @@ function parseFollowers(value) {
   return Number(clean) || 0;
 }
 
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 function softScale(value, cap) {
   if (!value || value <= 0) return 0;
   return Math.min(Math.sqrt(value / cap), 1) * 100;
+}
+
+function normalizeSearchText(value) {
+  return String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function normalizeExternalUrl(value, baseUrl = '') {
+  const trimmed = String(value || '').trim();
+  if (!trimmed) return '';
+
+  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) return trimmed;
+  if (trimmed.startsWith('//')) return `https:${trimmed}`;
+
+  if (baseUrl) {
+    const normalizedBase = normalizeExternalUrl(baseUrl);
+    try {
+      return new URL(trimmed, normalizedBase).toString();
+    } catch {
+      // Fall through to protocol prefix.
+    }
+  }
+
+  return `https://${trimmed.replace(/^\/+/, '')}`;
 }
 
 function computeScores(signals) {
@@ -186,6 +213,22 @@ function galleryNameFromSlug(value) {
     .filter(Boolean)
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ');
+}
+
+function getRankedArtistUnion(artists, windows, limit) {
+  const artistMap = new Map();
+
+  windows.forEach(window => {
+    [...artists]
+      .sort((a, b) => b.scores[window] - a.scores[window])
+      .slice(0, limit)
+      .forEach(artist => {
+        artistMap.set(artist.id, artist);
+      });
+  });
+
+  return Array.from(artistMap.values())
+    .sort((a, b) => b.scores['30d'] - a.scores['30d']);
 }
 
 function exportRows(rows, window) {
@@ -377,6 +420,7 @@ export default function MomentumRadarPage({ initialArtists, generatedAt, sourceS
   const [signalFilters, setSignalFilters] = useState([]);
   const [selectedId, setSelectedId] = useState(initialArtists[0]?.id || '');
   const [watchedIds, setWatchedIds] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_ARTISTS);
 
   const filteredArtists = useMemo(() => {
     const searchTerm = search.trim().toLowerCase();
@@ -402,6 +446,10 @@ export default function MomentumRadarPage({ initialArtists, generatedAt, sourceS
   }, [initialArtists, search, signalFilters, stage, window]);
 
   const selectedArtist = filteredArtists.find(artist => artist.id === selectedId) || filteredArtists[0] || null;
+  const visibleArtists = useMemo(
+    () => filteredArtists.slice(0, visibleCount),
+    [filteredArtists, visibleCount]
+  );
 
   const stats = useMemo(() => {
     const top = filteredArtists[0];
@@ -433,6 +481,10 @@ export default function MomentumRadarPage({ initialArtists, generatedAt, sourceS
         : [...current, id]
     ));
   }
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_ARTISTS);
+  }, [search, signalFilters, stage, window]);
 
   return (
     <>
@@ -554,7 +606,7 @@ export default function MomentumRadarPage({ initialArtists, generatedAt, sourceS
             </div>
 
             <div className={styles.artistList}>
-              {filteredArtists.slice(0, 120).map((artist, index) => (
+              {visibleArtists.map((artist, index) => (
                 <ArtistRow
                   key={artist.id}
                   artist={artist}
@@ -569,6 +621,21 @@ export default function MomentumRadarPage({ initialArtists, generatedAt, sourceS
 
               {filteredArtists.length === 0 && (
                 <div className={styles.noResults}>No artists match the current filters.</div>
+              )}
+
+              {filteredArtists.length > visibleArtists.length && (
+                <div className={styles.showMoreWrap}>
+                  <p>
+                    Showing {visibleArtists.length} of {filteredArtists.length} matching artists.
+                  </p>
+                  <button
+                    type="button"
+                    className={styles.showMoreButton}
+                    onClick={() => setVisibleCount(count => count + VISIBLE_ARTIST_INCREMENT)}
+                  >
+                    Show more
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -596,11 +663,12 @@ export async function getStaticProps() {
     }
   }
 
-  const [artistCsv, galleryCsv, openingsMd, seedGalleriesJson] = await Promise.all([
+  const [artistCsv, galleryCsv, openingsMd, seedGalleriesJson, topGallerySignalsJson] = await Promise.all([
     readOptional('data/artists-consolidated.csv'),
     readOptional('data/galleries-consolidated.csv'),
     readOptional('data/upcoming-openings.md'),
     readOptional('data/seed-galleries.json'),
+    readOptional('data/top-gallery-signals.json'),
   ]);
 
   const seedGalleries = seedGalleriesJson ? JSON.parse(seedGalleriesJson) : [];
@@ -618,9 +686,14 @@ export async function getStaticProps() {
     const files = await fs.readdir(dataDir).catch(() => []);
     const extractedFiles = files.filter(file => /^extracted-.*\.json$/.test(file));
     const artistMap = new Map();
+    const payloads = await Promise.all(
+      extractedFiles.map(async file => ({
+        file,
+        payload: JSON.parse(await fs.readFile(path.join(dataDir, file), 'utf8')),
+      }))
+    );
 
-    for (const file of extractedFiles) {
-      const payload = JSON.parse(await fs.readFile(path.join(dataDir, file), 'utf8'));
+    for (const { file, payload } of payloads) {
       const fallbackGallery = galleryNameFromSlug(payload.gallery || file.replace(/^extracted-/, '').replace(/\.json$/, ''));
 
       for (const artist of payload.artists || []) {
@@ -656,25 +729,21 @@ export async function getStaticProps() {
   }
 
   const artistRows = artistCsv ? parseCsv(artistCsv) : await loadExtractedArtistRows();
+  const openingsSearchText = ` ${normalizeSearchText(openingsMd)} `;
   const activeGalleries = new Set(
     galleryRows
       .filter(row => row.status === 'active')
       .map(row => row.name.toLowerCase())
   );
-
-  const topGalleryNames = new Set([
-    'art basel',
-    'carpenter\'s workshop gallery',
-    'clearing',
-    'david zwirner',
-    'frieze la',
-    'luhring augustine',
-    'magenta plains',
-    'mana contemporary',
-    'tanya bonakdar gallery',
-    'the armory show',
-    'tiger strikes asteroid',
-  ]);
+  const topGallerySignals = topGallerySignalsJson
+    ? JSON.parse(topGallerySignalsJson)
+    : seedGalleries.filter(gallery => ['major', 'mega'].includes(gallery.tier));
+  const topGalleryNames = new Set(
+    topGallerySignals
+      .flatMap(gallery => [gallery.name, ...(gallery.aliases || [])])
+      .filter(Boolean)
+      .map(name => name.toLowerCase())
+  );
 
   const artists = artistRows
     .filter(row => row.name && row.name.trim())
@@ -685,10 +754,14 @@ export async function getStaticProps() {
       const topGalleryCount = normalizedGalleries.filter(gallery => topGalleryNames.has(gallery)).length;
       const instagram = extractInstagram(row.instagram);
       const instagramFollowers = parseFollowers(row.instagram_followers);
-      const hasWebsite = Boolean(row.website);
-      const hasCv = Boolean(row.cv_url);
+      const website = normalizeExternalUrl(row.website);
+      const cvUrl = normalizeExternalUrl(row.cv_url, website);
+      const hasWebsite = Boolean(website);
+      const hasCv = Boolean(cvUrl);
       const hasInstagram = Boolean(instagram);
-      const recentOpening = Boolean(row._recentOpening) || new RegExp(`\\b${escapeRegExp(row.name.trim())}\\b`, 'i').test(openingsMd);
+      const artistSearchName = normalizeSearchText(row.name.trim());
+      const recentOpening = Boolean(row._recentOpening) ||
+        (artistSearchName && openingsSearchText.includes(` ${artistSearchName} `));
       const confidenceInputs = [
         galleries.length > 0,
         hasWebsite,
@@ -719,9 +792,9 @@ export async function getStaticProps() {
         id: row.id || `artist-${index}`,
         name: row.name.trim(),
         slug: row.slug || '',
-        website: row.website || '',
+        website,
         instagram,
-        cvUrl: row.cv_url || '',
+        cvUrl,
         instagramFollowers,
         galleries,
         galleryCount: galleries.length,
@@ -743,10 +816,13 @@ export async function getStaticProps() {
         },
         scores: computeScores(signals),
       };
-    })
-    .sort((a, b) => b.scores['30d'] - a.scores['30d']);
+    });
 
-  const rankedArtists = artists.slice(0, 250);
+  const rankedArtists = getRankedArtistUnion(
+    artists,
+    WINDOWS.map(item => item.id),
+    RANK_LIMIT_PER_WINDOW
+  );
 
   return {
     props: {
