@@ -70,7 +70,7 @@ Validated locally:
 - Mistral live smoke test succeeds.
 - `/api/campaign` generates campaign content through Mistral.
 - Frontend production build passes.
-- Playwright dashboard smoke test passes.
+- Playwright dashboard smoke test passes and verifies Tailwind-computed styles on the body, heading, and primary action.
 
 ## GCP Migration Shape
 

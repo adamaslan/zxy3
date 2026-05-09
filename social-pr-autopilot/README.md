@@ -47,10 +47,12 @@ AI_PROVIDER=mistral uvicorn app.main:app --reload --port 8102
 ```bash
 cd social-pr-autopilot/frontend
 npm install
-NEXT_PUBLIC_API_BASE=http://localhost:8102 npm run dev -- --port 3102
+npm run dev:local
 ```
 
 Open `http://localhost:3102`.
+
+Run this from `social-pr-autopilot/frontend`, not the repo root. The repo root is a separate `zxy3` Next app, so its Vercel preview is not the Social PR Autopilot frontend unless Vercel is configured with this nested frontend as the project root.
 
 ## GCP Migration Shape
 
