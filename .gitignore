@@ -2,14 +2,18 @@
 
 # dependencies
 /node_modules
+node_modules/
 /.pnp
 .pnp.js
 
 # testing
 /coverage
+test-results/
+playwright-report/
 
 # next.js
 /.next/
+.next/
 /out/
 
 # production
@@ -17,6 +21,9 @@
 
 # misc
 .DS_Store
+__pycache__/
+*.pyc
+*.tsbuildinfo
 
 # debug
 npm-debug.log*
