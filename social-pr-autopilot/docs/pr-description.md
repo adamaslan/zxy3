@@ -12,6 +12,8 @@ This PR adds the Social PR Autopilot full-stack app and upgrades it into a local
 - Added Gemini fallback/switching support for later GCP/provider changes.
 - Added Instagram scheduling export, Telegram Bot API, and Bluesky AT Protocol adapter scaffolding.
 - Added publish logs with retry state, missing config, response previews, rate-limit state, and next-action diagnostics.
+- Added safer env parsing, JSON-backed retry payloads, and guarded AI provider response parsing.
+- Enabled strict TypeScript typing on the dashboard.
 - Added structured backend logging with request IDs, run IDs, publish log IDs, channel names, and campaign names.
 - Added Dockerfiles, Compose config, GCP Cloud Run/Scheduler templates, and deployment docs.
 - Added backend contract tests and Playwright UI smoke tests.
@@ -19,7 +21,7 @@ This PR adds the Social PR Autopilot full-stack app and upgrades it into a local
 
 ## Validation
 
-- Backend tests: `5 passed`
+- Backend tests: `6 passed`
 - Backend compile check: passed
 - Mistral live smoke test: passed
 - Local `/api/campaign` generation through Mistral: passed

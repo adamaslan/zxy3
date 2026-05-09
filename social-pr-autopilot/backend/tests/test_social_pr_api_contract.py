@@ -34,6 +34,17 @@ def test_mistral_key_alias(monkeypatch) -> None:
     assert status["mistral_key_source"] == "MISTRAL_KEY"
 
 
+def test_invalid_env_values_use_safe_defaults(monkeypatch) -> None:
+    from app.ai_providers import provider_status
+    from app.runtime import channel_limit
+
+    monkeypatch.setenv("AI_MAX_ATTEMPTS", "not-a-number")
+    monkeypatch.setenv("TELEGRAM_RATE_LIMIT", "not-a-limit")
+
+    assert provider_status()["max_attempts"] == 2
+    assert channel_limit("telegram") == (10, 3600)
+
+
 def test_health_and_ready() -> None:
     assert client.get("/health").json()["status"] == "ok"
     ready = client.get("/ready").json()
@@ -85,7 +96,12 @@ def test_channel_statuses_and_dry_run_publish() -> None:
     logs = client.get("/api/publish-logs").json()["publish_logs"]
     saved_log = next(log for log in logs if log["id"] == payload["publish_log_id"])
     assert saved_log["next_action"]
+    assert saved_log["payload_preview"].startswith("{")
     assert "missing_config" in saved_log["diagnostics"]
+
+    retry = client.post(f"/api/publish-logs/{payload['publish_log_id']}/retry")
+    assert retry.status_code == 200
+    assert retry.json()["status"] == "dry_run"
 
 
 def test_instagram_scheduling_export() -> None:

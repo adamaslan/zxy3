@@ -3,13 +3,46 @@
 import { useEffect, useState } from "react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8102";
+type Channel = "instagram" | "telegram" | "bluesky";
+
+interface CampaignPack {
+  run_id: string;
+  campaign_name: string;
+  angle?: string;
+  posts?: Partial<Record<Channel, string>>;
+  image_prompts?: string[];
+}
+
+interface ChannelAdapterStatus {
+  channel: string;
+  configured: boolean;
+}
+
+interface DebugSnapshot {
+  run_count: number;
+  recent_events?: unknown[];
+}
+
+interface ReadyResponse {
+  providers?: {
+    selected_provider?: string;
+    mistral_configured?: boolean;
+    gemini_configured?: boolean;
+  };
+}
+
+interface PublishResult {
+  status: string;
+  publish_log_id: string;
+  next_action?: string;
+}
 
 export default function Home() {
   const [event, setEvent] = useState("Launching an agent that turns one product update into seven days of posts and PR outreach.");
   const [summary, setSummary] = useState("Campaign pack waiting.");
   const [backendStatus, setBackendStatus] = useState("checking backend...");
   const [debugSummary, setDebugSummary] = useState("debug snapshot pending");
-  const [campaign, setCampaign] = useState<any>(null);
+  const [campaign, setCampaign] = useState<CampaignPack | null>(null);
   const [channelStatus, setChannelStatus] = useState("channels loading...");
   const [publishResult, setPublishResult] = useState("No publish/export action yet.");
 
@@ -17,7 +50,7 @@ export default function Home() {
     const controller = new AbortController();
     fetch(`${API_BASE}/ready`, { signal: controller.signal })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error("not ready")))
-      .then((data) => {
+      .then((data: ReadyResponse) => {
         const selected = data.providers?.selected_provider ?? "demo";
         const configured = data.providers?.mistral_configured || data.providers?.gemini_configured;
         setBackendStatus(`backend ready · ${configured ? selected : "demo"} mode`);
@@ -32,7 +65,7 @@ export default function Home() {
     try {
       const response = await fetch(`${API_BASE}/debug`);
       if (!response.ok) throw new Error("debug unavailable");
-      const data = await response.json();
+      const data = await response.json() as DebugSnapshot;
       setDebugSummary(`${data.run_count} runs · ${data.recent_events?.length ?? 0} recent events`);
     } catch {
       setDebugSummary("debug endpoint unavailable");
@@ -43,8 +76,8 @@ export default function Home() {
     try {
       const response = await fetch(`${API_BASE}/api/channels`);
       if (!response.ok) throw new Error("channels unavailable");
-      const data = await response.json();
-      const configured = data.filter((item: any) => item.configured).map((item: any) => item.channel).join(", ");
+      const data = await response.json() as ChannelAdapterStatus[];
+      const configured = data.filter((item) => item.configured).map((item) => item.channel).join(", ");
       setChannelStatus(configured ? `configured: ${configured}` : "no live adapters configured · dry-run/export only");
     } catch {
       setChannelStatus("channel status unavailable");
@@ -60,7 +93,7 @@ export default function Home() {
         body: JSON.stringify({ event }),
       });
       if (!response.ok) throw new Error("Campaign request failed");
-      const data = await response.json();
+      const data = await response.json() as CampaignPack;
       setCampaign(data);
       setSummary(`run ${data.run_id}: ${data.angle ?? "Campaign generated."}`);
       fetchDebug();
@@ -69,7 +102,7 @@ export default function Home() {
     }
   }
 
-  async function publishChannel(channel: "instagram" | "telegram" | "bluesky") {
+  async function publishChannel(channel: Channel) {
     const text = campaign?.posts?.[channel] ?? campaign?.angle ?? event;
     setPublishResult(`${channel}: publishing/exporting...`);
     try {
@@ -85,7 +118,7 @@ export default function Home() {
         }),
       });
       if (!response.ok) throw new Error("publish failed");
-      const data = await response.json();
+      const data = await response.json() as PublishResult;
       setPublishResult(`${channel}: ${data.status} · log ${data.publish_log_id} · ${data.next_action ?? "check publish logs"}`);
       fetchDebug();
     } catch {

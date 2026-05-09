@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from collections.abc import Awaitable, Callable
-from typing import Any
+from typing import Any, NoReturn
 
 import httpx
 
@@ -58,7 +58,11 @@ async def _gemini(prompt: str, api_key: str) -> str:
     async with httpx.AsyncClient(timeout=45) as client:
         response = await client.post(url, json=payload, headers={"x-goog-api-key": api_key})
         response.raise_for_status()
-        return response.json()["candidates"][0]["content"]["parts"][0]["text"]
+        try:
+            content = response.json()["candidates"][0]["content"]["parts"][0]["text"]
+        except (KeyError, IndexError, TypeError, ValueError) as exc:
+            _raise_provider_parse_error("gemini", response.text, exc)
+        return str(content)
 
 
 async def _mistral(prompt: str, api_key: str) -> str:
@@ -70,12 +74,17 @@ async def _mistral(prompt: str, api_key: str) -> str:
             headers={"Authorization": f"Bearer {api_key}"},
         )
         response.raise_for_status()
-        return response.json()["choices"][0]["message"]["content"]
+        try:
+            content = response.json()["choices"][0]["message"]["content"]
+        except (KeyError, IndexError, TypeError, ValueError) as exc:
+            _raise_provider_parse_error("mistral", response.text, exc)
+        return str(content)
 
 
 async def _with_retries(call: Callable[[], Awaitable[str]], provider: str) -> str:
     last_exc: Exception | None = None
-    for attempt in range(1, _max_attempts() + 1):
+    max_attempts = _max_attempts()
+    for attempt in range(1, max_attempts + 1):
         record_event("ai_provider_attempt", provider=provider, attempt=attempt)
         try:
             result = await call()
@@ -84,7 +93,7 @@ async def _with_retries(call: Callable[[], Awaitable[str]], provider: str) -> st
         except Exception as exc:
             last_exc = exc
             record_event("ai_provider_error", level="warning", provider=provider, attempt=attempt, error=str(exc))
-            if attempt < _max_attempts():
+            if attempt < max_attempts:
                 await asyncio.sleep(0.75 * attempt)
     raise last_exc  # type: ignore[misc]
 
@@ -117,4 +126,21 @@ def _mistral_model() -> str:
 
 
 def _max_attempts() -> int:
-    return int(env_value("AI_MAX_ATTEMPTS", default="2"))
+    raw = env_value("AI_MAX_ATTEMPTS", default="2")
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        logger.warning("invalid_ai_max_attempts", extra={"config_value": raw, "default_value": 2})
+        return 2
+
+
+def _raise_provider_parse_error(provider: str, response_text: str, exc: Exception) -> NoReturn:
+    logger.error(
+        "ai_provider_parse_error",
+        extra={
+            "provider": provider,
+            "error": str(exc),
+            "response_preview": response_text[:500],
+        },
+    )
+    raise ValueError(f"Invalid response structure from {provider} API") from exc

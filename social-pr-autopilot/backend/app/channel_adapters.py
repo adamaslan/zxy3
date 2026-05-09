@@ -1,4 +1,6 @@
+import json
 import os
+from datetime import datetime, timezone
 from typing import Any
 
 import httpx
@@ -89,22 +91,20 @@ async def publish(payload: PublishRequest) -> PublishResult:
 
 
 async def retry_publish(log: dict[str, Any]) -> PublishResult:
-    payload = PublishRequest(**_payload_from_preview(log["payload_preview"]))
+    raw_payload = log.get("payload")
+    payload_data = raw_payload if isinstance(raw_payload, dict) else _payload_from_preview(log.get("payload_preview", ""))
+    payload = PublishRequest(**payload_data)
     return await publish(payload)
 
 
 def _payload_from_preview(preview: str) -> dict[str, Any]:
-    # The preview is deliberately plain str(dict) for operator readability.
-    # Retry uses a conservative fallback if the preview cannot be parsed.
-    import ast
-
     try:
-        value = ast.literal_eval(preview)
+        value = json.loads(preview)
         if isinstance(value, dict):
             return value
-    except Exception:
+    except (json.JSONDecodeError, TypeError):
         pass
-    return {"channel": "telegram", "text": preview[:280], "dry_run": True}
+    return {"channel": "telegram", "text": str(preview)[:280], "dry_run": True}
 
 
 def _instagram_export_id(payload: PublishRequest) -> str:
@@ -178,11 +178,15 @@ async def _publish_bluesky(payload: PublishRequest) -> str:
         )
         session_response.raise_for_status()
         session = session_response.json()
+        access_jwt = session.get("accessJwt")
+        repo = session.get("did")
+        if not access_jwt or not repo:
+            raise ValueError("Invalid Bluesky session response: missing accessJwt or did")
         record_response = await client.post(
             "https://bsky.social/xrpc/com.atproto.repo.createRecord",
-            headers={"Authorization": f"Bearer {session['accessJwt']}"},
+            headers={"Authorization": f"Bearer {access_jwt}"},
             json={
-                "repo": session["did"],
+                "repo": repo,
                 "collection": "app.bsky.feed.post",
                 "record": {
                     "$type": "app.bsky.feed.post",
@@ -257,6 +261,4 @@ def _rate_limit_label(channel: str) -> str:
 
 
 def _now_iso() -> str:
-    from datetime import datetime, timezone
-
     return datetime.now(timezone.utc).isoformat()

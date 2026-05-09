@@ -1,8 +1,9 @@
+import json
+import logging
 import os
 import time
 import uuid
 from datetime import datetime, timezone
-import logging
 from typing import Any
 
 from .config import load_env_files
@@ -37,7 +38,7 @@ def start_run(kind: str, payload: dict[str, Any]) -> dict[str, Any]:
         "status": "running",
         "created_at": now_iso(),
         "updated_at": now_iso(),
-        "input_preview": str(payload)[:500],
+        "input_preview": _json_preview(payload, 500),
         "summary": "",
         "error": "",
     }
@@ -100,8 +101,25 @@ def debug_snapshot() -> dict[str, Any]:
 
 def channel_limit(channel: str) -> tuple[int, int]:
     raw = os.getenv(f"{channel.upper()}_RATE_LIMIT", "10/3600")
-    count, window = raw.split("/", 1)
-    return int(count), int(window)
+    try:
+        count, window = raw.split("/", 1)
+        max_count = int(count)
+        window_seconds = int(window)
+        if max_count < 1 or window_seconds < 1:
+            raise ValueError("rate limit values must be positive")
+        return max_count, window_seconds
+    except (AttributeError, ValueError):
+        logger.warning(
+            "invalid_rate_limit",
+            extra={
+                "app": APP_NAME,
+                "event": "invalid_rate_limit",
+                "channel": channel,
+                "config_value": raw,
+                "default_value": "10/3600",
+            },
+        )
+        return 10, 3600
 
 
 def check_rate_limit(channel: str) -> tuple[bool, str]:
@@ -126,7 +144,8 @@ def create_publish_log(channel: str, payload: dict[str, Any], dry_run: bool, dia
         "attempts": 0,
         "created_at": now_iso(),
         "updated_at": now_iso(),
-        "payload_preview": str(payload)[:700],
+        "payload": payload,
+        "payload_preview": _json_preview(payload, 700),
         "external_id": "",
         "error": "",
         "retryable": False,
@@ -175,3 +194,7 @@ def list_publish_logs(limit: int = 50) -> list[dict[str, Any]]:
 
 def get_publish_log(log_id: str) -> dict[str, Any] | None:
     return PUBLISH_LOGS.get(log_id)
+
+
+def _json_preview(payload: dict[str, Any], limit: int) -> str:
+    return json.dumps(payload, default=str, sort_keys=True)[:limit]

@@ -11,4 +11,4 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 RUN npm run build
 
-CMD ["sh", "-c", "npm run start -- --hostname 0.0.0.0 --port ${PORT}"]
+CMD ["sh", "-c", "exec npm run start -- --hostname 0.0.0.0 --port ${PORT}"]

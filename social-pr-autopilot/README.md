@@ -63,10 +63,7 @@ Open `http://localhost:3102`.
 ## Test Commands
 
 ```bash
-cd social-pr-autopilot/backend
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+# From social-pr-autopilot/backend, with venv activated:
 pytest
 ```
 

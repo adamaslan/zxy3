@@ -34,6 +34,9 @@ class JsonFormatter(logging.Formatter):
             "channel",
             "publish_log_id",
             "campaign_name",
+            "config_value",
+            "default_value",
+            "response_preview",
         ):
             value = getattr(record, key, None)
             if value is not None:

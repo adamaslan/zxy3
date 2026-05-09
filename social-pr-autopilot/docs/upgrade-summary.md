@@ -15,8 +15,11 @@ Social PR Autopilot has moved from a concept scaffold into a locally runnable fu
 - Added in-memory run tracking and debug snapshots for local troubleshooting.
 - Added in-memory publish logs with status, retryability, required config, missing config, response previews, next actions, and payload previews.
 - Added retry support for stored publish attempts through `/api/publish-logs/{publish_log_id}/retry`.
+- Added JSON-backed publish payload storage so retry state is not tied to Python-specific string representations.
 - Added per-channel rate-limit settings through env vars such as `TELEGRAM_RATE_LIMIT=20/3600`.
-- Added backend tests that verify health, readiness, campaign creation, Mistral key aliasing, channel diagnostics, dry-run publishing, and Instagram export behavior.
+- Added safe fallback behavior for malformed retry/count env vars and guarded AI provider response parsing.
+- Added strict TypeScript typing for the dashboard campaign, provider, channel, debug, and publish-result shapes.
+- Added backend tests that verify health, readiness, campaign creation, Mistral key aliasing, invalid env fallback, channel diagnostics, dry-run publishing, publish-log retry, and Instagram export behavior.
 - Added Playwright smoke testing for the dashboard.
 - Added Dockerfiles, Compose config, Cloud Run template, Cloud Scheduler template, and deployment notes.
 - Added Docker ignore files and root ignore rules so dependency/build artifacts stay out of PRs and images.
