@@ -1,12 +1,14 @@
-import uuid
 import logging
 import time
+import uuid
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from .ai_providers import generate_text, provider_status
 from .channel_adapters import adapter_diagnostics, adapter_statuses, publish, retry_publish
+from .http_clients import close_http_clients
 from .logging_config import configure_logging
 from .models import CampaignPack, CampaignRequest, ChannelAdapterStatus, PublishRequest, PublishResult
 from .runtime import APP_NAME, allowed_origins, debug_snapshot, finish_run, get_publish_log, get_run, list_publish_logs, list_runs, record_event, start_run, uptime_seconds
@@ -14,7 +16,17 @@ from .runtime import APP_NAME, allowed_origins, debug_snapshot, finish_run, get_
 
 configure_logging(APP_NAME)
 logger = logging.getLogger(APP_NAME)
-app = FastAPI(title="Social PR Autopilot")
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    try:
+        yield
+    finally:
+        await close_http_clients()
+
+
+app = FastAPI(title="Social PR Autopilot", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins(),

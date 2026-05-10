@@ -1,12 +1,17 @@
+import base64
 import json
 import os
+import time
 from datetime import datetime, timezone
 from typing import Any
 
 import httpx
 
+from .http_clients import channel_client
 from .models import ChannelAdapterStatus, PublishRequest, PublishResult
 from .runtime import check_rate_limit, create_publish_log, record_event, update_publish_log
+
+BLUESKY_SESSION: dict[str, Any] = {}
 
 
 def adapter_statuses() -> list[ChannelAdapterStatus]:
@@ -156,13 +161,12 @@ async def _publish_telegram(payload: PublishRequest) -> str:
     chat_id = os.getenv("TELEGRAM_CHAT_ID")
     if not token or not chat_id:
         raise RuntimeError("Telegram credentials missing: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID are required")
-    async with httpx.AsyncClient(timeout=30) as client:
-        response = await client.post(
-            f"https://api.telegram.org/bot{token}/sendMessage",
-            json={"chat_id": chat_id, "text": payload.text, "disable_web_page_preview": False},
-        )
-        response.raise_for_status()
-        data = response.json()
+    response = await channel_client().post(
+        f"https://api.telegram.org/bot{token}/sendMessage",
+        json={"chat_id": chat_id, "text": payload.text, "disable_web_page_preview": False},
+    )
+    response.raise_for_status()
+    data = response.json()
     return str(data.get("result", {}).get("message_id", "telegram-message"))
 
 
@@ -171,33 +175,85 @@ async def _publish_bluesky(payload: PublishRequest) -> str:
     password = os.getenv("BLUESKY_APP_PASSWORD")
     if not handle or not password:
         raise RuntimeError("Bluesky credentials missing: BLUESKY_HANDLE and BLUESKY_APP_PASSWORD are required")
-    async with httpx.AsyncClient(timeout=30) as client:
-        session_response = await client.post(
-            "https://bsky.social/xrpc/com.atproto.server.createSession",
-            json={"identifier": handle, "password": password},
-        )
-        session_response.raise_for_status()
-        session = session_response.json()
-        access_jwt = session.get("accessJwt")
-        repo = session.get("did")
-        if not access_jwt or not repo:
-            raise ValueError("Invalid Bluesky session response: missing accessJwt or did")
-        record_response = await client.post(
-            "https://bsky.social/xrpc/com.atproto.repo.createRecord",
-            headers={"Authorization": f"Bearer {access_jwt}"},
-            json={
-                "repo": repo,
-                "collection": "app.bsky.feed.post",
-                "record": {
-                    "$type": "app.bsky.feed.post",
-                    "text": payload.text[:300],
-                    "createdAt": _now_iso(),
-                },
-            },
-        )
-        record_response.raise_for_status()
-        record = record_response.json()
+    access_jwt, repo = await _bluesky_session(handle, password)
+    try:
+        record = await _create_bluesky_record(repo, access_jwt, payload.text)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code != 401:
+            raise
+        BLUESKY_SESSION.clear()
+        access_jwt, repo = await _bluesky_session(handle, password)
+        record = await _create_bluesky_record(repo, access_jwt, payload.text)
     return str(record.get("uri", "bluesky-post"))
+
+
+async def _bluesky_session(handle: str, password: str) -> tuple[str, str]:
+    if _cached_bluesky_session_valid(handle):
+        return BLUESKY_SESSION["access_jwt"], BLUESKY_SESSION["did"]
+
+    session_response = await channel_client().post(
+        "https://bsky.social/xrpc/com.atproto.server.createSession",
+        json={"identifier": handle, "password": password},
+    )
+    session_response.raise_for_status()
+    session = session_response.json()
+    access_jwt = session.get("accessJwt")
+    did = session.get("did")
+    if not access_jwt or not did:
+        raise ValueError("Invalid Bluesky session response: missing accessJwt or did")
+
+    BLUESKY_SESSION.clear()
+    BLUESKY_SESSION.update({
+        "handle": handle,
+        "access_jwt": access_jwt,
+        "did": did,
+        "expires_at": _jwt_expires_at(access_jwt),
+    })
+    return access_jwt, did
+
+
+def _cached_bluesky_session_valid(handle: str) -> bool:
+    expires_at = float(BLUESKY_SESSION.get("expires_at", 0))
+    return (
+        BLUESKY_SESSION.get("handle") == handle
+        and bool(BLUESKY_SESSION.get("access_jwt"))
+        and bool(BLUESKY_SESSION.get("did"))
+        and expires_at > time.time() + 60
+    )
+
+
+def _jwt_expires_at(token: str) -> float:
+    try:
+        payload_segment = token.split(".")[1]
+        padded = payload_segment + "=" * (-len(payload_segment) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(padded))
+        exp = payload.get("exp")
+        if isinstance(exp, (int, float)):
+            return float(exp)
+    except (IndexError, ValueError, TypeError, json.JSONDecodeError):
+        pass
+    return time.time() + 3000
+
+
+async def _create_bluesky_record(repo: str, access_jwt: str, text: str) -> dict[str, Any]:
+    record_response = await channel_client().post(
+        "https://bsky.social/xrpc/com.atproto.repo.createRecord",
+        headers={"Authorization": f"Bearer {access_jwt}"},
+        json={
+            "repo": repo,
+            "collection": "app.bsky.feed.post",
+            "record": {
+                "$type": "app.bsky.feed.post",
+                "text": text[:300],
+                "createdAt": _now_iso(),
+            },
+        },
+    )
+    record_response.raise_for_status()
+    record = record_response.json()
+    if not isinstance(record, dict):
+        raise ValueError("Invalid Bluesky record response")
+    return record
 
 
 def _next_action_for_error(channel: str, error: str, diagnostics: dict[str, Any]) -> str:
@@ -261,4 +317,4 @@ def _rate_limit_label(channel: str) -> str:
 
 
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
