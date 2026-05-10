@@ -4,7 +4,7 @@ backend:
 	cd backend && uvicorn app.main:app --reload --port 8102
 
 frontend:
-	cd frontend && npm run dev -- --port 3102
+	cd frontend && npm run dev:local
 
 test-backend:
 	cd backend && pytest

@@ -3,9 +3,8 @@ import logging
 from collections.abc import Awaitable, Callable
 from typing import Any, NoReturn
 
-import httpx
-
 from .config import ai_provider_preference, config_status, deploy_target, env_source, env_value
+from .http_clients import ai_client
 from .runtime import APP_NAME, record_event
 
 
@@ -55,30 +54,28 @@ async def generate_text(prompt: str, *, purpose: str) -> str:
 async def _gemini(prompt: str, api_key: str) -> str:
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{_gemini_model()}:generateContent"
     payload: dict[str, Any] = {"contents": [{"parts": [{"text": prompt}]}]}
-    async with httpx.AsyncClient(timeout=45) as client:
-        response = await client.post(url, json=payload, headers={"x-goog-api-key": api_key})
-        response.raise_for_status()
-        try:
-            content = response.json()["candidates"][0]["content"]["parts"][0]["text"]
-        except (KeyError, IndexError, TypeError, ValueError) as exc:
-            _raise_provider_parse_error("gemini", response.text, exc)
-        return str(content)
+    response = await ai_client().post(url, json=payload, headers={"x-goog-api-key": api_key})
+    response.raise_for_status()
+    try:
+        content = response.json()["candidates"][0]["content"]["parts"][0]["text"]
+    except (KeyError, IndexError, TypeError, ValueError) as exc:
+        _raise_provider_parse_error("gemini", response.text, exc)
+    return str(content)
 
 
 async def _mistral(prompt: str, api_key: str) -> str:
     payload = {"model": _mistral_model(), "messages": [{"role": "user", "content": prompt}]}
-    async with httpx.AsyncClient(timeout=45) as client:
-        response = await client.post(
-            "https://api.mistral.ai/v1/chat/completions",
-            json=payload,
-            headers={"Authorization": f"Bearer {api_key}"},
-        )
-        response.raise_for_status()
-        try:
-            content = response.json()["choices"][0]["message"]["content"]
-        except (KeyError, IndexError, TypeError, ValueError) as exc:
-            _raise_provider_parse_error("mistral", response.text, exc)
-        return str(content)
+    response = await ai_client().post(
+        "https://api.mistral.ai/v1/chat/completions",
+        json=payload,
+        headers={"Authorization": f"Bearer {api_key}"},
+    )
+    response.raise_for_status()
+    try:
+        content = response.json()["choices"][0]["message"]["content"]
+    except (KeyError, IndexError, TypeError, ValueError) as exc:
+        _raise_provider_parse_error("mistral", response.text, exc)
+    return str(content)
 
 
 async def _with_retries(call: Callable[[], Awaitable[str]], provider: str) -> str:

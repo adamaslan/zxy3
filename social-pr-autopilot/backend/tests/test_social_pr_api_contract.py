@@ -120,3 +120,9 @@ def test_instagram_scheduling_export() -> None:
     assert payload["status"] == "exported"
     assert payload["payload"]["format"] == "scheduling_export"
     assert payload["next_action"]
+
+
+def test_bluesky_timestamp_uses_z_suffix() -> None:
+    from app.channel_adapters import _now_iso
+
+    assert _now_iso().endswith("Z")

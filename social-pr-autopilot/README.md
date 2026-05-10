@@ -80,3 +80,5 @@ cd social-pr-autopilot/tests
 npm install
 npm test
 ```
+
+Playwright uses `3112` so tests do not collide with the local dashboard on `3102`.
