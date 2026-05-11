@@ -36,7 +36,7 @@ Each publish log is designed to make real channel issues easier to fix:
 - `next_action`: the specific operational fix to try next.
 - `response_preview`: platform error or response detail, truncated for safe logging.
 
-For Instagram business-account publishing, the current implementation intentionally uses scheduling export first. Direct publishing should only be added after the app has confirmed business account ID, connected Facebook page ID, long-lived access token, media-container creation, publish endpoint behavior, and permission review status.
+For Instagram business-account publishing, the current implementation intentionally uses scheduling export first. Direct publishing should only be added after the app has confirmed business account ID, connected Facebook page ID, long-lived access token, media-container creation, publish endpoint behavior, and permission review status. Use [Connect An Instagram Account](./connect-instagram-account.md) to prepare the account and collect the required IDs/tokens.
 
 ## Success Criteria
 
