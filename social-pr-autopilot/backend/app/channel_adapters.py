@@ -36,10 +36,13 @@ def adapter_diagnostics(channel: str) -> dict[str, Any]:
     if channel == "instagram":
         expires_at = os.getenv("INSTAGRAM_TOKEN_EXPIRES_AT", "")
         if expires_at:
-            seconds_left = int(expires_at) - int(time.time())
-            result["token_expires_in_days"] = round(seconds_left / 86400, 1)
-            if seconds_left < 7 * 86400:
-                result["token_warning"] = "Token expires in less than 7 days — renew now."
+            try:
+                seconds_left = int(expires_at) - int(time.time())
+                result["token_expires_in_days"] = round(seconds_left / 86400, 1)
+                if seconds_left < 7 * 86400:
+                    result["token_warning"] = "Token expires in less than 7 days — renew now."
+            except (ValueError, TypeError):
+                result["token_warning"] = "Invalid token expiry format in INSTAGRAM_TOKEN_EXPIRES_AT."
         result["public_base_url"] = os.getenv("INSTAGRAM_PUBLIC_BASE_URL", "") or "NOT SET — ngrok required for local images"
         result["media_dir"] = str(media_dir())
     return result
@@ -66,7 +69,7 @@ async def publish(payload: PublishRequest) -> PublishResult:
 
     try:
         if payload.channel == "instagram":
-            direct_enabled = os.getenv("INSTAGRAM_DIRECT_PUBLISH_ENABLED", "false").lower() not in {"0", "false", "no", "off"}
+            direct_enabled = _instagram_direct_enabled()
             if not direct_enabled or payload.dry_run:
                 external_id = _instagram_export_id(payload)
                 next_action = (
@@ -78,7 +81,9 @@ async def publish(payload: PublishRequest) -> PublishResult:
                 update_publish_log(log["id"], status, external_id=external_id, next_action=next_action)
                 return _result(payload, log["id"], status, limit_message, external_id=external_id, next_action=next_action, diagnostics=diagnostics)
             external_id = await _publish_instagram(payload)
-            next_action = "Verify the post on the Instagram profile: https://www.instagram.com/tastytechbytes/"
+            ig_handle = os.getenv("INSTAGRAM_HANDLE", "")
+            profile_hint = f"https://www.instagram.com/{ig_handle}/" if ig_handle else "your Instagram profile"
+            next_action = f"Verify the post on the Instagram profile: {profile_hint}"
             update_publish_log(log["id"], "published", external_id=external_id, next_action=next_action)
             return _result(payload, log["id"], "published", limit_message, external_id=external_id, next_action=next_action, diagnostics=diagnostics)
 
@@ -220,7 +225,10 @@ async def _check_instagram_quota() -> None:
         params={"fields": "config,quota_usage", "access_token": token},
     )
     response.raise_for_status()
-    data = response.json().get("data", [{}])[0]
+    data_list = response.json().get("data", [])
+    if not data_list:
+        return
+    data = data_list[0]
     quota_usage = data.get("quota_usage", 0)
     quota_total = data.get("config", {}).get("quota_total", 100)
     if quota_usage >= quota_total:

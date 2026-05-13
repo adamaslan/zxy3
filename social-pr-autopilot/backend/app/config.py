@@ -70,7 +70,7 @@ def app_env() -> str:
 
 
 def ttb8_repo_path() -> str:
-    return env_value("TTB8_REPO_PATH", default="/Users/adamaslan/code/ttb8")
+    return env_value("TTB8_REPO_PATH", default="")
 
 
 def ai_news_sources() -> list[str]:
