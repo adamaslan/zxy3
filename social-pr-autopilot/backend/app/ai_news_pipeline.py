@@ -6,9 +6,13 @@ Eight steps:
   3. generate_article     — Mistral (JSON mode) → structured Article
   4. render_route_tsx     — f-string template → .tsx file text
   5. generate_hero_image  — Gemini Imagen → 1080×1080 JPEG in MEDIA_DIR
-  6. write_to_ttb8        — drops files into ttb8 repo, appends routes
+  6. write_to_ttb8        — drops files into ttb8 repo, updates data registry
   7. compose_caption      — Gemini → ≤ 2200-char Instagram caption
   8. publish_to_instagram — calls existing /api/publish endpoint
+
+Routes and article index are driven by a JSON registry file
+(ttb8/app/article-registry.json) rather than regex modification of source
+files, making updates safe and diff-friendly.
 """
 
 import base64
@@ -17,6 +21,8 @@ import json
 import logging
 import re
 import uuid
+import xml.etree.ElementTree as ET
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -45,9 +51,18 @@ _BLOG_RSS_FEEDS = [
     ("google-deepmind", "https://deepmind.google/blog/rss/"),
 ]
 
+# XML namespaces used in Atom feeds (arXiv)
+_ATOM_NS = {"atom": "http://www.w3.org/2005/Atom"}
+
 
 class DuplicateArticleError(Exception):
     pass
+
+
+@dataclass
+class WriteResult:
+    route_file: str
+    image_dest: str
 
 
 # ---------------------------------------------------------------------------
@@ -90,7 +105,7 @@ async def run_ai_news_pipeline(
         image_filename, image_provider_used = await generate_hero_image(article)
 
         # 6. Write to ttb8
-        route_file = await write_to_ttb8(article, route_tsx_text, image_filename)
+        write_result = await write_to_ttb8(article, route_tsx_text, image_filename)
         mark_story_seen(story.url)
 
         # 7. Compose caption
@@ -109,7 +124,7 @@ async def run_ai_news_pipeline(
             story_url=story.url,
             story_title=story.title,
             article_slug=article.slug,
-            route_file=route_file,
+            route_file=write_result.route_file,
             image_filename=image_filename,
             image_provider_used=image_provider_used,
             caption=caption,
@@ -189,6 +204,7 @@ async def _fetch_hn_stories() -> list[Story]:
 
 
 async def _fetch_arxiv_stories() -> list[Story]:
+    """Fetch recent AI papers from arXiv using the Atom XML API."""
     url = (
         "http://export.arxiv.org/api/query"
         "?search_query=cat:cs.AI"
@@ -198,21 +214,27 @@ async def _fetch_arxiv_stories() -> list[Story]:
         resp = await client.get(url)
         resp.raise_for_status()
 
+    try:
+        root = ET.fromstring(resp.text)
+    except ET.ParseError as exc:
+        raise ValueError(f"Failed to parse arXiv Atom feed: {exc}") from exc
+
     stories = []
-    entries = re.findall(r"<entry>(.*?)</entry>", resp.text, re.DOTALL)
-    for entry in entries:
-        title_match = re.search(r"<title>(.*?)</title>", entry, re.DOTALL)
-        summary_match = re.search(r"<summary>(.*?)</summary>", entry, re.DOTALL)
-        link_match = re.search(r'<id>(.*?)</id>', entry, re.DOTALL)
-        published_match = re.search(r"<published>(.*?)</published>", entry)
-        if not title_match or not link_match:
+    for entry in root.findall("atom:entry", _ATOM_NS):
+        title_el = entry.find("atom:title", _ATOM_NS)
+        summary_el = entry.find("atom:summary", _ATOM_NS)
+        id_el = entry.find("atom:id", _ATOM_NS)
+        published_el = entry.find("atom:published", _ATOM_NS)
+
+        if title_el is None or id_el is None:
             continue
+
         stories.append(Story(
-            url=link_match.group(1).strip(),
-            title=title_match.group(1).strip().replace("\n", " "),
-            summary=(summary_match.group(1).strip().replace("\n", " ") if summary_match else ""),
+            url=(id_el.text or "").strip(),
+            title=(title_el.text or "").strip().replace("\n", " "),
+            summary=(summary_el.text or "").strip().replace("\n", " ") if summary_el is not None else "",
             source="arxiv",
-            published_at=published_match.group(1).strip() if published_match else "",
+            published_at=(published_el.text or "").strip() if published_el is not None else "",
         ))
     return stories
 
@@ -241,32 +263,65 @@ async def _fetch_hf_stories() -> list[Story]:
 
 
 async def _fetch_blog_stories() -> list[Story]:
+    """Fetch blog posts from RSS feeds using a proper XML parser."""
     stories = []
     async with httpx.AsyncClient(timeout=15) as client:
         for source_name, feed_url in _BLOG_RSS_FEEDS:
             try:
                 resp = await client.get(feed_url)
                 resp.raise_for_status()
-                items = re.findall(r"<item>(.*?)</item>", resp.text, re.DOTALL)
-                for item in items[:2]:
-                    title_match = re.search(r"<title><!\[CDATA\[(.*?)]]></title>|<title>(.*?)</title>", item, re.DOTALL)
-                    link_match = re.search(r"<link>(.*?)</link>", item, re.DOTALL)
-                    desc_match = re.search(r"<description><!\[CDATA\[(.*?)]]></description>|<description>(.*?)</description>", item, re.DOTALL)
-                    pub_match = re.search(r"<pubDate>(.*?)</pubDate>", item)
-                    if not title_match or not link_match:
-                        continue
-                    title = (title_match.group(1) or title_match.group(2) or "").strip()
-                    desc = (desc_match.group(1) if desc_match and desc_match.group(1) else (desc_match.group(2) if desc_match else "")).strip()
-                    stories.append(Story(
-                        url=link_match.group(1).strip(),
-                        title=title,
-                        summary=desc[:300],
-                        source=source_name,
-                        published_at=pub_match.group(1).strip() if pub_match else "",
-                    ))
+                stories.extend(_parse_rss_feed(resp.text, source_name))
             except Exception as exc:
                 record_event("ai_news_blog_feed_error", level="warning", feed=source_name, error=str(exc))
     return stories
+
+
+def _parse_rss_feed(xml_text: str, source_name: str) -> list[Story]:
+    """Parse an RSS 2.0 or Atom feed into Story objects using ElementTree."""
+    try:
+        root = ET.fromstring(xml_text)
+    except ET.ParseError as exc:
+        raise ValueError(f"Failed to parse RSS feed for {source_name}: {exc}") from exc
+
+    # Detect feed type: RSS 2.0 uses <channel><item>, Atom uses <entry>
+    ns = {"atom": "http://www.w3.org/2005/Atom"}
+    items = root.findall(".//item")  # RSS 2.0
+    if not items:
+        items = root.findall("atom:entry", ns) or root.findall(".//entry")  # Atom
+
+    stories = []
+    for item in items[:2]:
+        title_el = item.find("title") or item.find("{http://www.w3.org/2005/Atom}title")
+        link_el = item.find("link") or item.find("{http://www.w3.org/2005/Atom}link")
+        desc_el = item.find("description") or item.find("{http://www.w3.org/2005/Atom}summary")
+        pub_el = item.find("pubDate") or item.find("{http://www.w3.org/2005/Atom}published")
+
+        # <link> in Atom is often an empty tag with href attribute
+        if link_el is None:
+            continue
+        link = (link_el.text or link_el.get("href") or "").strip()
+        title = _strip_cdata(title_el.text or "") if title_el is not None else ""
+        if not link or not title:
+            continue
+
+        desc = _strip_cdata(desc_el.text or "") if desc_el is not None else ""
+        pub = (pub_el.text or "").strip() if pub_el is not None else ""
+        stories.append(Story(
+            url=link,
+            title=title,
+            summary=desc[:300],
+            source=source_name,
+            published_at=pub,
+        ))
+    return stories
+
+
+def _strip_cdata(text: str) -> str:
+    """Remove CDATA wrappers that some RSS feeds include in text content."""
+    stripped = text.strip()
+    if stripped.startswith("<![CDATA[") and stripped.endswith("]]>"):
+        return stripped[9:-3].strip()
+    return stripped
 
 
 # ---------------------------------------------------------------------------
@@ -315,14 +370,9 @@ Output only the chosen URL on a single line. Nothing else."""
 
 
 def _load_existing_articles() -> list[dict[str, str]]:
-    """Read title+slug pairs from ttb8's ai-articles.tsx for inline linking."""
-    ai_articles_path = Path(ttb8_repo_path()) / "app" / "routes" / "ai-articles.tsx"
-    if not ai_articles_path.exists():
-        return []
-    content = ai_articles_path.read_text(encoding="utf-8")
-    entries = re.findall(r'title:\s*"([^"]+)".*?link:\s*"(/[^"]+)"', content, re.DOTALL)
-    # Skip the index page itself (first entry is often "Ai Articles")
-    return [{"title": t, "slug": l.lstrip("/")} for t, l in entries if len(t) > 10]
+    """Read title+slug pairs from the article registry for inline linking."""
+    registry = _load_article_registry()
+    return [{"title": a["title"], "slug": a["slug"]} for a in registry if len(a.get("title", "")) > 10]
 
 
 async def generate_article(story: Story) -> Article:
@@ -371,15 +421,7 @@ Other rules:
 - keywords list must have 4-6 items"""
 
     raw = await generate_text(prompt, purpose="article_generation")
-
-    # Strip any accidental markdown fences
-    raw = re.sub(r"^```(?:json)?\s*", "", raw.strip())
-    raw = re.sub(r"\s*```$", "", raw.strip())
-
-    try:
-        data = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"Article generation returned invalid JSON: {exc}\nRaw: {raw[:300]}") from exc
+    data = _parse_llm_json(raw, context="article_generation")
 
     sections = [
         ArticleSection(heading=s["heading"], paragraphs=s["paragraphs"])
@@ -395,6 +437,43 @@ Other rules:
         sections=sections,
         image_prompt=data.get("image_prompt", f"Abstract AI technology hero image for {data['title']}"),
     )
+
+
+def _parse_llm_json(raw: str, context: str = "") -> dict[str, Any]:
+    """Parse JSON from LLM output, tolerating common formatting artifacts.
+
+    LLMs frequently wrap JSON in markdown code fences, add trailing commas,
+    or include leading/trailing prose. This function strips the most common
+    artifacts before calling json.loads, and raises ValueError with context
+    on failure rather than a bare JSONDecodeError.
+    """
+    text = raw.strip()
+
+    # Strip markdown code fences (```json ... ``` or ``` ... ```)
+    text = re.sub(r"^```(?:json)?\s*", "", text)
+    text = re.sub(r"\s*```$", "", text)
+    text = text.strip()
+
+    # Extract the outermost JSON object if there's leading/trailing prose
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        text = text[start: end + 1]
+
+    # Remove trailing commas before ] or } (common LLM artifact)
+    text = re.sub(r",\s*([}\]])", r"\1", text)
+
+    try:
+        result = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"LLM output is not valid JSON [{context}]: {exc}\nRaw (first 400 chars): {raw[:400]}"
+        ) from exc
+
+    if not isinstance(result, dict):
+        raise ValueError(f"LLM JSON is not an object [{context}]: got {type(result).__name__}")
+
+    return result
 
 
 def _sanitize_slug(raw: str) -> str:
@@ -423,7 +502,6 @@ def _md_links_to_jsx(text: str) -> str:
         if m:
             label = html.escape(m.group(1))
             raw_url = m.group(2)
-            # Treat anything not starting with http(s) as an internal path
             if not raw_url.startswith("http"):
                 internal = "/" + raw_url.lstrip("/")
                 url = html.escape(internal)
@@ -542,8 +620,11 @@ async def _generate_image_gemini(article: Article, dest_name: str) -> tuple[str,
     response.raise_for_status()
 
     data = response.json()
-    b64 = data["predictions"][0]["bytesBase64Encoded"]
-    image_bytes = base64.b64decode(b64)
+    try:
+        b64 = data["predictions"][0]["bytesBase64Encoded"]
+        image_bytes = base64.b64decode(b64)
+    except (KeyError, IndexError, TypeError) as exc:
+        raise ValueError(f"Gemini Imagen API returned an unexpected response format: {data}") from exc
 
     png_path = MEDIA_DIR / f"{uuid.uuid4().hex}.png"
     png_path.write_bytes(image_bytes)
@@ -554,7 +635,6 @@ async def _generate_image_gemini(article: Article, dest_name: str) -> tuple[str,
         if png_path.exists():
             png_path.unlink()
 
-    # Rename to slug-based name if the converter gave us a UUID name
     final_path = MEDIA_DIR / dest_name
     current_path = MEDIA_DIR / jpeg_name
     if current_path != final_path:
@@ -593,20 +673,44 @@ async def _generate_image_pollinations(article: Article, dest_name: str) -> tupl
 # Step 6: Write to ttb8
 # ---------------------------------------------------------------------------
 
+# Registry schema: list of {"slug": str, "title": str, "og_description": str, "image": str}
+# The registry is the single source of truth consumed by routes.ts and ai-articles.tsx
+# via a build-time codegen step, avoiding fragile regex surgery on source files.
+_REGISTRY_FILENAME = "article-registry.json"
 
-class WriteResult:
-    def __init__(self, route_file: str, image_dest: str) -> None:
-        self.route_file = route_file
-        self.image_dest = image_dest
+
+def _registry_path() -> Path:
+    repo = ttb8_repo_path()
+    if not repo:
+        raise ValueError("TTB8_REPO_PATH is not set — cannot locate article registry")
+    return Path(repo) / "app" / _REGISTRY_FILENAME
 
 
-async def write_to_ttb8(article: Article, route_tsx: str, image_filename: str) -> str:
-    ttb8 = Path(ttb8_repo_path())
+def _load_article_registry() -> list[dict[str, Any]]:
+    path = _registry_path()
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return data if isinstance(data, list) else []
+    except (json.JSONDecodeError, OSError):
+        return []
+
+
+def _save_article_registry(entries: list[dict[str, Any]]) -> None:
+    path = _registry_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(entries, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+async def write_to_ttb8(article: Article, route_tsx: str, image_filename: str) -> WriteResult:
+    repo = ttb8_repo_path()
+    if not repo:
+        raise ValueError("TTB8_REPO_PATH is not set")
+
+    ttb8 = Path(repo)
     routes_dir = ttb8 / "app" / "routes"
     public_dir = ttb8 / "public"
-    routes_ts_path = ttb8 / "app" / "routes.ts"
-    ai_articles_path = routes_dir / "ai-articles.tsx"
-    index_path = routes_dir / "_index.tsx"
 
     route_file = routes_dir / f"{article.slug}.tsx"
     if route_file.exists():
@@ -623,143 +727,42 @@ async def write_to_ttb8(article: Article, route_tsx: str, image_filename: str) -
         dest_image.write_bytes(src_image.read_bytes())
         record_event("ai_news_image_copied", dest=str(dest_image))
 
-    # Append to routes.ts — insert before the closing `] satisfies RouteConfig`
-    _append_to_routes_ts(routes_ts_path, article.slug)
+    # Update the article registry (single source of truth for routes + index)
+    _register_article(article, image_filename)
 
-    # Append to ai-articles.tsx
-    _append_to_ai_articles(ai_articles_path, article)
-
-    # Prepend to _index.tsx homepage grid
-    _prepend_to_index(index_path, article, image_filename)
-
-    return str(route_file)
+    return WriteResult(route_file=str(route_file), image_dest=str(dest_image))
 
 
-def _append_to_routes_ts(routes_ts_path: Path, slug: str) -> None:
-    if not routes_ts_path.exists():
-        raise FileNotFoundError(f"routes.ts not found at {routes_ts_path}")
+def _register_article(article: Article, image_filename: str) -> None:
+    """Append the new article to the JSON registry.
 
-    content = routes_ts_path.read_text(encoding="utf-8")
-    new_line = f'  route("{slug}", "./routes/{slug}.tsx"),'
+    The registry is consumed at build time by two generated files:
+      - app/routes.ts     (via `npm run codegen:routes`)
+      - app/routes/ai-articles.tsx  (via `npm run codegen:articles`)
 
-    if new_line in content:
-        return  # Already registered
+    Keeping registration as a pure JSON write means this pipeline never
+    needs to parse or modify TypeScript/JSX source directly.
+    """
+    entries = _load_article_registry()
 
-    # Insert before the first (and only) `] satisfies RouteConfig` on its own line
-    marker_re = re.compile(r'^(\s*\]\s*satisfies\s*RouteConfig\s*;)', re.MULTILINE)
-    m = marker_re.search(content)
-    if not m:
-        raise ValueError("Could not find '] satisfies RouteConfig;' in routes.ts")
+    # Idempotent: skip if slug already registered
+    if any(e.get("slug") == article.slug for e in entries):
+        return
 
-    updated = content[:m.start()] + new_line + "\n" + content[m.start():]
-    routes_ts_path.write_text(updated, encoding="utf-8")
-    record_event("ai_news_routes_ts_updated", slug=slug)
+    entries.insert(0, {
+        "slug": article.slug,
+        "title": article.title,
+        "og_description": article.og_description,
+        "image": f"/{image_filename}",
+        "keywords": article.keywords,
+    })
 
-
-def _append_to_ai_articles(ai_articles_path: Path, article: Article) -> None:
-    if not ai_articles_path.exists():
-        raise FileNotFoundError(f"ai-articles.tsx not found at {ai_articles_path}")
-
-    content = ai_articles_path.read_text(encoding="utf-8")
-
-    new_entry = (
-        f'    {{\n'
-        f'      title: "{_js_escape(article.title)}",\n'
-        f'      description: "{_js_escape(article.og_description)}",\n'
-        f'      link: "/{article.slug}",\n'
-        f'      image: "/{article.slug}.jpg"\n'
-        f'    }},'
-    )
-
-    if f'"/{article.slug}"' in content:
-        return  # Already listed
-
-    # Insert just before the closing `];` of the articles array
-    marker = "  ];"
-    if marker not in content:
-        raise ValueError("Could not find '];' array closing marker in ai-articles.tsx")
-
-    updated = content.replace(marker, f"{new_entry}\n{marker}", 1)
-    ai_articles_path.write_text(updated, encoding="utf-8")
-    record_event("ai_news_ai_articles_updated", slug=article.slug)
+    _save_article_registry(entries)
+    record_event("ai_news_registry_updated", slug=article.slug)
 
 
 def _js_escape(s: str) -> str:
     return s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ").replace("\r", "")
-
-
-def _prepend_to_index(index_path: Path, article: Article, image_filename: str) -> None:
-    """Rotate the newest article into the top hero grid (grid-cols-4).
-
-    Finds the last <Link> block in that grid's last column and replaces it with
-    the new article card. Grid dimensions stay fixed; the evicted article still
-    lives in ai-articles.tsx.
-
-    The last column is identified by its known closing sentinel:
-      </div>\\n        </div> \\n      </div>\\n\\n      {/* smaller div section */}
-    which is stable across edits because it's the end of the elaborite-div section.
-    """
-    if not index_path.exists():
-        raise FileNotFoundError(f"_index.tsx not found at {index_path}")
-
-    content = index_path.read_text(encoding="utf-8")
-
-    if f'to="/{article.slug}"' in content:
-        return  # Already present (idempotent)
-
-    var_name = _slug_to_var(article.slug)
-    import_line = f'import {var_name} from "/{image_filename}";\n'
-
-    # Add image import after the last existing import line
-    last_import_match = list(re.finditer(r'^import .+;\n', content, re.MULTILINE))
-    if not last_import_match:
-        raise ValueError("Could not find import block in _index.tsx")
-    insert_pos = last_import_match[-1].end()
-    content = content[:insert_pos] + import_line + content[insert_pos:]
-
-    # The top hero grid ends just before {/* smaller div section */}
-    # Find the last <Link ...> block before that comment
-    smaller_marker = "{/* smaller div section */}"
-    if smaller_marker not in content:
-        raise ValueError("Could not find '/* smaller div section */' sentinel in _index.tsx")
-
-    hero_section = content[:content.index(smaller_marker)]
-
-    # Find the last complete <Link to="...">...</Link> block in the hero section
-    link_pattern = re.compile(
-        r'(\n\n?[ \t]*<Link to="[^"]*">.*?</Link>)',
-        re.DOTALL,
-    )
-    matches = list(link_pattern.finditer(hero_section))
-    if not matches:
-        raise ValueError("No Link blocks found in hero section")
-
-    last_match = matches[-1]
-
-    new_card = (
-        f'\n\n          <Link to="/{article.slug}">\n'
-        f'            <div className="transition-shadow duration-300 ease-in-out hover:bg-gray-100">\n'
-        f'              <div className="rounded-full bg-purple-400 p-1 text-lg font-bold tracking-tight text-white">\n'
-        f'                AI News\n'
-        f'              </div>\n'
-        f'              <img\n'
-        f'                className="items-left justify-left m-2 h-auto max-w-full flex-col rounded-full"\n'
-        f'                src={{{var_name}}}\n'
-        f'                alt="{_js_escape(article.title)}"\n'
-        f'              />\n'
-        f'              <h1 className="pb-4 text-left text-xl font-bold tracking-tight sm:text-2xl lg:pb-12 lg:text-3xl">\n'
-        f'                {_js_escape(article.title)}\n'
-        f'              </h1>\n'
-        f'            </div>\n'
-        f'          </Link>'
-    )
-
-    # Replace the last Link in the hero section with the new card
-    updated_hero = hero_section[:last_match.start()] + new_card + hero_section[last_match.end():]
-    content = updated_hero + content[content.index(smaller_marker):]
-
-    index_path.write_text(content, encoding="utf-8")
-    record_event("ai_news_index_updated", slug=article.slug)
 
 
 def _slug_to_var(slug: str) -> str:
