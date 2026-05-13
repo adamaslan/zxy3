@@ -16,7 +16,16 @@ RUNS: dict[str, dict[str, Any]] = {}
 EVENTS: list[dict[str, Any]] = []
 PUBLISH_LOGS: dict[str, dict[str, Any]] = {}
 CHANNEL_ATTEMPTS: dict[str, list[float]] = {}
-MAX_EVENTS = int(os.getenv("MAX_DEBUG_EVENTS", "200"))
+
+
+def _parse_int_env(name: str, default: int) -> int:
+    raw = os.getenv(name, "")
+    return int(raw) if raw.isdigit() else default
+
+
+MAX_EVENTS = _parse_int_env("MAX_DEBUG_EVENTS", 200)
+MAX_RUNS = _parse_int_env("MAX_RUNS", 500)
+MAX_PUBLISH_LOGS = _parse_int_env("MAX_PUBLISH_LOGS", 500)
 logger = logging.getLogger(APP_NAME)
 
 
@@ -29,7 +38,16 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _evict_oldest(store: dict[str, dict[str, Any]], max_size: int) -> None:
+    """Remove oldest entries when the store exceeds max_size."""
+    if len(store) >= max_size:
+        oldest_keys = sorted(store, key=lambda k: store[k].get("created_at", ""))[:max(1, len(store) - max_size + 1)]
+        for k in oldest_keys:
+            del store[k]
+
+
 def start_run(kind: str, payload: dict[str, Any]) -> dict[str, Any]:
+    _evict_oldest(RUNS, MAX_RUNS)
     run_id = str(uuid.uuid4())
     record = {
         "id": run_id,
@@ -135,6 +153,7 @@ def check_rate_limit(channel: str) -> tuple[bool, str]:
 
 
 def create_publish_log(channel: str, payload: dict[str, Any], dry_run: bool, diagnostics: dict[str, Any] | None = None) -> dict[str, Any]:
+    _evict_oldest(PUBLISH_LOGS, MAX_PUBLISH_LOGS)
     log_id = str(uuid.uuid4())
     log = {
         "id": log_id,

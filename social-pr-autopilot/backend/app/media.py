@@ -2,38 +2,46 @@ import os
 import uuid
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
-# Canonical directory for operator-supplied images
-MEDIA_DIR = Path(__file__).resolve().parents[2] / "frontend" / "public"
+# Configurable via env so Cloud Run / Docker can mount a volume at a different path.
+# Defaults to frontend/public/ relative to the repo root for local development.
+_DEFAULT_MEDIA_DIR = Path(__file__).resolve().parents[2] / "frontend" / "public"
+MEDIA_DIR = Path(os.getenv("MEDIA_STORAGE_PATH", str(_DEFAULT_MEDIA_DIR))).resolve()
 
 
 def local_path_to_public_jpeg(local_path: str) -> str:
     """Convert a local image file to JPEG in MEDIA_DIR and return its filename.
 
-    Accepts absolute paths or filenames relative to MEDIA_DIR.
+    Accepts only filenames relative to MEDIA_DIR — absolute paths and
+    path traversal sequences (../) are rejected.
     Returns the JPEG filename (not a URL — the caller builds the URL).
     """
-    src = Path(local_path)
-    if not src.is_absolute():
-        src = MEDIA_DIR / local_path
-    src = src.resolve()
+    # Resolve relative to MEDIA_DIR only — never accept absolute paths from callers.
+    src = (MEDIA_DIR / local_path).resolve()
+
+    # Guard against path traversal (e.g. "../../../etc/passwd")
+    if not src.is_relative_to(MEDIA_DIR):
+        raise ValueError(f"Invalid image path: access outside media directory is not allowed")
 
     if not src.exists():
-        raise FileNotFoundError(f"Image not found: {src}")
+        raise FileNotFoundError(f"Image not found: {src.name}")
 
     # If already a JPEG in MEDIA_DIR, return as-is
-    if src.suffix.lower() in (".jpg", ".jpeg") and src.parent == MEDIA_DIR:
+    if src.suffix.lower() in (".jpg", ".jpeg"):
         return src.name
 
     # Convert to JPEG
     dest_name = f"{uuid.uuid4().hex}.jpg"
     dest = MEDIA_DIR / dest_name
 
-    with Image.open(src) as img:
-        rgb = img.convert("RGB")
-        _validate_dimensions(rgb)
-        rgb.save(dest, "JPEG", quality=92, optimize=True)
+    try:
+        with Image.open(src) as img:
+            rgb = img.convert("RGB")
+            _validate_dimensions(rgb)
+            rgb.save(dest, "JPEG", quality=92, optimize=True)
+    except UnidentifiedImageError:
+        raise ValueError(f"File is not a recognised image format: {src.name}")
 
     return dest_name
 
