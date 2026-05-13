@@ -1,16 +1,21 @@
 import logging
+import os
 import time
 import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from .ai_providers import generate_text, provider_status
+from .ai_news_pipeline import run_ai_news_pipeline
 from .channel_adapters import adapter_diagnostics, adapter_statuses, publish, retry_publish
 from .http_clients import close_http_clients
 from .logging_config import configure_logging
-from .models import CampaignPack, CampaignRequest, ChannelAdapterStatus, PublishRequest, PublishResult
+from .media import local_path_to_public_jpeg, media_dir
+from .models import AiNewsRunRequest, AiNewsRunResult, CampaignPack, CampaignRequest, ChannelAdapterStatus, PublishRequest, PublishResult
 from .runtime import APP_NAME, allowed_origins, debug_snapshot, finish_run, get_publish_log, get_run, list_publish_logs, list_runs, record_event, start_run, uptime_seconds
 
 
@@ -34,6 +39,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve operator-supplied images at /media/<filename>
+app.mount("/media", StaticFiles(directory=str(media_dir())), name="media")
 
 
 @app.middleware("http")
@@ -114,6 +122,44 @@ async def retry_publish_endpoint(publish_log_id: str) -> PublishResult:
     if not log:
         raise HTTPException(status_code=404, detail="Publish log not found")
     return await retry_publish(log)
+
+
+@app.post("/api/media/prepare")
+async def media_prepare(payload: dict) -> dict:
+    """Convert a local image to JPEG and return the public URL Meta can fetch.
+
+    Body: {"local_image_path": "/absolute/or/relative/to/public/image.png"}
+    Requires INSTAGRAM_PUBLIC_BASE_URL to be set (ngrok URL locally, Cloud Run URL in prod).
+    """
+    local_path = payload.get("local_image_path", "")
+    if not local_path:
+        raise HTTPException(status_code=400, detail="local_image_path is required")
+
+    base_url = os.getenv("INSTAGRAM_PUBLIC_BASE_URL", "").rstrip("/")
+    if not base_url:
+        raise HTTPException(
+            status_code=503,
+            detail="INSTAGRAM_PUBLIC_BASE_URL is not set. Start ngrok and set it to the https tunnel URL.",
+        )
+
+    try:
+        filename = local_path_to_public_jpeg(local_path)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+    media_url = f"{base_url}/media/{filename}"
+    return {"filename": filename, "media_url": media_url}
+
+
+@app.post("/api/ai-news/run", response_model=AiNewsRunResult)
+async def ai_news_run(payload: AiNewsRunRequest) -> AiNewsRunResult:
+    return await run_ai_news_pipeline(
+        dry_run=payload.dry_run,
+        publish=payload.publish,
+        source_override=payload.sources,
+    )
 
 
 @app.post("/api/campaign", response_model=CampaignPack)

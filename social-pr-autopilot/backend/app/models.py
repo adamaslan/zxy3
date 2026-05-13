@@ -3,6 +3,56 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
+# ---------------------------------------------------------------------------
+# AI News Pipeline models
+# ---------------------------------------------------------------------------
+
+
+class Story(BaseModel, frozen=True):
+    url: str
+    title: str
+    summary: str
+    source: str
+    published_at: str = ""
+
+
+class ArticleSection(BaseModel, frozen=True):
+    heading: str
+    paragraphs: list[str]
+
+
+class Article(BaseModel, frozen=True):
+    title: str
+    slug: str
+    subtitle: str
+    og_description: str
+    keywords: list[str]
+    sections: list[ArticleSection]
+    image_prompt: str
+
+
+class AiNewsRunRequest(BaseModel):
+    dry_run: bool = Field(default=True)
+    publish: bool = Field(default=True)
+    sources: list[str] | None = None
+
+
+class AiNewsRunResult(BaseModel):
+    run_id: str
+    status: str
+    story_url: str = ""
+    story_title: str = ""
+    article_slug: str = ""
+    route_file: str = ""
+    image_filename: str = ""
+    image_provider_used: str = ""
+    caption: str = ""
+    publish_log_id: str = ""
+    media_id: str = ""
+    dry_run: bool = True
+    error: str = ""
+
+
 class CampaignRequest(BaseModel):
     product: str = Field(default="Autonomous Growth Agent")
     event: str
@@ -32,6 +82,9 @@ class PublishRequest(BaseModel):
     text: str
     campaign_name: str = Field(default="Untitled Campaign")
     image_prompt: str | None = None
+    local_image_path: str | None = None   # path or filename under frontend/public/
+    media_url: str | None = None          # public HTTPS URL (overrides local_image_path)
+    alt_text: str | None = None           # image alt text, max 1000 chars
     link_url: str | None = None
     dry_run: bool = Field(default=True)
 
