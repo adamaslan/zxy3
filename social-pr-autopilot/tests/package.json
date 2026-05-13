@@ -1,0 +1,10 @@
+{
+  "name": "social-pr-autopilot-tests",
+  "private": true,
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0"
+  }
+}

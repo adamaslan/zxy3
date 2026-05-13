@@ -1,44 +1,126 @@
 import Link from "next/link";
 import Head from "next/head";
-import Layout from "../../components/layout";
+import React, { useState, useEffect } from 'react';
+import Layout from '../../components/layout';
+import ArtworkSearchTable from "../../components/ds-magic2";
+import styles from "../../styles/layout.module.css";
 
-export default function PastShows() {
+export default function PastShows1() {
   return (
     <>
       <Layout>
         <Head>
-          <title>ZXY</title>
+          <title>An Archive of Past Events at ZXY Gallery</title>
+          <link rel="icon" href="/public/favicon.ico" />
+          <link
+            rel="apple-touch-icon"
+            href="https://res.cloudinary.com/adamaslan/image/upload/c_thumb,w_200,g_face/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+          />
+          <meta name="description" content="Hear about all our past events." />
+          <meta
+            property="og:image"
+            content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+          />
         </Head>
-        <article>
-        <h1>Past Shows - 2021</h1>
+ 
+          
+          <h1>Past Shows - 2024</h1>
 
-<h2>Earth in the Heavens </h2>
-<p>These works evocative of earthen material will be presented on the heavenly confines of the ZXY Gallery roof. Highlighting displacement this exibition speaks to identity question often faced by individuals seeking a place of refuge. </p>
-        <h2>"Process / Progress</h2>
-        <p>
-          {" "}
-          A Group exhibition showcasing artists that display unique processes
-          behind their work. On display is not just the completed works, but
-          also artifacts of the process. Artists showing include Renana Nueman,
-          Emily MacCloud, Bianca Boragi, Derek Des Islets, Bill Pierce, Mofaana
-          Morojele, Robert Balun
-        </p>
-
-        <p> Inquire about specific shows prior to 2021 </p>
-
-        <p>
-            Find more on our instagram{" "}
-            <a href="https://www.instagram.com/zxygallery/">
-              <a>@zxygallery </a>
-            </a>{" "}
+          <h2>Re-imagined Narrative</h2> 
+          <p>"Re-imagined Narrative" explores the work of Roman Kalinovski. <br />
+            The paintings are inspired from digital and analog video stills bringing yet another new transformation of the original figure
+            once optimized for view in a movie theater and now within the confines of oil on canvas.
           </p>
 
-        <h2>
-          <Link href="/">
-            <a>Back to home</a>
-          </Link>
-        </h2>
-        </article>
+          <h2>Trad Medium</h2> 
+          <p>ah yes…the trad medium…the trad use of material…the trad dichotomy of subject and object…the trad decision to figure or abstract…shall we try to escape it? 
+            no…not today…we will embrace it…study it…move forth…appreciating…the works…like a successful trad gallery ought to, should do…ZXY Gal at your trad service sir…
+          </p>
+
+          <h1>Past Shows - 2023</h1>
+          <h2>ZXY Gallery presents "Mayoween"</h2>
+          <p>A group exhibition and culinary journey</p>
+          
+          <p>Work by:</p>
+          <ul>
+            <li>Carolyn Colsant @jkbutseriously</li>
+            <li>Gunner Dongieux @gunlagoon</li>
+            <li>Karla Zurita @karlakarlakarlazurita</li>
+            <li>Julio Williams @julio.cesar.williams</li>
+          </ul>
+
+          <p>Featuring: Kewpie Mayo</p>
+          
+          <h2>"Atonement ||"</h2>
+          <p>The exhibition seeks to atone via bringing in works that are challenging for the gallery to show for various reasons.</p>
+          
+          <h2>Invoking Pizza</h2>
+          <p>Artists present disparate works deconstructing pizza creating a dialogue a posteriori of inherited tropes
+            exposing latent meaning with in pizza and with
+            out as pizza is shown to connect with a larger individual and societal sense of identity
+          </p>
+
+          <h1>Past Shows - 2022</h1>
+
+          <h2>Holiday Market</h2>
+          <p>ZXY Presents a variety of works perfect as Holiday Gifts</p>
+
+          <h2>Meaning in Fragility</h2>
+          <p>
+            ZXY Gallery is pleased to announce its latest group exhibition,
+            "Meaning in Fragility", featuring work by Stefanie Guerrero,
+            Lesdavag, and Manuela Riestra. These works speak to the fragility of
+            existence for those embracing contemporary values in a society
+            fueled by problematic interests. While this fragility is ubiquitous
+            for all with similar senses of meaning, it is particularly
+            challenging for artists devoted to upholding a sense of self that
+            challenges archaic modes and also must put in the time requisite to
+            survive as an artist. A tenuous grasp on things becomes meaningful
+            as an artist balances concerns for their own physical and mental
+            health with the needs of a committed art practice. Stefanie Guerrero
+            explores fragility through the uncertainty and chance for error she
+            embraces in her work. Manuela Riestra uses art to deconstruct many
+            important aspects of the human experience. Lesdavag deals with the
+            rejection of personal history by dancing a baile folklorico laden
+            with meaning and the vulnerable solitude of diverging from a
+            prevailing culture.
+          </p>
+
+          <h2>Natural Ephemera</h2>
+          <p>
+            These works evocative of earthen material will be presented on the
+            heavenly confines of the ZXY Gallery roof. Highlighting displacement
+            this exibition speaks to identity question often faced by
+            individuals seeking a place of refuge.
+          </p>
+          
+          <h2>Sea Friends</h2>
+          <p>
+            With so much connected to the sea, one wonders why we imagine that
+            we can seemingly do the type of things to it that we would never
+            want to see done to land that is close to where we live. The amount
+            of toxic chemicals that are poured into the ocean is astonishing.
+            Evoking the beauty and importance of this mysterious and clandestine
+            gem, the artists of "Sea Friends bring together a strong vision of
+            what goes into all the aspects of the sea.
+          </p>
+          
+          <p>Inquire about specific shows prior to 2021</p>
+          
+          <h3>Search for works of Sculpture, Painting, Photography and more:</h3>
+          <ArtworkSearchTable />
+
+
+
+            <p>
+            Find more on our instagram{" "}
+            <a href="https://www.instagram.com/zxygallery/">@zxygallery</a>
+          </p>
+          
+          <h2>
+            <Link href="/">Back to home</Link>
+          </h2>
+       
       </Layout>
     </>
   );

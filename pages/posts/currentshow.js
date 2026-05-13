@@ -1,52 +1,65 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
-import Image from "next/image";
+import styles from "../../styles/layout.module.css";
+import { useEffect, useRef } from "react";
 
 export default function CurrentShows() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  }, []);
+
   return (
-    <>
-      <Layout>
-        <Head>
-          <title>ZXY</title>
-        </Head>
-        <article>
-          <h1>Current Show</h1>
-          <h2>"*Mei- (1) + *Mei- (2)"</h2>
+    <Layout>
+      <Head>
+        <title>Current Show "Mayoween" at ZXY Gallery in Bushwick</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="description"
+          content="Hear about our current exhibit at ZXY Gallery in Bushwick, Brooklyn for the last 8 years"
+        />
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+        />
+      </Head>
+      <article>
+        <div className={styles.gridcontainer4}>
+          <div className={styles.gridcontainer5}>
+            <video
+              ref={videoRef}
+              alt="art show"
+              className={styles.photo}
+              src="/zxy-april.MOV"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
 
-          <Image src="/mei1.jpg" alt="Flyer" width={1110} height={810} />
-
-          <p>
-            ZXY Gallery is proud to announce, *Mei- (1) + *Mei- (2), a group
-            exhibition with Liz Ainslie, Andrew Zarou, Chiara, and Nazlie Efe.
-            The show is an exploration of these two Proto-Indo-European roots
-            that have evidence of their existence in Sanskirt, Latin, Greek, and
-            old English. *mei- (1) is the Proto-Indo-European root meaning "to
-            change, go, move," *mei- (2) is Proto-Indo-European root meaning
-            "small."
-          </p>
-          <p>
-            These divergent meanings allow for a multitude of analogies with the
-            artists shown in this exhibition. On focus is a beauty created
-            through the softness of material and color. Expressed as painting
-            and sculpture, the works explore an aesthetic that carries a sense
-            of humility in color via a multitude of themes behind the individual
-            works.
-          </p>
-
-          <h2>
-            <p>
-              Find more on our instagram{" "}
-              <a href="https://www.instagram.com/zxygallery/">
-                <a>@zxygallery </a>
-              </a>{" "}
-            </p>
-            <Link href="/">
-              <a>Back to home</a>
-            </Link>
-          </h2>
-        </article>
-      </Layout>
-    </>
+            <h2>ZXY Gallery presents:</h2>
+            <h2>Paula De Martino</h2>
+            <h2>Rosalie Smith</h2>
+            <p>These multi-displinary artists are currently showing at ZXY Gallery</p>
+            
+            <p>Stay tuned for more information on the closing event in Bushwick</p>
+<br />
+<br />
+            <h2>
+              Find more on our Instagram{" "}
+              <a href="https://www.instagram.com/zxygallery/" target="_blank" rel="noopener noreferrer">
+                @zxygallery
+              </a><br />
+              <Link href="/">Home</Link>
+            </h2>
+            
+          </div>
+        </div>
+      </article>
+    </Layout>
   );
 }

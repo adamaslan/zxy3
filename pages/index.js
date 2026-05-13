@@ -1,29 +1,39 @@
 import Head from "next/head";
 import Link from "next/link";
+import SplashScreen from "../components/SplashScreen";
 
 export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>ZXY Gallery</title>
+        <title>ZXY Gallery, located in Bushwick, Brooklyn</title>
+
+        <meta
+          name="description"
+          content="A technology focused Art Gallery located in Bushwick, Brooklyn"
+        />
         <link rel="icon" href="/public/favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          href="https://res.cloudinary.com/adamaslan/image/upload/c_thumb,w_200,g_face/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+        ></link>
+        <meta
+          property="og:image"
+          content="https://res.cloudinary.com/adamaslan/image/upload/v1666992137/ZXY%20/zxy-logo_cos9hl.jpg"
+        />
       </Head>
 
       <main>
         <h1 className="title">
           Welcome to
-          <Link href="/posts/currentshow">
+          <Link href="/posts/currentshow" legacyBehavior>
             <a> ZXY Gallery</a>
           </Link>
         </h1>
-
+        <SplashScreen />
         <p className="description">
           <code>
-            currently focusing on outdoor pop-up art events <br /> contact us on
-            instagram --->
-            <a href="https://www.instagram.com/zxygallery/?hl=en">
-              <u>@zxygallery</u>
-            </a>{" "}
+            A technology focused Art Gallery <br /> 
           </code>
         </p>
 
@@ -31,6 +41,7 @@ export default function Home() {
           <a href="/posts/about" className="card">
             <h3>About &rarr;</h3>
             <p>More about ZXY Gallery</p>
+            
           </a>
 
           <a href="/posts/featuredwork" className="card">
@@ -40,13 +51,30 @@ export default function Home() {
 
           <a href="/posts/currentshow" className="card">
             <h3>Current Show &rarr;</h3>
-            <p>"*Mei- (1) + *Mei- (2)"</p>
+            <p>Rosalie Smith</p>
+            <p>Paula De Martino</p>
           </a>
 
           <a href="/posts/pastshows" className="card">
             <h3>Past Shows &rarr;</h3>
             <p>Explore Past Shows</p>
           </a>
+
+          <a href="/posts/artists" className="card">
+            <h3>Artists &rarr;</h3>
+            <p>Search every artist ZXY has shown. Filter by career stage, read AI-generated bios, and see who's trending now.</p>
+          </a>
+
+          <a href="/trending" className="card">
+            <h3>Trending &rarr;</h3>
+            <p>See who's rising</p>
+          </a>
+
+       
+          <a href="https://www.instagram.com/zxygallery/?hl=en" className="card">
+            <h3>Contact</h3> <p>   contact us on instagram for
+          info on our latest events &nbsp; <u>@zxygallery</u>
+          </p></a>{" "}
         </div>
       </main>
 

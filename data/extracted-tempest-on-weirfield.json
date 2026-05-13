@@ -1,0 +1,8 @@
+{
+  "gallery": "tempest-on-weirfield",
+  "segment": "emerging",
+  "artists": [
+    { "name": "Artist A", "shows": [{ "title": "Inaugural Show", "year": 2024 }] },
+    { "name": "Artist B", "shows": [{ "title": "Group Show", "year": 2024 }] }
+  ]
+}

@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+// ─── LEGACY TABLE (keep until fully migrated) ────────────────────────────────
+model mytable {
+  id          BigInt  @id @default(sequence())
+  artist      String
+  medium1     String
+  medium2     String?
+  price_range String
+}
+
+// ─── V2 SCHEMA ───────────────────────────────────────────────────────────────
+
+model Artist {
+  id               BigInt    @id @default(sequence())
+  name             String
+  slug             String?   @unique
+  bio              String?
+  website          String?
+  instagram        String?
+  nationality      String?
+  birth_year       Int?
+  active           Boolean   @default(true)
+
+  // AI enrichment fields (written by Lambda)
+  bio_generated    Boolean   @default(false)
+  comprehend_tags  String[]
+  comprehend_ran   DateTime?
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  artworks         Artwork[]
+  metrics          ArtistMetrics?
+  gallery_links    ArtistGallery[]
+}
+
+model Artwork {
+  id                   BigInt    @id @default(sequence())
+  artist_id            BigInt
+  title                String?
+  year                 Int?
+  medium               String?
+  medium_secondary     String?
+  price_range          String?
+  dimensions           String?
+  show_name            String?
+  gallery_name         String?
+  show_year            Int?
+
+  // Cloudflare R2 image storage
+  image_s3_key         String?
+  image_url            String?
+  thumbnail_url        String?
+
+  // Google Cloud Vision enrichment (written by Lambda)
+  rekognition_labels   Json?
+  dominant_colors      Json?
+  rek_ran              DateTime?
+
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  artist               Artist    @relation(fields: [artist_id], references: [id])
+}
+
+model Gallery {
+  id           Int      @id @default(sequence())
+  name         String   @unique
+  slug         String?  @unique
+  city         String?
+  country      String?
+  website      String?
+  instagram    String?
+  type         String?  // "commercial" | "non-profit" | "museum" | "institution" | "art_fair"
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  artist_links ArtistGallery[]
+}
+
+model ArtistGallery {
+  artist_id    BigInt
+  gallery_id   Int
+  relationship String? // "represented" | "shown" | "alumnus"
+  year_start   Int?
+  year_end     Int?
+
+  artist       Artist  @relation(fields: [artist_id], references: [id])
+  gallery      Gallery @relation(fields: [gallery_id], references: [id])
+
+  @@id([artist_id, gallery_id])
+}
+
+model ArtistMetrics {
+  artist_id     BigInt    @id
+  search_hits   Int       @default(0)
+  profile_views Int       @default(0)
+  last_viewed   DateTime?
+
+  artist        Artist    @relation(fields: [artist_id], references: [id])
+}

@@ -1,0 +1,22 @@
+{
+  "gallery": "gallery-slug",
+  "segment": "emerging|mid-career|established|late-career",
+  "artists": [
+    {
+      "name": "Artist Name (required)",
+      "bio": "Optional biography or artist statement",
+      "shows": [
+        {
+          "title": "Exhibition Title",
+          "year": 2024,
+          "endYear": 2024
+        }
+      ],
+      "represented_by": [
+        "Gallery Name if mentioned in CV"
+      ],
+      "instagram": "@handle",
+      "website": "https://artistwebsite.com"
+    }
+  ]
+}
