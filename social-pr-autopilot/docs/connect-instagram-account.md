@@ -1,6 +1,6 @@
 # Connect An Instagram Account
 
-Last verified: 2026-05-11
+Last verified: 2026-05-12
 
 This is the Instagram-first setup guide for Social PR Autopilot. It follows Meta's "Instagram API with Facebook Login for Business" get-started flow: start with an Instagram Business or Creator account, connect that account to a Facebook Page, use a Facebook Developer account that can perform Tasks on that Page, and use a registered Facebook App with Basic settings configured.
 
@@ -310,6 +310,34 @@ Graph API Explorer is the fastest local setup path:
 8. Immediately test it with `/me/accounts` in Step 8.
 
 If the permission modal does not show the requested scopes, confirm you selected the right Meta app and that Facebook Login for Business is added to that app.
+
+### Troubleshooting The Generate Access Tokens Screen
+
+If Meta shows a section like **"Generate access tokens"** with text such as **"Add an Instagram account to generate access tokens and setup webhook subscriptions"**, pause and confirm which Instagram API setup you are in.
+
+That dashboard section usually belongs to **Instagram > API Setup with Instagram Login**. Meta's own app setup docs now auto-add that setup when you add the Instagram product, but they also say that if you are building for an Instagram Professional account linked to a Facebook Page, use **API Setup with Facebook Login** instead. Social PR Autopilot is currently written for the Facebook Login path, because the app needs `/me/accounts`, the Facebook Page ID, and `instagram_business_account`.
+
+Use this decision rule:
+
+| What you see | What it means | What to do |
+| --- | --- | --- |
+| `Instagram > API Setup with Instagram Login` asks you to add an Instagram tester/account | You are in the Instagram Login path, which is useful for Instagram-only APIs but is not the current Social PR Autopilot token path | Do not fight this screen for local setup. Switch to **API Setup with Facebook Login** or use Graph API Explorer with the Social PR Autopilot app. |
+| Meta says to assign the Instagram Tester role before generating a token | The Instagram Login token generator will only issue test tokens for assigned Instagram tester accounts | If intentionally testing Instagram Login, add the account under `App Roles > Roles` or the Instagram setup screen, make sure the account is public, accept any invite/login prompt, then retry. For this project, Graph API Explorer is still the preferred local path. |
+| The `Generate token` button is missing, disabled, or loops | The Instagram account is not assigned as a tester, the wrong app is selected, browser sessions are mixed, the app is not fully configured, or Meta has not refreshed the tester assignment yet | Confirm the app, assign the tester role, log out/in to Instagram and Facebook, allow popups/cookies, wait a few minutes, and retry in a clean browser profile. |
+| A token is generated but `/me/accounts` fails or returns no Pages | The token is likely not the Facebook User access token this guide expects, or the Facebook user lacks Page access | Generate a **User Token** in Graph API Explorer with `instagram_basic` + `pages_show_list`, signed in as the Facebook user with Page Tasks. |
+| The webhook setup is blocking progress | Webhooks are useful later for comments/messages/events, but they are not required for the first Page/Instagram discovery test | Skip webhook setup for now and prove `/me/accounts` plus `instagram_business_account` first. |
+
+Fast recovery path for Social PR Autopilot:
+
+1. Open `https://developers.facebook.com/tools/explorer/`.
+2. Select the Social PR Autopilot Meta app.
+3. Choose `User Token`.
+4. Add only `instagram_basic` and `pages_show_list`.
+5. Generate the token while logged in as the Facebook user that can manage or create content on the connected Page.
+6. Run `/me/accounts?fields=id,name,tasks`.
+7. Run `/<FACEBOOK_PAGE_ID>?fields=instagram_business_account`.
+
+Do not paste the generated token into chat, screenshots, docs, or git. Store it only in your local `.env` or secret manager.
 
 ### Using Manual OAuth Later
 
@@ -672,6 +700,9 @@ For the fully automated version, Codex/AI should not hold raw tokens in chat con
 | Page appears but `instagram_business_account` is missing | Instagram account is not connected to that Page or is not Professional | Reconnect the Instagram account to the Page and confirm it is Business/Creator |
 | Works in Graph API Explorer but not in app | App Login/OAuth config differs from Explorer or redirect URI is wrong | Compare app ID, scopes, redirect URI, and token debugger output |
 | Works for app admin but not customers | App is in Development Mode or lacks Advanced Access/App Review | Add testers for dev, or complete App Review and switch to Live Mode |
+| Meta's "Generate access tokens" screen says to add an Instagram tester | You are probably in `Instagram > API Setup with Instagram Login`, not the Facebook Login path this guide uses | Use Graph API Explorer for a Facebook User token, or switch the app setup to **API Setup with Facebook Login** for the Page-linked account path |
+| Token generator creates a token but `/me/accounts` does not work | Token type/path mismatch, wrong app, wrong user, missing `pages_show_list`, or the Facebook user lacks Page Tasks | Regenerate a User token in Graph API Explorer from the Social PR Autopilot app with `instagram_basic` + `pages_show_list` |
+| Webhook setup appears before token discovery is proven | Meta's Instagram Login setup bundles test tokens and webhook setup, but webhooks are not needed for this project's first readiness check | Skip webhooks until the Page ID, Instagram business account ID, and access token pass the Graph API Explorer checklist |
 | Meta says "Some permissions have been restricted and won't be requested from users of this app" | Restricted permissions were selected before the app has the right access level, App Review, app mode, or template setup | For local setup, remove broad/restricted permissions and keep only `instagram_basic` + `pages_show_list`; for publishing permissions, complete the direct-publish adapter and App Review path first |
 | Consent screen does not show a permission you selected | Meta filtered it out because it is restricted, dependent on another permission, unavailable for the app mode, or not approved | Check the app's permission access level, app roles, Development vs Live Mode, and whether the permission belongs in the later direct-publishing phase |
 | Graph API Explorer tests pass but local diagnostics fail | Backend did not load the new `.env`, values were added to the wrong `.env`, or the backend is running from an old process | Put values in the repo root `.env`, restart the backend, then call `/api/channels/instagram/diagnostics` again |
@@ -683,6 +714,8 @@ For the fully automated version, Codex/AI should not hold raw tokens in chat con
 
 ## Official References
 
+- Meta Create a Meta App for Instagram Platform: https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app
+- Meta Instagram API with Instagram Login: https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login
 - Meta Instagram API with Facebook Login get-started: https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/get-started
 - Meta Content Publishing: https://developers.facebook.com/docs/instagram-platform/content-publishing/
 - Meta IG User Media reference: https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media

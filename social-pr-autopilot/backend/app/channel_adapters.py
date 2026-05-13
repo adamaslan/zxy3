@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import json
 import os
@@ -8,6 +9,7 @@ from typing import Any
 import httpx
 
 from .http_clients import channel_client
+from .media import local_path_to_public_jpeg, media_dir
 from .models import ChannelAdapterStatus, PublishRequest, PublishResult
 from .runtime import check_rate_limit, create_publish_log, record_event, update_publish_log
 
@@ -20,7 +22,7 @@ def adapter_statuses() -> list[ChannelAdapterStatus]:
 
 def adapter_diagnostics(channel: str) -> dict[str, Any]:
     status = _status(channel)
-    return {
+    result: dict[str, Any] = {
         "channel": channel,
         "protocol": status.protocol,
         "configured": status.configured,
@@ -31,6 +33,16 @@ def adapter_diagnostics(channel: str) -> dict[str, Any]:
         "supports_autopublish": status.supports_autopublish,
         "next_action": status.next_action,
     }
+    if channel == "instagram":
+        expires_at = os.getenv("INSTAGRAM_TOKEN_EXPIRES_AT", "")
+        if expires_at:
+            seconds_left = int(expires_at) - int(time.time())
+            result["token_expires_in_days"] = round(seconds_left / 86400, 1)
+            if seconds_left < 7 * 86400:
+                result["token_warning"] = "Token expires in less than 7 days — renew now."
+        result["public_base_url"] = os.getenv("INSTAGRAM_PUBLIC_BASE_URL", "") or "NOT SET — ngrok required for local images"
+        result["media_dir"] = str(media_dir())
+    return result
 
 
 async def publish(payload: PublishRequest) -> PublishResult:
@@ -54,10 +66,21 @@ async def publish(payload: PublishRequest) -> PublishResult:
 
     try:
         if payload.channel == "instagram":
-            external_id = _instagram_export_id(payload)
-            next_action = "Upload/schedule this export in Meta Business Suite or connect Instagram Graph API credentials."
-            update_publish_log(log["id"], "exported", external_id=external_id, next_action=next_action)
-            return _result(payload, log["id"], "exported", limit_message, external_id=external_id, next_action=next_action, diagnostics=diagnostics)
+            direct_enabled = os.getenv("INSTAGRAM_DIRECT_PUBLISH_ENABLED", "false").lower() not in {"0", "false", "no", "off"}
+            if not direct_enabled or payload.dry_run:
+                external_id = _instagram_export_id(payload)
+                next_action = (
+                    "Set INSTAGRAM_DIRECT_PUBLISH_ENABLED=true and supply local_image_path or media_url to enable live posting."
+                    if not direct_enabled
+                    else "Dry run complete. Set dry_run=false to post live."
+                )
+                status = "dry_run" if payload.dry_run else "exported"
+                update_publish_log(log["id"], status, external_id=external_id, next_action=next_action)
+                return _result(payload, log["id"], status, limit_message, external_id=external_id, next_action=next_action, diagnostics=diagnostics)
+            external_id = await _publish_instagram(payload)
+            next_action = "Verify the post on the Instagram profile: https://www.instagram.com/tastytechbytes/"
+            update_publish_log(log["id"], "published", external_id=external_id, next_action=next_action)
+            return _result(payload, log["id"], "published", limit_message, external_id=external_id, next_action=next_action, diagnostics=diagnostics)
 
         if payload.dry_run:
             external_id = f"dry-run-{payload.channel}-{log['id']}"
@@ -117,14 +140,27 @@ def _instagram_export_id(payload: PublishRequest) -> str:
     return f"instagram-export-{payload.campaign_name.lower().replace(' ', '-')[:40]}"
 
 
+def _instagram_direct_enabled() -> bool:
+    return os.getenv("INSTAGRAM_DIRECT_PUBLISH_ENABLED", "false").lower() not in {"0", "false", "no", "off"}
+
+
 def _status(channel: str) -> ChannelAdapterStatus:
+    direct = _instagram_direct_enabled()
     config = {
         "instagram": {
-            "protocol": "Meta Business Suite export now; Instagram Graph API credentials reserved for direct publish",
+            "protocol": (
+                "Instagram Graph API direct publish (POST /media → poll → media_publish)"
+                if direct
+                else "Meta Business Suite scheduling export; set INSTAGRAM_DIRECT_PUBLISH_ENABLED=true to enable direct posting"
+            ),
             "required": ["INSTAGRAM_BUSINESS_ACCOUNT_ID", "INSTAGRAM_ACCESS_TOKEN", "INSTAGRAM_FACEBOOK_PAGE_ID"],
-            "mode": "scheduling_export",
-            "supports_autopublish": False,
-            "next_action": "Use export mode now; add Instagram business account, Facebook page, and access token before direct publishing.",
+            "mode": "direct_publish" if direct else "scheduling_export",
+            "supports_autopublish": direct,
+            "next_action": (
+                "Supply local_image_path or media_url and set dry_run=false to post live."
+                if direct
+                else "Set INSTAGRAM_DIRECT_PUBLISH_ENABLED=true then supply local_image_path or media_url."
+            ),
         },
         "telegram": {
             "protocol": "Telegram Bot API sendMessage",
@@ -154,6 +190,102 @@ def _status(channel: str) -> ChannelAdapterStatus:
         missing_config=missing,
         next_action="" if configured and channel != "instagram" else config["next_action"],
     )
+
+
+def _resolve_instagram_media_url(payload: PublishRequest) -> str:
+    """Return a public HTTPS media URL for the payload, resolving local_image_path if needed."""
+    if payload.media_url:
+        return payload.media_url
+
+    if payload.local_image_path:
+        base_url = os.getenv("INSTAGRAM_PUBLIC_BASE_URL", "").rstrip("/")
+        if not base_url:
+            raise RuntimeError(
+                "INSTAGRAM_PUBLIC_BASE_URL is not set. "
+                "Run: ngrok http 8102  then set INSTAGRAM_PUBLIC_BASE_URL=https://<id>.ngrok-free.app"
+            )
+        filename = local_path_to_public_jpeg(payload.local_image_path)
+        return f"{base_url}/media/{filename}"
+
+    raise RuntimeError("Provide local_image_path or media_url for Instagram direct publishing.")
+
+
+async def _check_instagram_quota() -> None:
+    """Raise RuntimeError if the account has hit Meta's 100-post daily limit."""
+    ig_id = os.getenv("INSTAGRAM_BUSINESS_ACCOUNT_ID")
+    token = os.getenv("INSTAGRAM_ACCESS_TOKEN")
+    version = os.getenv("INSTAGRAM_GRAPH_API_VERSION", "v25.0")
+    response = await channel_client().get(
+        f"https://graph.facebook.com/{version}/{ig_id}/content_publishing_limit",
+        params={"fields": "config,quota_usage", "access_token": token},
+    )
+    response.raise_for_status()
+    data = response.json().get("data", [{}])[0]
+    quota_usage = data.get("quota_usage", 0)
+    quota_total = data.get("config", {}).get("quota_total", 100)
+    if quota_usage >= quota_total:
+        raise RuntimeError(f"Instagram daily quota reached: {quota_usage}/{quota_total} posts in the last 24 hours")
+
+
+async def _publish_instagram(payload: PublishRequest) -> str:
+    """Create a media container, poll until FINISHED, publish. Returns the IG media ID."""
+    ig_id = os.getenv("INSTAGRAM_BUSINESS_ACCOUNT_ID")
+    token = os.getenv("INSTAGRAM_ACCESS_TOKEN")
+    version = os.getenv("INSTAGRAM_GRAPH_API_VERSION", "v25.0")
+    base = f"https://graph.facebook.com/{version}"
+
+    if not ig_id or not token:
+        raise RuntimeError("INSTAGRAM_BUSINESS_ACCOUNT_ID and INSTAGRAM_ACCESS_TOKEN are required")
+
+    media_url = _resolve_instagram_media_url(payload)
+    await _check_instagram_quota()
+
+    # Step 1: create media container
+    container_params: dict[str, str] = {
+        "image_url": media_url,
+        "caption": payload.text[:2200],
+        "access_token": token,
+    }
+    if payload.alt_text:
+        container_params["alt_text"] = payload.alt_text[:1000]
+
+    container_response = await channel_client().post(
+        f"{base}/{ig_id}/media",
+        params=container_params,
+    )
+    container_response.raise_for_status()
+    container_id = container_response.json().get("id")
+    if not container_id:
+        raise RuntimeError(f"No container id in response: {container_response.text}")
+
+    # Step 2: poll status (max 10 × 6 s = 60 s)
+    for _ in range(10):
+        status_response = await channel_client().get(
+            f"{base}/{container_id}",
+            params={"fields": "status_code", "access_token": token},
+        )
+        status_response.raise_for_status()
+        status_code = status_response.json().get("status_code", "")
+        if status_code == "FINISHED":
+            break
+        if status_code in ("ERROR", "EXPIRED"):
+            raise RuntimeError(f"Media container failed with status: {status_code}")
+        await asyncio.sleep(6)
+    else:
+        raise RuntimeError("Media container did not reach FINISHED status within 60 seconds")
+
+    # Step 3: publish
+    publish_response = await channel_client().post(
+        f"{base}/{ig_id}/media_publish",
+        params={"creation_id": container_id, "access_token": token},
+    )
+    publish_response.raise_for_status()
+    media_id = publish_response.json().get("id", "")
+    if not media_id:
+        raise RuntimeError(f"No media id in publish response: {publish_response.text}")
+
+    record_event("instagram_published", channel="instagram", media_id=media_id, media_url=media_url)
+    return media_id
 
 
 async def _publish_telegram(payload: PublishRequest) -> str:
