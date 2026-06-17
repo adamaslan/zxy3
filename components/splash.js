@@ -34,6 +34,6 @@ const Splash = ({ finishLoading }) => {
   //   );
   // }
 
-  return;
+  return null;
 };
 export default Splash;

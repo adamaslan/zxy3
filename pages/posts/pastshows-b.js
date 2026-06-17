@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/layout";
-import { getAllUsers } from "../../components/Search2";
+import { getAllArtworks } from "../../components/Search2";
 import { useState } from "react";
 
 export default function PastShows({ results }) {
@@ -174,7 +174,7 @@ export default function PastShows({ results }) {
 }
 
 export const getServerSideProps = async () => {
-  const results = await getAllUsers();
+  const results = await getAllArtworks();
   const cleanResult = results.map((artist) => ({ ...artist, id: artist.id || "abc" }));
   return { props: { results: JSON.parse(JSON.stringify(cleanResult)) } };
 };

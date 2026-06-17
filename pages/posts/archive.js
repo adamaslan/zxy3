@@ -10,7 +10,7 @@ const SHOWS = [
     type: "Group Exhibition",
     image: "/horizon1.jpg",
     description:
-      "Horizonality refers to the way soil naturally organizes itself into distinct horizontal layers over time. Just as soil has horizons and each unique plot of land its own specific horizonality, so too does an art exhibition. The ZXY Gallery spring exhibition "Horizonality" explored the various works as akin to soil in a continuous state of mixing new minerals, organisms, spring, and rain water.",
+      "Horizonality refers to the way soil naturally organizes itself into distinct horizontal layers over time. Just as soil has horizons and each unique plot of land its own specific horizonality, so too does an art exhibition. The ZXY Gallery spring exhibition “Horizonality” explored the various works as akin to soil in a continuous state of mixing new minerals, organisms, spring, and rain water.",
     artists: [
       { name: "Josie Girard", instagram: "rugratz4lyfe" },
       { name: "Theo Gaffney", instagram: "theophilusgaffney" },

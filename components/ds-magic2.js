@@ -86,7 +86,7 @@ export default function ArtworkSearchTable() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {artists.map((artist) =>
-                artist.artworks.length > 0
+                artist.artworks?.length > 0
                   ? artist.artworks.map((aw) => (
                       <tr key={`aw-${aw.id}`} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">{artist.name}</td>
