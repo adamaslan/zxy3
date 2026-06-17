@@ -1,11 +1,11 @@
 import { prisma } from "../prisma/globalprisma";
 
-export const getAllUsers = async () => {
+export const getAllArtworks = async () => {
   try {
-    const allUsers = await prisma.mytable.findMany();
-    return allUsers;
+    const allArtworks = await prisma.mytable.findMany();
+    return allArtworks;
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error("Error fetching artworks:", error);
     throw error;
   }
   // Remove the $disconnect() call from here since it can cause issues

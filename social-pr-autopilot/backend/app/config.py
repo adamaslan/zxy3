@@ -69,31 +69,6 @@ def app_env() -> str:
     return env_value("APP_ENV", default="local").lower()
 
 
-def ttb8_repo_path() -> str:
-    return env_value("TTB8_REPO_PATH", default="")
-
-
-def ai_news_sources() -> list[str]:
-    raw = env_value("AI_NEWS_SOURCES", default="hn,arxiv,hf,blogs")
-    return [s.strip() for s in raw.split(",") if s.strip()]
-
-
-def ai_news_max_candidates() -> int:
-    raw = env_value("AI_NEWS_MAX_CANDIDATES", default="5")
-    try:
-        return max(1, int(raw))
-    except ValueError:
-        return 5
-
-
-def ai_news_image_provider() -> str:
-    return env_value("AI_NEWS_IMAGE_PROVIDER", default="gemini").lower()
-
-
-def ai_news_dry_run_default() -> bool:
-    return env_value("AI_NEWS_DRY_RUN_DEFAULT", default="false").lower() not in FALSE_VALUES
-
-
 def config_status() -> dict[str, object]:
     return {
         "app_env": app_env(),

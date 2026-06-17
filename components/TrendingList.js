@@ -105,9 +105,9 @@ function ArtistCard({ artist }) {
         </Link>
 
         <MetricsBar
-          viewCount={artist.metrics.viewCount}
-          searchFrequency={artist.metrics.searchFrequency}
-          marketMentions={artist.metrics.marketMentions}
+          viewCount={artist.metrics?.viewCount ?? 0}
+          searchFrequency={artist.metrics?.searchFrequency ?? 0}
+          marketMentions={artist.metrics?.marketMentions ?? 0}
         />
 
         <div className={styles.links}>

@@ -16,7 +16,6 @@ RUNS: dict[str, dict[str, Any]] = {}
 EVENTS: list[dict[str, Any]] = []
 PUBLISH_LOGS: dict[str, dict[str, Any]] = {}
 CHANNEL_ATTEMPTS: dict[str, list[float]] = {}
-STORIES_SEEN: list[str] = []  # URL ring buffer for dedup — last 500
 
 
 def _parse_int_env(name: str, default: int) -> int:
@@ -218,18 +217,3 @@ def get_publish_log(log_id: str) -> dict[str, Any] | None:
 
 def _json_preview(payload: dict[str, Any], limit: int) -> str:
     return json.dumps(payload, default=str, sort_keys=True)[:limit]
-
-
-MAX_STORIES_SEEN = _parse_int_env("MAX_STORIES_SEEN", 500)
-
-
-def story_already_seen(url: str) -> bool:
-    return url in STORIES_SEEN
-
-
-def mark_story_seen(url: str) -> None:
-    if url in STORIES_SEEN:
-        return
-    STORIES_SEEN.append(url)
-    if len(STORIES_SEEN) > MAX_STORIES_SEEN:
-        del STORIES_SEEN[: len(STORIES_SEEN) - MAX_STORIES_SEEN]

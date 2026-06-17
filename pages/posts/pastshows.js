@@ -24,6 +24,24 @@ export default function PastShows1() {
         </Head>
  
           
+          <h1>Past Shows - 2025</h1>
+
+          <h2>Horizonality</h2>
+          <p>
+            Horizonality refers to the way soil naturally organizes itself into distinct horizontal
+            layers over time. Just as soil has horizons and each unique plot of land its own
+            specific horizonality, so too does an art exhibition. The ZXY Gallery spring exhibition
+            &ldquo;Horizonality&rdquo; explored the various works in the exhibition as akin to soil in a
+            continuous state of mixing new minerals, organisms, spring, and rain water.
+          </p>
+          <p>Work by: Josie Girard, Theo Gaffney, Rose Silberman-Gorn, Mallory Concetta Smith,
+            Alice Herbert, Kelli Mcguire, Yue Yuan, Lucinda Graciela, Michelle-B-Lin, Mia Grasso,
+            Goldfinch Bolton. Performances by Hero Magnus and Adam Aslan.
+          </p>
+
+          <h2>Paula De Martino &amp; Rosalie Smith</h2>
+          <p>A two-person exhibition featuring multi-disciplinary artists Paula De Martino and Rosalie Smith at ZXY Gallery in Bushwick.</p>
+
           <h1>Past Shows - 2024</h1>
 
           <h2>Re-imagined Narrative</h2> 

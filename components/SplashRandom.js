@@ -8,18 +8,15 @@ function RotatingSphere() {
 
   // Use the useFrame hook to animate the sphere
   useFrame((state) => {
-    // Rotate the sphere on the x and y axes
-    sphereRef.current.rotation.x += 0.01;
-    sphereRef.current.rotation.y += 0.01;
+    if (sphereRef.current) {
+      sphereRef.current.rotation.x += 0.01;
+      sphereRef.current.rotation.y += 0.01;
 
-    // Revolve the sphere around the center of the page
-    // Use the state.clock to get the elapsed time in seconds
-    // Use Math.sin and Math.cos to calculate the x and z coordinates
-    // Use a radius variable to control the distance from the center
-    const radius = 2.25;
-    const angle = state.clock.getElapsedTime();
-    sphereRef.current.position.x = radius * Math.sin(angle);
-    sphereRef.current.position.z = radius * Math.cos(angle) * 1.5;
+      const radius = 2.25;
+      const angle = state.clock.getElapsedTime();
+      sphereRef.current.position.x = radius * Math.sin(angle);
+      sphereRef.current.position.z = radius * Math.cos(angle) * 1.5;
+    }
   });
 
   // Return the JSX element for the sphere

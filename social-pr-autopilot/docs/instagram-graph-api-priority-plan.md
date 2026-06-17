@@ -1,6 +1,6 @@
 # Instagram Graph API Priority Plan
 
-Last verified: 2026-05-12
+Last verified: 2026-05-11
 
 This plan makes Instagram Graph API publishing the priority path for Social PR Autopilot while keeping the current scheduling export mode as a safe fallback. It is based on the current Meta Instagram API with Facebook Login and Content Publishing docs, plus the setup issues already encountered: template confusion, restricted permissions, Graph API Explorer testing, Netlify URL validation, supplied article images, and the desire to operate from VSCode/Codex now before moving to cloud automation.
 
@@ -111,70 +111,6 @@ Use this rule:
 - If it appears for `instagram_basic` or `pages_show_list`, stop and check app role, app mode, Instagram Onboarding template, Facebook Login for Business setup, and permission access level.
 
 For local setup, the only success target is: the token can list Pages and find the connected Instagram business account.
-
-## Generate Access Token Troubleshooting
-
-If Meta shows **"Generate access tokens"** and asks you to **add an Instagram account** or assign the **Instagram Tester** role, you are probably looking at **Instagram > API Setup with Instagram Login**. That is a valid Meta path, but it is not the priority path this project is using right now.
-
-Social PR Autopilot's current readiness path is **Instagram API with Facebook Login**:
-
-- generate a Facebook User access token,
-- request `instagram_basic` and `pages_show_list`,
-- call `/me/accounts`,
-- find the connected Page,
-- read `instagram_business_account`.
-
-Use this troubleshooting rule:
-
-| Problem | Likely meaning | Fix |
-| --- | --- | --- |
-| The dashboard says to add an Instagram account before generating a token | You are in the Instagram Login setup screen | For this project, switch to Graph API Explorer and generate a `User Token` from the Social PR Autopilot Meta app. |
-| Meta says the Instagram Tester role must be assigned | The Instagram Login token generator only works for assigned tester accounts in development/test mode | If intentionally testing Instagram Login, assign the tester in `App Roles > Roles`, use a public Instagram account, complete the login/invite flow, then retry. Otherwise use Graph API Explorer. |
-| Token generator succeeds but `/me/accounts` fails | Token type mismatch or missing Facebook Page permissions | Regenerate a Facebook User token with `instagram_basic` + `pages_show_list` while logged in as the Facebook user with Page Tasks. |
-| Webhook setup blocks token progress | Webhooks are bundled into the Instagram Login setup, but they are not needed for first Graph API readiness | Skip webhooks until the Page ID, IG business account ID, and token pass the discovery tests. |
-| The correct Page is not listed | Wrong Facebook user, missing `pages_show_list`, or missing Page access | Grant Page access, confirm `CREATE_CONTENT` or `MANAGE`, and regenerate the token. |
-
-Fast recovery sequence:
-
-1. Open Graph API Explorer.
-2. Select the Social PR Autopilot app.
-3. Choose `User Token`.
-4. Request only `instagram_basic` and `pages_show_list`.
-5. Run `/me/accounts?fields=id,name,tasks`.
-6. Run `/<FACEBOOK_PAGE_ID>?fields=instagram_business_account`.
-7. Save the Page ID, IG business account ID, and token only after both calls pass.
-
-## Remaining Steps After Permission Cleanup
-
-After deleting the extra App Review/new-request items, do not submit a broad permission review yet. The remaining goal is only to prove that a Facebook User token can discover the connected Page and Instagram professional account.
-
-Current keep/remove state:
-
-| Permission/request | Current action |
-| --- | --- |
-| `public_profile` | Leave alone if Meta keeps it as a default login permission. |
-| `instagram_basic` | Keep for discovery. |
-| `pages_show_list` | Keep for `/me/accounts`. |
-| `instagram_content_publish` | Leave removed until the direct publish adapter and App Review path are ready. |
-| `pages_read_engagement` | Leave removed until direct publishing. |
-| `instagram_business_basic` and other `instagram_business_*` permissions | Leave removed for this Facebook Login path. |
-| Marketing, oEmbed, public content, Threads, messages, comments, and `business_management` requests | Leave removed unless a future feature explicitly needs them. |
-
-Remaining setup steps:
-
-1. Confirm the Instagram account is Professional, preferably Business for this B2B automation path.
-2. Confirm the Instagram account is linked to the correct Facebook Page.
-3. Confirm the Facebook user creating the token has Page Tasks such as `CREATE_CONTENT` or `MANAGE`.
-4. Confirm the Meta app has Basic settings saved and uses the Instagram Onboarding/Facebook Login path, not Creator Marketplace.
-5. In Graph API Explorer, select the Social PR Autopilot app and choose `User Token`.
-6. Request only `instagram_basic` and `pages_show_list`.
-7. Run `/debug_token?input_token=<USER_ACCESS_TOKEN>` and confirm the token belongs to the expected app/user and includes both scopes.
-8. Run `/me/accounts?fields=id,name,tasks` and copy the correct Facebook Page ID.
-9. Run `/<FACEBOOK_PAGE_ID>?fields=instagram_business_account` and copy `instagram_business_account.id`.
-10. Run `/<INSTAGRAM_BUSINESS_ACCOUNT_ID>?fields=id,username,account_type,media_count` to prove the IG account is readable.
-11. Add only these values to the repo root `.env`: `INSTAGRAM_FACEBOOK_PAGE_ID`, `INSTAGRAM_BUSINESS_ACCOUNT_ID`, and `INSTAGRAM_ACCESS_TOKEN`.
-12. Restart the backend and call `/api/channels/instagram/diagnostics`.
-13. Keep Instagram in scheduling export mode until direct publishing is implemented, media URLs are public, and the publishing permissions are reviewed.
 
 ## Netlify URL Issue
 
@@ -343,7 +279,6 @@ Phase 3: Autonomous posting
 | Situation | Preferred action |
 | --- | --- |
 | Need to connect account today | Use Graph API Explorer with `instagram_basic` + `pages_show_list`. |
-| Meta's token screen asks for an Instagram Tester | Treat it as the Instagram Login setup, not the current Facebook Login discovery path. |
 | Meta asks Creator Marketplace vs Instagram Onboarding | Choose Instagram Onboarding. |
 | Meta warns permissions are restricted | Remove broad permissions and keep discovery minimal. |
 | Netlify URL is rejected | Use Graph API Explorer for local setup, or configure exact production HTTPS backend callback later. |
@@ -355,8 +290,6 @@ Phase 3: Autonomous posting
 
 ## References
 
-- Meta Create a Meta App for Instagram Platform: https://developers.facebook.com/docs/instagram-platform/create-an-instagram-app
-- Meta Instagram API with Instagram Login: https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login
 - Meta Instagram API with Facebook Login get-started: https://developers.facebook.com/docs/instagram-platform/instagram-api-with-facebook-login/get-started
 - Meta Content Publishing: https://developers.facebook.com/docs/instagram-platform/content-publishing/
 - Meta IG User Media reference: https://developers.facebook.com/docs/instagram-platform/instagram-graph-api/reference/ig-user/media
