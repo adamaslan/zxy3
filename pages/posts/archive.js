@@ -66,7 +66,7 @@ const SHOWS = [
     year: 2023,
     title: "Mayoween",
     type: "Group Exhibition",
-    image: "/mayo1.MOV",
+    image: null,
     description: "A group exhibition and culinary journey. Featuring Kewpie Mayo.",
     artists: [
       { name: "Carolyn Colsant", instagram: "jkbutseriously" },

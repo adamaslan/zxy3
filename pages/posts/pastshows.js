@@ -74,8 +74,7 @@ export default function PastShows1() {
           
           <h2>Invoking Pizza</h2>
           <p>Artists present disparate works deconstructing pizza creating a dialogue a posteriori of inherited tropes
-            exposing latent meaning with in pizza and with
-            out as pizza is shown to connect with a larger individual and societal sense of identity
+            exposing latent meaning within pizza and without as pizza is shown to connect with a larger individual and societal sense of identity
           </p>
 
           <h1>Past Shows - 2022</h1>
@@ -108,7 +107,7 @@ export default function PastShows1() {
           <p>
             These works evocative of earthen material will be presented on the
             heavenly confines of the ZXY Gallery roof. Highlighting displacement
-            this exibition speaks to identity question often faced by
+            this exhibition speaks to identity questions often faced by
             individuals seeking a place of refuge.
           </p>
           
@@ -119,7 +118,7 @@ export default function PastShows1() {
             want to see done to land that is close to where we live. The amount
             of toxic chemicals that are poured into the ocean is astonishing.
             Evoking the beauty and importance of this mysterious and clandestine
-            gem, the artists of "Sea Friends bring together a strong vision of
+            gem, the artists of "Sea Friends" bring together a strong vision of
             what goes into all the aspects of the sea.
           </p>
           
