@@ -67,7 +67,7 @@ return results;
 
 **Example**: Fetching artist details `SELECT * FROM Artist WHERE id = ?`
 
-```
+```text
 First call: DB query (50ms)
 Second call: Prisma query cache (<1ms)
 Third call: Prisma query cache (<1ms)
@@ -182,7 +182,7 @@ function getSession(userId) {
 **Con**: Stale data for 1h (rankings may be outdated)  
 **Decision**: 1h is acceptable for trending (user expectations set by other platforms)
 
-```
+```text
 Possible Solutions:
 - Reduce TTL to 5m (higher Redis load, more recomputes)
 - Manual invalidation (operational overhead)
