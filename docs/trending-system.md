@@ -83,7 +83,7 @@ Query params: `window` (7d/30d/90d), `limit` (default 100), `offset` (default 0)
 ### Manual Script
 
 ```bash
-npm run trending   # node scripts/run-trending-ranks.js
+npm run trending   # node ../artist-db/cockroach-db/scripts/run-trending-ranks.js
 ```
 
 Runs `computeAllTrending` directly (bypasses cron, no Redis, no auth). Used for one-off computation.
@@ -337,7 +337,7 @@ Phase 3 matters once Redis cache hit rates are high enough that you're missing m
 | 1 | `pages/api/v2/artists/[id].js`, `pages/api/v2/artists/index.js` | No |
 | 2 | New: `lib/middleware/trackEvent.js`, update: `prisma/schema.prisma`, `lib/trending/calculator.js`, `lib/cron/trendingCron.js` | Yes |
 | 3 | `pages/api/v2/artists/[id].js` (reorder middleware), or new `lib/middleware/trackEvent.js` | No |
-| 4 | New: `scripts/fetch-mentions.js` or similar | Maybe |
+| 4 | New: `../artist-db/cockroach-db/scripts/fetch-mentions.js` or similar | Maybe |
 
 ### Cron Auto-Start
 

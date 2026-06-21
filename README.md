@@ -71,7 +71,7 @@ npx prisma studio      # Open Prisma Studio UI
 
 - [DEVELOPMENT.md](./docs/DEVELOPMENT.md) - Setup and development workflow
 - [API_V2.md](./docs/API_V2.md) - API v2 endpoint documentation
-- [SCHEMA_MIGRATION.md](./docs/SCHEMA_MIGRATION.md) - Database schema migration guide
+- [SCHEMA_MIGRATION.md](../artist-db/cockroach-db/docs/SCHEMA_MIGRATION.md) - Database schema migration guide
 - [CLAUDE.md](./CLAUDE.md) - Project-specific guidance for Claude Code
 
 ## Tech Stack

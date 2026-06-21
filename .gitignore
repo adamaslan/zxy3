@@ -37,6 +37,7 @@ yarn-error.log*
 .claude
 # secrets
 .env
+social-pr-autopilot/sensitive/
 
 # lambda build artifacts
 lambda/bundle/

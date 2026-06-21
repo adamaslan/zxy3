@@ -61,7 +61,8 @@ zxy3/
 │   └── e2e/                  # End-to-end tests (Cypress)
 ├── docs/                     # Documentation
 ├── plans/                    # Project plans and roadmaps
-└── scripts/                  # Utility scripts
+└── ../artist-db/cockroach-db/scripts/
+                                # Data import, enrichment, and export scripts
 
 ```
 

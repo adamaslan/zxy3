@@ -1,9 +1,0 @@
-name: projects/PROJECT_ID/locations/us-central1/jobs/social-pr-daily-campaign
-schedule: "30 9 * * 1-5"
-timeZone: "America/New_York"
-httpTarget:
-  uri: "https://SOCIAL_PR_BACKEND_URL/api/campaign"
-  httpMethod: POST
-  headers:
-    Content-Type: "application/json"
-  body: "BASE64_JSON_PAYLOAD"

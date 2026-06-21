@@ -69,11 +69,11 @@ export default function Home() {
             <p>See who's rising</p>
           </a>
 
-       
+
           <a href="https://www.instagram.com/zxygallery/?hl=en" className="card">
-            <h3>Contact</h3> <p>   contact us on instagram for
-          info on our latest events &nbsp; <u>@zxygallery</u>
-          </p></a>{" "}
+            <h3>Contact &rarr;</h3>
+            <p>Contact us on Instagram for info on our latest events <u>@zxygallery</u></p>
+          </a>
         </div>
       </main>
 
@@ -88,7 +88,7 @@ export default function Home() {
             <u>here</u>
           </a>{" "}
           to check out the current highly toggleable online gallery. Thanks to
-          Ellis Marte and Nick Foden for their assitance on this project.
+          Ellis Marte and Nick Foden for their assistance on this project.
         </p>
       </footer>
 
