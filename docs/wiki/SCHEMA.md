@@ -133,7 +133,7 @@ One-liner: what interaction does this describe?
 ## System Diagram
 ASCII diagram or description of data flow
 
-```
+```text
 Component A
     → (describe interaction)
 Component B
@@ -335,7 +335,7 @@ Tracks artist engagement (views, searches, market mentions) and computes hourly 
 
 ## Implementation Details
 Scoring formula:
-```
+```text
 trendScore = (views × 0.5) + (searches × 0.3) + (mentions × 0.2)
 ```
 Ranked descending within each window. Percentile calculated against full artist cohort.

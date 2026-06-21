@@ -6,22 +6,17 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "start": "next start -p $PORT",
+    "start": "next start",
     "p-format": "prisma format",
     "p-generate": "prisma generate",
     "cy:open": "cypress open",
     "db:seed": "node prisma/seed.js",
-    "dump-artworks": "NODE_PATH=./node_modules node ../artist-db/cockroach-db/scripts/dump-artworks.js",
-    "db:check": "NODE_PATH=./node_modules node ../artist-db/cockroach-db/scripts/db-check.js",
-    "trending": "NODE_PATH=./node_modules node ../artist-db/cockroach-db/scripts/run-trending-ranks.js",
     "test": "jest",
-    "test:unit": "jest --testPathPattern=unit",
-    "test:integration": "jest --testPathPattern=integration",
+    "test:unit": "jest --testPathPatterns=unit",
+    "test:integration": "jest --testPathPatterns=integration",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "eslint . --ext .js,.jsx",
-    "enrich-artists": "NODE_PATH=./node_modules node ../artist-db/cockroach-db/scripts/enrich-artists-artsy.js",
-    "enrich-artists-dry": "NODE_PATH=./node_modules node ../artist-db/cockroach-db/scripts/enrich-artists-artsy.js --dry-run"
+    "lint": "eslint . --ext .js,.jsx"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.5.0",
