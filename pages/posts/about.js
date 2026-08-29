@@ -63,6 +63,15 @@ export default function About() {
         <br />
         <br />
         <h2>
+          We also run an <a href="/posts/residency" className="card">
+            <h3>Artist Residency</h3>
+            <p>click here</p>
+          </a> offering studio space, curatorial support, and a
+          technology-focused program for emerging artists.
+        </h2>
+        <br />
+        <br />
+        <h2>
           How it was built: <br /> This website is built with Nextjs, React,
           CSS, HTML. It is super fast via its integration with Vercel, which
           also allows for testing before deployment. It runs via github.
