@@ -63,12 +63,14 @@ export default function About() {
         <br />
         <br />
         <h2>
-          We also run an <a href="/posts/residency" className="card">
-            <h3>Artist Residency</h3>
-            <p>click here</p>
-          </a> offering studio space, curatorial support, and a
+          We also run an <Link href="/posts/residency">Artist Residency</Link>{" "}
+          offering studio space, curatorial support, and a
           technology-focused program for emerging artists.
         </h2>
+        <a href="/posts/residency" className="card">
+          <h3>Artist Residency</h3>
+          <p>click here</p>
+        </a>
         <br />
         <br />
         <h2>
