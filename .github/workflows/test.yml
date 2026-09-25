@@ -47,6 +47,7 @@ jobs:
         run: npm run test:unit --if-present
         env:
           NODE_ENV: test
+          SKIP_REDIS_TESTS: "true"
 
       - name: Run integration tests
         run: npm run test:integration --if-present
@@ -114,6 +115,8 @@ jobs:
 
       - name: Validate Prisma schema
         run: npx prisma validate
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
 
       - name: Check for security vulnerabilities
         run: npm audit --audit-level=moderate

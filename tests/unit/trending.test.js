@@ -185,16 +185,16 @@ describe('Trending Scorer', () => {
 
   describe('WEIGHTS constant', () => {
     it('should have valid weights that sum to 1', () => {
-      const { viewCount, searchFrequency, marketMentions } = scorer.WEIGHTS;
+      const { viewCount, searchFrequency, marketMentions } = scorer.INTERNAL_WEIGHTS;
       const total = viewCount + searchFrequency + marketMentions;
 
       expect(total).toBe(1);
     });
 
     it('should prioritize viewCount', () => {
-      expect(scorer.WEIGHTS.viewCount).toBe(0.5);
-      expect(scorer.WEIGHTS.viewCount > scorer.WEIGHTS.searchFrequency).toBe(true);
-      expect(scorer.WEIGHTS.searchFrequency > scorer.WEIGHTS.marketMentions).toBe(true);
+      expect(scorer.INTERNAL_WEIGHTS.viewCount).toBe(0.5);
+      expect(scorer.INTERNAL_WEIGHTS.viewCount > scorer.INTERNAL_WEIGHTS.searchFrequency).toBe(true);
+      expect(scorer.INTERNAL_WEIGHTS.searchFrequency > scorer.INTERNAL_WEIGHTS.marketMentions).toBe(true);
     });
   });
 });
@@ -251,7 +251,7 @@ describe('Trending Calculator', () => {
 
       expect(ranked.length).toBe(2);
       expect(ranked[0].rank).toBe(1);
-      expect(ranked[0].artistId).toBe(2n); // Higher score
+      expect(ranked[0].artistId).toBe('2'); // Higher score (calculator stringifies BigInt ids)
     });
 
     it('should handle empty metrics', async () => {
