@@ -195,7 +195,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
       <div style={{ minHeight: '100vh', background: '#fafafa', fontFamily: 'system-ui, sans-serif' }}>
 
         {/* Header */}
-        <header style={{
+        <header className="artists-header" style={{
           background: '#fff', borderBottom: '1px solid #e8e8e8',
           padding: '1rem 2rem', display: 'flex', alignItems: 'center',
           justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 10
@@ -203,7 +203,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           <Link href="/" style={{ fontWeight: 800, fontSize: '1.2rem', color: '#111', textDecoration: 'none' }}>
             ZXY Gallery
           </Link>
-          <nav style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem' }}>
+          <nav className="artists-nav" style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem' }}>
             <Link href="/" style={{ color: '#555', textDecoration: 'none' }}>Home</Link>
             <Link href="/posts/artists" style={{ color: '#f30000c0', textDecoration: 'none', fontWeight: 600 }}>Artists</Link>
             <Link href="/trending" style={{ color: '#555', textDecoration: 'none' }}>Trending</Link>
@@ -224,6 +224,8 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           @media (max-width: 900px) {
             .artists-layout { grid-template-columns: 1fr; padding: 1.25rem 1rem; }
             .artists-trending-card { position: static; }
+            .artists-header { padding: 0.75rem 1rem !important; }
+            .artists-nav { gap: 0.85rem !important; font-size: 0.82rem !important; }
           }
         `}</style>
         <div className="artists-layout">
@@ -446,4 +448,4 @@ export async function getServerSideProps() {
     console.error('getServerSideProps /posts/artists failed:', err.message);
     return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS } };
   }
-                  }
+}
