@@ -153,7 +153,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           setTotal(data.meta?.pagination?.total || 0);
           if (data.meta?.stageCounts) setStageCounts(data.meta.stageCounts);
         } else {
-          setError(data.error?.message || 'The artists API returned an error.');
+          setError('Could not load artists. Please try again.');
         }
       })
       .catch(err => {
@@ -446,4 +446,4 @@ export async function getServerSideProps() {
     console.error('getServerSideProps /posts/artists failed:', err.message);
     return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS } };
   }
-}
+                  }
