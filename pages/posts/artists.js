@@ -111,6 +111,8 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
   const [artists, setArtists] = useState(initialArtists || []);
   const [total, setTotal] = useState(totalCount || 0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [retryTick, setRetryTick] = useState(0);
   const [page, setPage] = useState(0);
 
   const [trendWindow, setTrendWindow] = useState('7d');
@@ -131,7 +133,10 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
   // Fetch artists on filter/page change
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     setLoading(true);
+    setError(null);
     const params = new URLSearchParams({
       limit: LIMIT,
       offset: page * LIMIT,
@@ -139,7 +144,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
       ...(careerFilter !== 'all' && { careerStage: careerFilter }),
     });
 
-    fetch(`/api/v2/artists?${params}`)
+    fetch(`/api/v2/artists?${params}`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
         if (!active) return;
@@ -147,22 +152,34 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           setArtists(data.data || []);
           setTotal(data.meta?.pagination?.total || 0);
           if (data.meta?.stageCounts) setStageCounts(data.meta.stageCounts);
+        } else {
+          setError(data.error?.message || 'The artists API returned an error.');
         }
       })
-      .finally(() => { if (active) setLoading(false); });
+      .catch(err => {
+        if (!active) return;
+        setError(err.name === 'AbortError'
+          ? 'Loading artists timed out. Please try again.'
+          : 'Could not load artists. Please try again.');
+      })
+      .finally(() => { clearTimeout(timeout); if (active) setLoading(false); });
 
-    return () => { active = false; };
-  }, [debouncedSearch, careerFilter, page]);
+    return () => { active = false; clearTimeout(timeout); controller.abort(); };
+  }, [debouncedSearch, careerFilter, page, retryTick]);
 
   // Fetch trending
   useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     setTrendLoading(true);
-    fetch(`/api/v2/trending/artists?window=${trendWindow}&limit=10`)
+    fetch(`/api/v2/trending/artists?window=${trendWindow}&limit=10`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
         if (data.status === 'success') setTrending(data.data || []);
       })
-      .finally(() => setTrendLoading(false));
+      .catch(() => { /* keep the empty trending state on failure */ })
+      .finally(() => { clearTimeout(timeout); setTrendLoading(false); });
+    return () => { clearTimeout(timeout); controller.abort(); };
   }, [trendWindow]);
 
   // Reset page on filter change
@@ -194,7 +211,22 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           </nav>
         </header>
 
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1.5rem', display: 'grid', gridTemplateColumns: '1fr 280px', gap: '2rem' }}>
+        <style>{`
+          .artists-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 2rem;
+          }
+          .artists-trending-card { position: sticky; top: 72px; }
+          @media (max-width: 900px) {
+            .artists-layout { grid-template-columns: 1fr; padding: 1.25rem 1rem; }
+            .artists-trending-card { position: static; }
+          }
+        `}</style>
+        <div className="artists-layout">
 
           {/* Main column */}
           <div>
@@ -247,6 +279,19 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
             {/* Grid */}
             {loading ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: '#aaa' }}>Loading...</div>
+            ) : error ? (
+              <div style={{ textAlign: 'center', padding: '3rem', color: '#888' }}>
+                <p style={{ margin: '0 0 0.75rem' }}>{error}</p>
+                <button
+                  onClick={() => setRetryTick(t => t + 1)}
+                  style={{
+                    padding: '8px 18px', borderRadius: 6, border: '1px solid #ddd',
+                    background: '#fff', cursor: 'pointer', color: '#333'
+                  }}
+                >
+                  Retry
+                </button>
+              </div>
             ) : artists.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: '#aaa' }}>No artists found.</div>
             ) : (
@@ -294,9 +339,9 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
 
           {/* Sidebar: Trending */}
           <aside>
-            <div style={{
+            <div className="artists-trending-card" style={{
               background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10,
-              padding: '1.2rem', position: 'sticky', top: 72
+              padding: '1.2rem'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>Trending</h2>
