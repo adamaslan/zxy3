@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { artistCountText, stageCountText } from '../../lib/artistDisplay';
 
 const CAREER_STAGES = ['all', 'emerging artist', 'mid-career artist', 'established artist', 'late-career artist'];
 
@@ -104,7 +105,7 @@ function TrendingRow({ artist, rank }) {
   );
 }
 
-export default function ArtistsPage({ initialArtists, totalCount, initialStageCounts }) {
+export default function ArtistsPage({ initialArtists, totalCount, initialStageCounts, initialFailed }) {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [careerFilter, setCareerFilter] = useState('all');
@@ -113,6 +114,8 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [retryTick, setRetryTick] = useState(0);
+  // true when the backend could not be read - counts are then unknown, not zero
+  const [loadFailed, setLoadFailed] = useState(!!initialFailed);
   const [page, setPage] = useState(0);
 
   const [trendWindow, setTrendWindow] = useState('7d');
@@ -152,12 +155,15 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           setArtists(data.data || []);
           setTotal(data.meta?.pagination?.total || 0);
           if (data.meta?.stageCounts) setStageCounts(data.meta.stageCounts);
+          setLoadFailed(false);
         } else {
+          setLoadFailed(true);
           setError('Could not load artists. Please try again.');
         }
       })
       .catch(err => {
         if (!active) return;
+        setLoadFailed(true);
         setError(err.name === 'AbortError'
           ? 'Loading artists timed out. Please try again.'
           : 'Could not load artists. Please try again.');
@@ -234,7 +240,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           <div>
             <div style={{ marginBottom: '1.5rem' }}>
               <h1 style={{ margin: '0 0 0.25rem', fontSize: '2rem', fontWeight: 800 }}>Artists</h1>
-              <p style={{ margin: 0, color: '#777', fontSize: '0.9rem' }}>{total} artists in the database</p>
+              <p style={{ margin: 0, color: '#777', fontSize: '0.9rem' }}>{artistCountText(loadFailed, total)}</p>
             </div>
 
             {/* Search */}
@@ -272,7 +278,9 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
                       color: active ? (c?.text || '#fff') : '#555',
                     }}
                   >
-                    {s === 'all' ? `All (${total})` : `${s.replace(' artist', '')}${stageCounts[s] ? ` (${stageCounts[s]})` : ''}`}
+                    {s === 'all'
+                      ? (loadFailed ? 'All' : `All (${total})`)
+                      : (loadFailed ? s.replace(' artist', '') : `${s.replace(' artist', '')}${stageCounts[s] ? ` (${stageCounts[s]})` : ''}`)}
                   </button>
                 );
               })}
@@ -396,7 +404,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
                 return (
                   <div key={s} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                     <CareerBadge stage={s} />
-                    <span style={{ fontSize: '0.82rem', color: '#888' }}>{stageCounts[s] || 0} artists</span>
+                    <span style={{ fontSize: '0.82rem', color: '#888' }}>{stageCountText(loadFailed, stageCounts[s])}</span>
                   </div>
                 );
               })}
@@ -443,9 +451,9 @@ export async function getServerSideProps() {
       CAREER_STAGES.slice(1).map((s, i) => [s, stageCountResults[i]])
     );
 
-    return { props: { initialArtists: formatted, totalCount: total, initialStageCounts } };
+    return { props: { initialArtists: formatted, totalCount: total, initialStageCounts, initialFailed: false } };
   } catch (err) {
     console.error('getServerSideProps /posts/artists failed:', err.message);
-    return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS } };
+    return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS, initialFailed: true } };
   }
-}
+                        }
