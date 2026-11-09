@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { artistCountText, stageCountText } from '../../lib/artistDisplay';
+import { artistCountText, stageCountText, trendingStatusText } from '../../lib/artistDisplay';
 
 const CAREER_STAGES = ['all', 'emerging artist', 'mid-career artist', 'established artist', 'late-career artist'];
 
@@ -121,6 +121,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
   const [trendWindow, setTrendWindow] = useState('7d');
   const [trending, setTrending] = useState([]);
   const [trendLoading, setTrendLoading] = useState(true);
+  const [trendFailed, setTrendFailed] = useState(false);
   const [stageCounts, setStageCounts] = useState(
     initialStageCounts || CAREER_STAGES.slice(1).reduce((acc, s) => ({ ...acc, [s]: 0 }), {})
   );
@@ -178,12 +179,17 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
     setTrendLoading(true);
+    setTrendFailed(false);
     fetch(`/api/v2/trending/artists?window=${trendWindow}&limit=10`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
-        if (data.status === 'success') setTrending(data.data || []);
+        if (data.status === 'success') {
+          setTrending(data.data || []);
+        } else {
+          setTrendFailed(true);
+        }
       })
-      .catch(() => { /* keep the empty trending state on failure */ })
+      .catch(() => { setTrendFailed(true); })
       .finally(() => { clearTimeout(timeout); setTrendLoading(false); });
     return () => { clearTimeout(timeout); controller.abort(); };
   }, [trendWindow]);
@@ -376,9 +382,13 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
 
               {trendLoading ? (
                 <div style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>Loading...</div>
+              ) : trendFailed ? (
+                <div style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>
+                  {trendingStatusText(true)}
+                </div>
               ) : trending.length === 0 ? (
                 <div style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>
-                  No trending data yet.<br />
+                  {trendingStatusText(false)}<br />
                   <span style={{ fontSize: '0.75rem' }}>Run: <code>npm run trending</code></span>
                 </div>
               ) : (
@@ -456,4 +466,4 @@ export async function getServerSideProps() {
     console.error('getServerSideProps /posts/artists failed:', err.message);
     return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS, initialFailed: true } };
   }
-                        }
+}
