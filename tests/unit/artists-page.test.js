@@ -6,7 +6,7 @@
  * empty database ("0 artists in the database").
  */
 
-const { artistCountText, stageCountText } = require('../../lib/artistDisplay');
+const { artistCountText, stageCountText, trendingStatusText } = require('../../lib/artistDisplay');
 
 describe('artistCountText', () => {
   it('reports unavailable when the load failed', () => {
@@ -38,5 +38,15 @@ describe('stageCountText', () => {
   it('shows the real count when data loaded', () => {
     expect(stageCountText(false, 7)).toBe('7 artists');
     expect(stageCountText(false, 0)).toBe('0 artists');
+  });
+});
+
+describe('trendingStatusText - unavailable vs verified empty', () => {
+  test('failed trending load renders as unavailable, not as verified no-data', () => {
+    expect(trendingStatusText(true)).toBe('Trending data unavailable.');
+  });
+
+  test('successful empty load keeps the verified no-data message', () => {
+    expect(trendingStatusText(false)).toBe('No trending data yet.');
   });
 });
