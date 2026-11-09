@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { artistCountText, stageCountText, trendingStatusText } from '../../lib/artistDisplay';
 
 const CAREER_STAGES = ['all', 'emerging artist', 'mid-career artist', 'established artist', 'late-career artist'];
 
@@ -104,18 +105,23 @@ function TrendingRow({ artist, rank }) {
   );
 }
 
-export default function ArtistsPage({ initialArtists, totalCount, initialStageCounts }) {
+export default function ArtistsPage({ initialArtists, totalCount, initialStageCounts, initialFailed }) {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [careerFilter, setCareerFilter] = useState('all');
   const [artists, setArtists] = useState(initialArtists || []);
   const [total, setTotal] = useState(totalCount || 0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [retryTick, setRetryTick] = useState(0);
+  // true when the backend could not be read - counts are then unknown, not zero
+  const [loadFailed, setLoadFailed] = useState(!!initialFailed);
   const [page, setPage] = useState(0);
 
   const [trendWindow, setTrendWindow] = useState('7d');
   const [trending, setTrending] = useState([]);
   const [trendLoading, setTrendLoading] = useState(true);
+  const [trendFailed, setTrendFailed] = useState(false);
   const [stageCounts, setStageCounts] = useState(
     initialStageCounts || CAREER_STAGES.slice(1).reduce((acc, s) => ({ ...acc, [s]: 0 }), {})
   );
@@ -131,7 +137,10 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
   // Fetch artists on filter/page change
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     setLoading(true);
+    setError(null);
     const params = new URLSearchParams({
       limit: LIMIT,
       offset: page * LIMIT,
@@ -139,7 +148,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
       ...(careerFilter !== 'all' && { careerStage: careerFilter }),
     });
 
-    fetch(`/api/v2/artists?${params}`)
+    fetch(`/api/v2/artists?${params}`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
         if (!active) return;
@@ -147,22 +156,42 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           setArtists(data.data || []);
           setTotal(data.meta?.pagination?.total || 0);
           if (data.meta?.stageCounts) setStageCounts(data.meta.stageCounts);
+          setLoadFailed(false);
+        } else {
+          setLoadFailed(true);
+          setError('Could not load artists. Please try again.');
         }
       })
-      .finally(() => { if (active) setLoading(false); });
+      .catch(err => {
+        if (!active) return;
+        setLoadFailed(true);
+        setError(err.name === 'AbortError'
+          ? 'Loading artists timed out. Please try again.'
+          : 'Could not load artists. Please try again.');
+      })
+      .finally(() => { clearTimeout(timeout); if (active) setLoading(false); });
 
-    return () => { active = false; };
-  }, [debouncedSearch, careerFilter, page]);
+    return () => { active = false; clearTimeout(timeout); controller.abort(); };
+  }, [debouncedSearch, careerFilter, page, retryTick]);
 
   // Fetch trending
   useEffect(() => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     setTrendLoading(true);
-    fetch(`/api/v2/trending/artists?window=${trendWindow}&limit=10`)
+    setTrendFailed(false);
+    fetch(`/api/v2/trending/artists?window=${trendWindow}&limit=10`, { signal: controller.signal })
       .then(r => r.json())
       .then(data => {
-        if (data.status === 'success') setTrending(data.data || []);
+        if (data.status === 'success') {
+          setTrending(data.data || []);
+        } else {
+          setTrendFailed(true);
+        }
       })
-      .finally(() => setTrendLoading(false));
+      .catch(() => { setTrendFailed(true); })
+      .finally(() => { clearTimeout(timeout); setTrendLoading(false); });
+    return () => { clearTimeout(timeout); controller.abort(); };
   }, [trendWindow]);
 
   // Reset page on filter change
@@ -178,7 +207,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
       <div style={{ minHeight: '100vh', background: '#fafafa', fontFamily: 'system-ui, sans-serif' }}>
 
         {/* Header */}
-        <header style={{
+        <header className="artists-header" style={{
           background: '#fff', borderBottom: '1px solid #e8e8e8',
           padding: '1rem 2rem', display: 'flex', alignItems: 'center',
           justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 10
@@ -186,7 +215,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           <Link href="/" style={{ fontWeight: 800, fontSize: '1.2rem', color: '#111', textDecoration: 'none' }}>
             ZXY Gallery
           </Link>
-          <nav style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem' }}>
+          <nav className="artists-nav" style={{ display: 'flex', gap: '1.5rem', fontSize: '0.9rem' }}>
             <Link href="/" style={{ color: '#555', textDecoration: 'none' }}>Home</Link>
             <Link href="/posts/artists" style={{ color: '#f30000c0', textDecoration: 'none', fontWeight: 600 }}>Artists</Link>
             <Link href="/trending" style={{ color: '#555', textDecoration: 'none' }}>Trending</Link>
@@ -194,13 +223,30 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
           </nav>
         </header>
 
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1.5rem', display: 'grid', gridTemplateColumns: '1fr 280px', gap: '2rem' }}>
+        <style>{`
+          .artists-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 2rem;
+          }
+          .artists-trending-card { position: sticky; top: 72px; }
+          @media (max-width: 900px) {
+            .artists-layout { grid-template-columns: 1fr; padding: 1.25rem 1rem; }
+            .artists-trending-card { position: static; }
+            .artists-header { padding: 0.75rem 1rem !important; }
+            .artists-nav { gap: 0.85rem !important; font-size: 0.82rem !important; }
+          }
+        `}</style>
+        <div className="artists-layout">
 
           {/* Main column */}
           <div>
             <div style={{ marginBottom: '1.5rem' }}>
               <h1 style={{ margin: '0 0 0.25rem', fontSize: '2rem', fontWeight: 800 }}>Artists</h1>
-              <p style={{ margin: 0, color: '#777', fontSize: '0.9rem' }}>{total} artists in the database</p>
+              <p style={{ margin: 0, color: '#777', fontSize: '0.9rem' }}>{artistCountText(loadFailed, total)}</p>
             </div>
 
             {/* Search */}
@@ -238,7 +284,9 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
                       color: active ? (c?.text || '#fff') : '#555',
                     }}
                   >
-                    {s === 'all' ? `All (${total})` : `${s.replace(' artist', '')}${stageCounts[s] ? ` (${stageCounts[s]})` : ''}`}
+                    {s === 'all'
+                      ? (loadFailed ? 'All' : `All (${total})`)
+                      : (loadFailed ? s.replace(' artist', '') : `${s.replace(' artist', '')}${stageCounts[s] ? ` (${stageCounts[s]})` : ''}`)}
                   </button>
                 );
               })}
@@ -247,6 +295,19 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
             {/* Grid */}
             {loading ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: '#aaa' }}>Loading...</div>
+            ) : error ? (
+              <div style={{ textAlign: 'center', padding: '3rem', color: '#888' }}>
+                <p style={{ margin: '0 0 0.75rem' }}>{error}</p>
+                <button
+                  onClick={() => setRetryTick(t => t + 1)}
+                  style={{
+                    padding: '8px 18px', borderRadius: 6, border: '1px solid #ddd',
+                    background: '#fff', cursor: 'pointer', color: '#333'
+                  }}
+                >
+                  Retry
+                </button>
+              </div>
             ) : artists.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: '#aaa' }}>No artists found.</div>
             ) : (
@@ -294,9 +355,9 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
 
           {/* Sidebar: Trending */}
           <aside>
-            <div style={{
+            <div className="artists-trending-card" style={{
               background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10,
-              padding: '1.2rem', position: 'sticky', top: 72
+              padding: '1.2rem'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>Trending</h2>
@@ -321,9 +382,13 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
 
               {trendLoading ? (
                 <div style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>Loading...</div>
+              ) : trendFailed ? (
+                <div style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>
+                  {trendingStatusText(true)}
+                </div>
               ) : trending.length === 0 ? (
                 <div style={{ color: '#aaa', fontSize: '0.85rem', textAlign: 'center', padding: '1rem' }}>
-                  No trending data yet.<br />
+                  {trendingStatusText(false)}<br />
                   <span style={{ fontSize: '0.75rem' }}>Run: <code>npm run trending</code></span>
                 </div>
               ) : (
@@ -349,7 +414,7 @@ export default function ArtistsPage({ initialArtists, totalCount, initialStageCo
                 return (
                   <div key={s} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                     <CareerBadge stage={s} />
-                    <span style={{ fontSize: '0.82rem', color: '#888' }}>{stageCounts[s] || 0} artists</span>
+                    <span style={{ fontSize: '0.82rem', color: '#888' }}>{stageCountText(loadFailed, stageCounts[s])}</span>
                   </div>
                 );
               })}
@@ -396,9 +461,9 @@ export async function getServerSideProps() {
       CAREER_STAGES.slice(1).map((s, i) => [s, stageCountResults[i]])
     );
 
-    return { props: { initialArtists: formatted, totalCount: total, initialStageCounts } };
+    return { props: { initialArtists: formatted, totalCount: total, initialStageCounts, initialFailed: false } };
   } catch (err) {
     console.error('getServerSideProps /posts/artists failed:', err.message);
-    return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS } };
+    return { props: { initialArtists: [], totalCount: 0, initialStageCounts: EMPTY_STAGE_COUNTS, initialFailed: true } };
   }
 }
