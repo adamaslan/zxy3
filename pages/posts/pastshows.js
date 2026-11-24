@@ -82,6 +82,16 @@ export default function PastShows1() {
           <h2>Holiday Market</h2>
           <p>ZXY Presents a variety of works perfect as Holiday Gifts</p>
 
+          <h2>Antechamber</h2>
+          <p>
+            ZXY Gallery presented &ldquo;Antechamber&rdquo;, featuring the work of
+            Emily Rose Wright (@gridrot). The exhibition opened November 15,
+            2022 with a reception from 6-8 pm at the gallery in Brooklyn,
+            featuring a poetry reading by Adrienne Greenblatt
+            (@deathinmidwinter) and music by Dean Cercone (@deancercone) and
+            Lambface (@lambface).
+          </p>
+
           <h2>Meaning in Fragility</h2>
           <p>
             ZXY Gallery is pleased to announce its latest group exhibition,
